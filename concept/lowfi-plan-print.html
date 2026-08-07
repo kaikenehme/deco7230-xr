@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>XR Renovation Previewer — Low-Fidelity Prototype &amp; Test Plan</title>
+<style>
+  @page { size: A4; margin: 16mm 15mm 14mm 15mm; }
+
+  :root{
+    --ink:#16130f;
+    --muted:#7a7167;
+    --kraft:#b08968;
+    --red:#c0392b;
+    --green:#6fa03c;
+    --flame:#e8912a;
+    --tint:#faf7f2;
+    --rule:#e5ded4;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  body{
+    margin:0;
+    font-family:Georgia,"Times New Roman",serif;
+    font-size:9.4pt;
+    line-height:1.5;
+    color:var(--ink);
+  }
+  h1,h2,h3,.eyebrow,th,.step-n,.tag,.role-n{
+    font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+  }
+
+  /* ---------- masthead ---------- */
+  .masthead{ border-bottom:2.5px solid var(--ink); padding-bottom:9px; margin-bottom:16px; }
+  .eyebrow{
+    font-size:7.2pt; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--muted); font-weight:700; margin-bottom:7px;
+  }
+  h1{ font-size:20pt; line-height:1.12; margin:0 0 5px; letter-spacing:-.017em; font-weight:700; }
+  h1 .sub{ display:block; font-size:11.4pt; font-weight:400; color:var(--muted); margin-top:5px; letter-spacing:0; }
+  .byline{ font-size:8pt; color:var(--muted); margin-top:9px; letter-spacing:.03em; }
+  .byline strong{ color:var(--ink); font-weight:600; }
+
+  /* ---------- section headings ---------- */
+  h2{
+    font-size:8.4pt; letter-spacing:.15em; text-transform:uppercase; font-weight:700;
+    margin:18px 0 8px; padding-bottom:5px; border-bottom:1px solid var(--rule);
+    page-break-after:avoid; break-after:avoid;
+  }
+  h2 .num{ color:var(--kraft); margin-right:8px; }
+  h3{ font-size:9.6pt; margin:13px 0 5px; font-weight:700; letter-spacing:-.005em;
+      page-break-after:avoid; break-after:avoid; }
+  table, .plates, .steps, .roles, .note, .focus, .finding{ page-break-inside:avoid; break-inside:avoid; }
+  tr{ page-break-inside:avoid; break-inside:avoid; }
+  p{ margin:0 0 8px; }
+  .lede{ font-size:10.6pt; line-height:1.5; }
+
+  /* ---------- pitch pullquote ---------- */
+  .pitch{
+    border-left:3px solid var(--kraft); background:var(--tint);
+    padding:11px 14px; margin:12px 0 4px; font-size:10pt; line-height:1.5; font-style:italic;
+  }
+  .pitch b{ font-style:normal; }
+
+  /* ---------- focus callout ---------- */
+  .focus{
+    border:1.5px solid var(--ink); padding:11px 14px; margin:14px 0 4px; background:#fff;
+  }
+  .focus .eyebrow{ margin-bottom:5px; }
+  .focus .loop{
+    font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size:10.2pt; font-weight:600; line-height:1.45; letter-spacing:-.008em;
+  }
+  .focus .loop em{ color:var(--kraft); font-style:normal; }
+  .focus .not{ font-size:8.2pt; color:var(--muted); margin-top:7px; }
+
+  /* ---------- photos ---------- */
+  .plates{ display:flex; gap:9px; margin:12px 0 4px; }
+  .plate{ flex:1; }
+  .plate img{ width:100%; height:62mm; object-fit:cover; object-position:50% 44%;
+              display:block; border:1px solid var(--rule); }
+  .cap{ font-size:7.4pt; color:var(--muted); margin-top:5px; line-height:1.35; }
+  .cap b{ color:var(--ink); font-weight:600; }
+
+  /* ---------- key / legend ---------- */
+  table.key{ width:100%; border-collapse:collapse; margin:9px 0 4px; }
+  table.key td{ padding:5px 8px 5px 0; border-bottom:1px dotted var(--rule); vertical-align:top; font-size:8.4pt; line-height:1.4; }
+  table.key tr:last-child td{ border-bottom:0; }
+  td.sw{ width:15px; padding-right:0; }
+  td.sw span{ display:block; width:11px; height:11px; border-radius:2px; border:1px solid rgba(0,0,0,.2); margin-top:3px; }
+  td.kn{ width:100px; font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; font-size:8.1pt; font-weight:700; }
+  td.kr{ width:76px; font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; font-size:6.9pt; font-weight:700;
+        letter-spacing:.07em; text-transform:uppercase; color:var(--kraft); padding-top:6px; }
+
+  /* ---------- loop steps ---------- */
+  .steps{ display:flex; gap:6px; margin:11px 0 4px; }
+  .step{ flex:1; border:1px solid var(--rule); border-top:2.5px solid var(--kraft); padding:8px 8px 9px; background:#fff; }
+  .step-n{ font-size:7pt; font-weight:700; color:var(--kraft); letter-spacing:.1em; }
+  .step-t{ font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; font-size:9pt; font-weight:700; margin:3px 0 4px; }
+  .step-d{ font-size:7.8pt; line-height:1.4; color:#3d372f; }
+
+  /* ---------- tables ---------- */
+  table{ width:100%; border-collapse:collapse; margin:9px 0 4px; font-size:8.4pt; }
+  th{
+    text-align:left; font-size:7.2pt; letter-spacing:.11em; text-transform:uppercase;
+    font-weight:700; color:var(--muted); border-bottom:1.5px solid var(--ink);
+    padding:0 8px 5px 0; vertical-align:bottom;
+  }
+  td{ padding:6px 8px 6px 0; border-bottom:1px solid var(--rule); vertical-align:top; line-height:1.42; }
+  tr:last-child td{ border-bottom:0; }
+  td.q, td.n{ font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; font-weight:700; color:var(--kraft); white-space:nowrap; }
+  td.does{ font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; font-size:8.1pt; }
+  .t-narrow th:first-child, .t-narrow td:first-child{ width:30px; }
+  .t-time td:first-child{
+    width:46px; font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-weight:700; font-size:8.6pt; font-variant-numeric:tabular-nums;
+  }
+  .fill td{ height:19px; }
+
+  /* ---------- roles ---------- */
+  .roles{ display:flex; gap:8px; margin:10px 0 4px; }
+  .role{ flex:1; background:var(--tint); padding:9px 10px; border-bottom:2px solid var(--kraft); }
+  .role-n{ font-size:9pt; font-weight:700; margin-bottom:3px; }
+  .role-d{ font-size:8pt; line-height:1.4; }
+
+  /* ---------- notes ---------- */
+  .note{
+    border-left:3px solid var(--flame); background:#fdf8f0;
+    padding:9px 12px; margin:11px 0 4px; font-size:8.6pt; line-height:1.45;
+  }
+  .note b{ font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; font-size:8pt; letter-spacing:.04em; }
+
+  .finding{ margin:9px 0 4px; }
+  .finding-row{ display:flex; gap:10px; padding:7px 0; border-bottom:1px solid var(--rule); }
+  .finding-row:last-child{ border-bottom:0; }
+  .f-tag{
+    flex:0 0 78px; font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size:7pt; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+    color:#fff; background:var(--ink); padding:3px 5px; height:fit-content; text-align:center;
+  }
+  .f-body{ flex:1; font-size:8.6pt; line-height:1.45; }
+  .f-body b{ font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; font-size:8.4pt; }
+
+  footer{ margin-top:20px; padding-top:8px; border-top:1px solid var(--rule); font-size:7.2pt; color:var(--muted); }
+
+  .pb{ page-break-before:always; }
+  .avoid{ page-break-inside:avoid; }
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="eyebrow">DECO7230 · Week 2 Studio · Low-Fidelity Prototyping</div>
+  <h1>XR Renovation Previewer
+    <span class="sub">Low-fidelity prototype and test plan</span>
+  </h1>
+  <div class="byline"><strong>Kaike Nehme</strong> · 7 August 2026 · Digital Prototyping and Extended Reality</div>
+</div>
+
+<h2><span class="num">01</span>The concept</h2>
+<p class="lede">Phone apps for previewing a renovation — Dulux Visualizer, Houzz, IKEA Kreativ — all fail the same way. They show a candidate colour as a flat rectangle on a six-inch screen, lit by a generic renderer, detached from the room it is meant to go in. The three things that actually decide whether a renovation works are all spatial: <b>scale</b>, <b>adjacency</b> to what you are keeping, and <b>light</b>.</p>
+
+<div class="pitch">
+  This project is a phone paint-visualiser app, <b>but using XR</b> so you can hold a sample up against the surfaces you are <b>keeping</b>, at full size, in your own light. You pull samples directly off the things staying in the room — the floor, the sofa — and those samples generate what works with them. Nothing is picked from a catalogue: the room you already have decides what fits.
+</div>
+
+<div class="focus avoid">
+  <div class="eyebrow">The one part being prototyped today</div>
+  <div class="loop">Pull a sample off something you're <em>keeping</em> &nbsp;→&nbsp; hold it up against something you're <em>changing</em> &nbsp;→&nbsp; rotate to vary it &nbsp;→&nbsp; release to commit</div>
+  <div class="not"><b>Not</b> tested today: scheme comparison · marking keep/change · MR passthrough · colour-harmony maths · anything involving the headset.</div>
+</div>
+
+<h2><span class="num">02</span>The physical prototype</h2>
+
+<div class="plates avoid">
+  <div class="plate">
+    <img src="IMG1_B64" alt="Cardboard living room, front view">
+    <div class="cap"><b>Plate 1 — front.</b> Two hinged paper walls, one scribbled red and one green. Card and playdoh furniture on a paper floor.</div>
+  </div>
+  <div class="plate">
+    <img src="IMG2_B64" alt="Cardboard living room, eye level">
+    <div class="cap"><b>Plate 2 — eye level.</b> Viewed from inside the room, at the height a seated occupant would judge the space from.</div>
+  </div>
+</div>
+
+<h3>What it is made of</h3>
+<table class="key">
+  <tr>
+    <td class="sw"><span style="background:#c0392b"></span></td>
+    <td class="kn">Red wall</td><td class="kr">changeable</td>
+    <td>Paper panel, hand-scribbled. Lifts off and is swapped by the wizard to simulate a colour change.</td>
+  </tr>
+  <tr>
+    <td class="sw"><span style="background:#8dc63f"></span></td>
+    <td class="kn">Green wall</td><td class="kr">changeable</td>
+    <td>Second panel at right angles, so two candidate colours can be judged in one glance.</td>
+  </tr>
+  <tr>
+    <td class="sw"><span style="background:#b08968"></span></td>
+    <td class="kn">Card armchair</td><td class="kr">kept</td>
+    <td>Left as bare kraft card — uncoloured, so it reads as the existing furniture that is staying. The sample source.</td>
+  </tr>
+  <tr>
+    <td class="sw"><span style="background:#a4d233"></span></td>
+    <td class="kn">Playdoh sofa</td><td class="kr">changeable</td>
+    <td>Moulded by hand. Colour deliberately matched to the green wall — tests whether the loop reads the same on furniture as on walls.</td>
+  </tr>
+  <tr>
+    <td class="sw"><span style="background:#c9a08a"></span></td>
+    <td class="kn">Card table</td><td class="kr">changeable</td>
+    <td>Corrugated card, scribbled red to match the red wall. The second half of the coordination test.</td>
+  </tr>
+  <tr>
+    <td class="sw"><span style="background:#e8912a"></span></td>
+    <td class="kn">LED tea lights ×2</td><td class="kr">light</td>
+    <td>Warm point sources at floor level, against cool ambient room light.</td>
+  </tr>
+</table>
+
+<h3>What emerged from building it</h3>
+
+<div class="finding avoid">
+  <div class="finding-row">
+    <div class="f-tag">Light</div>
+    <div class="f-body"><b>The tea lights were not planned, and they are the most valuable thing here.</b> In both plates the red wall reads warm orange near the flame and cool pink further away — the same paper, two apparent colours. This is precisely the affordance the concept claims XR has over a phone, demonstrated in cardboard before a line of code exists.</div>
+  </div>
+  <div class="finding-row">
+    <div class="f-tag">Matching</div>
+    <div class="f-body"><b>Coordination happened by hand, unprompted.</b> The sofa was matched to the green wall and the table to the red one while building. The instinct the concept is designed around turned up on its own, which is weak but real evidence that the premise is sound.</div>
+  </div>
+  <div class="finding-row">
+    <div class="f-tag">Materials</div>
+    <div class="f-body"><b>Three materials, three jobs.</b> Paper = the changeable surface. Card = the fixed structure. Playdoh = form that can be reshaped as well as recoloured, which raises a question the digital version has not answered: should furniture be re-<i>shapeable</i>, or only recolourable?</div>
+  </div>
+</div>
+
+<div class="note avoid">
+  <b>ADD BEFORE TESTING —</b> the card armchair must be visibly labelled as <b>staying</b>. If nothing marks it, participants cannot discover a rule the prototype does not express, and question Q1 below returns a false negative. A strip of tape or a written label is enough.
+</div>
+
+<h2><span class="num">03</span>The interaction being tested</h2>
+
+<div class="steps avoid">
+  <div class="step">
+    <div class="step-n">STEP 01</div>
+    <div class="step-t">Pull</div>
+    <div class="step-d">Touch a surface you are keeping — the bare card armchair — and draw your hand away. A sample of its colour comes with you.</div>
+  </div>
+  <div class="step">
+    <div class="step-n">STEP 02</div>
+    <div class="step-t">Hold up</div>
+    <div class="step-d">Raise the sample toward a surface you want to change. As it nears, that surface previews the colour behind it.</div>
+  </div>
+  <div class="step">
+    <div class="step-n">STEP 03</div>
+    <div class="step-t">Tune</div>
+    <div class="step-d">Rotate the sample in your hand to move through the range that works with the thing you pulled it from. Warmer, cooler, deeper.</div>
+  </div>
+  <div class="step">
+    <div class="step-n">STEP 04</div>
+    <div class="step-t">Commit</div>
+    <div class="step-d">Release. The preview becomes the surface. Move away without releasing and it reverts.</div>
+  </div>
+</div>
+
+<p style="font-size:8.6pt;margin-top:9px;">There are no menus anywhere in that loop. Every change is a physical act on the thing being changed — a direct response to the brief's warning that XR interactions must not be "limited to simply pushing VR buttons".</p>
+
+<h2><span class="num">04</span>What we need to find out</h2>
+
+<table class="t-narrow avoid">
+  <thead><tr><th></th><th>Question</th><th>If the answer is no</th></tr></thead>
+  <tbody>
+    <tr><td class="q">Q1</td><td>Do people work out that samples come from the things being <b>kept</b>?</td><td>Kept surfaces need a visual affordance</td></tr>
+    <tr><td class="q">Q2</td><td>Is holding a sample <b>near</b> a surface understood as "preview"?</td><td>Proximity-preview fails; needs an explicit trigger</td></tr>
+    <tr><td class="q">Q3</td><td>Do people <b>rotate</b> the sample to ask for a variation?</td><td>Twist-to-tune is arbitrary — cut it or redesign it</td></tr>
+    <tr><td class="q">Q4</td><td>Does the same gesture read correctly for <b>furniture</b> as for walls?</td><td>The loop does not generalise; scope is at risk</td></tr>
+    <tr><td class="q">Q5</td><td>Do <b>fewer, constrained</b> options feel helpful or restrictive?</td><td>The core premise is wrong</td></tr>
+  </tbody>
+</table>
+
+<h3>Assumptions under challenge</h3>
+<table class="t-narrow avoid">
+  <tbody>
+    <tr><td class="q">A1</td><td><b>Discoverability.</b> The loop can be performed without instruction.</td></tr>
+    <tr><td class="q">A2</td><td><b>Constraint as help.</b> Generating options from what is staying <i>reduces</i> choice paralysis rather than causing frustration.</td></tr>
+  </tbody>
+</table>
+<p style="font-size:8.6pt;">Q5 / A2 matters most. It can genuinely fail, and a failure is a finding worth reporting — not a problem to hide.</p>
+
+<h2><span class="num">05</span>Methodology</h2>
+<p><b>Wizard-of-Oz play-acting on a physical low-fidelity prototype.</b> A second person acts as the system: when the participant performs a gesture, the wizard physically swaps the paper to produce what the app <i>would</i> have done. The participant is never told how it works. This tests the interaction model before any code exists — and discoverability cannot be measured if you explain the interface first.</p>
+
+<div class="roles avoid">
+  <div class="role"><div class="role-n">Participant</div><div class="role-d">Uses the prototype. Thinks aloud throughout.</div></div>
+  <div class="role"><div class="role-n">Wizard</div><div class="role-d">Silently swaps paper per the rules. Never explains.</div></div>
+  <div class="role"><div class="role-n">Observer</div><div class="role-d">Times, tallies, records verbatim quotes. Says nothing.</div></div>
+</div>
+
+<h3>Wizard response rules — follow exactly, every run</h3>
+<table class="avoid">
+  <thead><tr><th style="width:44%">Participant does</th><th>Wizard does</th></tr></thead>
+  <tbody>
+    <tr><td class="does">Holds a swatch <b>near</b> a surface</td><td>Swap that surface's panel to the swatch colour. Hold it there.</td></tr>
+    <tr><td class="does">Moves the swatch <b>away</b></td><td>Put the original panel back.</td></tr>
+    <tr><td class="does"><b>Rotates</b> the swatch in hand</td><td>Hand over a different swatch from the same harmony set.</td></tr>
+    <tr><td class="does"><b>Releases</b> it onto a surface</td><td>Leave the new panel in place — committed.</td></tr>
+    <tr><td class="does"><b>Taps or presses</b> a surface</td><td>Do nothing. Observer records it.</td></tr>
+    <tr><td class="does">Touches the <b>kept</b> armchair</td><td>Hand them a swatch matching its colour.</td></tr>
+    <tr><td class="does">Tries to sample a <b>changeable</b> surface</td><td>Do nothing. Observer records it.</td></tr>
+    <tr><td class="does"><b>Asks how it works</b></td><td>"What would you expect?" Nothing more.</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num">06</span>Step-by-step testing process</h2>
+<p style="font-size:8.6pt;">One run ≈ 6 min 30 s. Aim for three to four runs. Reset the room to its starting state between participants and photograph it, so everyone begins identically.</p>
+
+<table class="t-time avoid">
+  <thead><tr><th>Time</th><th style="width:30%">Step</th><th>Script and what is observed</th></tr></thead>
+  <tbody>
+    <tr><td>0:30</td><td><b>Setup</b></td><td>Room on table, kept item labelled, swatch deck to one side. Reset any previous changes.</td></tr>
+    <tr><td>0:30</td><td><b>Brief</b></td><td>"This is a living room. The armchair is staying. Everything else can change. Think out loud." <b>Nothing about how it works.</b></td></tr>
+    <tr><td>1:30</td><td><b>Free exploration</b></td><td>No task given. Observe first actions, whether they touch the kept item, whether they try to tap. → D1, D2, D4, D6</td></tr>
+    <tr><td>2:00</td><td><b>Task 1 — colour</b></td><td>"Change the room so it works with the armchair you're keeping." Wizard responds per rules. → D3, D5, D7</td></tr>
+    <tr><td>1:00</td><td><b>Task 2 — furniture</b></td><td>"Now change a piece of furniture the same way." Tests Q4.</td></tr>
+    <tr><td>1:00</td><td><b>Post-task</b></td><td>D8, then: "What did you think would happen when you held the card up?" and "Where did you think the colours came from?"</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num">07</span>Data collected and how</h2>
+<table class="t-narrow avoid">
+  <thead><tr><th></th><th style="width:44%">Measure</th><th>Type</th><th>Captured by</th></tr></thead>
+  <tbody>
+    <tr><td class="n">D1</td><td>First three actions attempted, in order</td><td>sequence</td><td>Observer writes them down</td></tr>
+    <tr><td class="n">D2</td><td>Time to first correct pull from the kept item</td><td>seconds</td><td>Phone stopwatch</td></tr>
+    <tr><td class="n">D3</td><td>Prompts needed before the loop was performed</td><td>tally</td><td>Observer</td></tr>
+    <tr><td class="n">D4</td><td>Tried to tap or press instead of holding up?</td><td>yes / no</td><td>Observer</td></tr>
+    <tr><td class="n">D5</td><td>Rotated the swatch unprompted?</td><td>yes / no</td><td>Observer</td></tr>
+    <tr><td class="n">D6</td><td>Tried to sample a <i>changeable</i> surface?</td><td>yes / no</td><td>Observer</td></tr>
+    <tr><td class="n">D7</td><td>Confusion quotes, verbatim</td><td>qualitative</td><td>Observer, in the participant's own words</td></tr>
+    <tr><td class="n">D8</td><td>"Did fewer options feel helpful or restrictive?" 1–5 + why</td><td>mixed</td><td>Asked after the task</td></tr>
+    <tr><td class="n">D9</td><td>Photograph of each configuration produced</td><td>visual</td><td>Phone</td></tr>
+  </tbody>
+</table>
+<p style="font-size:8.6pt;">D7 and D8 carry the most weight. Numbers from three or four participants prove nothing statistically — the value is entirely in <i>why</i> people got stuck.</p>
+
+<h2><span class="num">08</span>Results — completed during the session</h2>
+<table class="avoid">
+  <thead><tr><th style="width:40%">Measure</th><th>P1</th><th>P2</th><th>P3</th><th>P4</th></tr></thead>
+  <tbody class="fill">
+    <tr><td>D1 &nbsp;First three actions</td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>D2 &nbsp;Time to first correct pull</td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>D3 &nbsp;Prompts needed</td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>D4 &nbsp;Tapped instead of held up?</td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>D5 &nbsp;Rotated unprompted?</td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>D6 &nbsp;Sampled a changeable surface?</td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>D8 &nbsp;Helpful / restrictive (1–5)</td><td></td><td></td><td></td><td></td></tr>
+  </tbody>
+</table>
+
+<table class="t-narrow avoid" style="margin-top:14px;">
+  <thead><tr><th></th><th style="width:38%">Finding</th><th>Evidence</th></tr></thead>
+  <tbody class="fill">
+    <tr><td class="q">Q1</td><td>Samples come from kept things</td><td></td></tr>
+    <tr><td class="q">Q2</td><td>Proximity reads as preview</td><td></td></tr>
+    <tr><td class="q">Q3</td><td>Rotation reads as "vary it"</td><td></td></tr>
+    <tr><td class="q">Q4</td><td>Works for furniture too</td><td></td></tr>
+    <tr><td class="q">Q5</td><td>Constraint helps vs restricts</td><td></td></tr>
+  </tbody>
+</table>
+
+<div class="note avoid" style="margin-top:16px;">
+  <b>WHAT CHANGED AS A RESULT —</b> this is the actual deliverable. Criterion 3 of the Design Concept Report rewards showing how the initial idea was <b>refined</b>, not how right it was to begin with. A gesture that failed and was redesigned scores better than one asserted to be perfect from the start.
+</div>
+
+<footer>
+  XR Renovation Previewer · Low-fidelity prototype and test plan · Kaike Nehme · DECO7230 Week 2 Studio · 7 August 2026
+</footer>
+
+</body>
+</html>
