@@ -140,16 +140,34 @@ D7 and D8 carry the most weight. Numbers from three or four participants prove n
 
 ## 9. What changed as a result
 
-*This section is the deliverable.* Criterion 3 of the Design Concept Report rewards showing how the initial idea was **refined**, not how right it was to begin with. A gesture that failed and was redesigned scores better than one asserted to be perfect.
+*This section is the deliverable.* Criterion 3 of the Design Concept Report rewards showing how the initial idea was **refined**, not how right it was to begin with.
 
-**Changed:**
+**Nature of the data.** The studio session produced qualitative design feedback from peers viewing and handling the prototype, not a full Wizard-of-Oz run against the protocol in §6. Measures D1–D8 were therefore not captured, and questions Q1–Q5 remain open — they carry forward to IP1 in Week 5. What follows is peer critique, which is weaker evidence than observed behaviour but sufficient to redirect the design before any code is written.
 
--
+### Changed
 
-**Kept, and why the testing supports it:**
+**1. Light control promoted from "not in scope" to a first-class IP1 interaction.**
+Peers asked for the ability to turn lights on and off. This was not in the concept — the tea lights were an unplanned addition during building. The request confirms the concept's central claim (that real light is what phone previews cannot show) arrived at independently by someone who did not know that was the claim.
 
--
+Implemented as a **diegetic control**, not a menu: a lamp you reach out and touch, or a switch on the wall. Extended beyond on/off to three states — *warm bulb / cool bulb / daylight* — which makes "does this green still work at 9pm under a warm bulb?" a testable question at no extra interaction cost.
 
-**Still unresolved, to test in IP1:**
+**2. Furniture repositioning confirmed as a genuine need, and scheduled.**
+Peers asked to rotate furniture more easily. The initial reading was that this might be an artefact of the tabletop scale — participants could not walk around the model, so spinning the object was the only way to see another angle. Checking with the session, the intent was **actual repositioning**: a layout decision, not a viewing problem.
 
--
+Grab, move and rotate therefore becomes a real system, scheduled for **IP2a in Week 9**. Explicitly excluded from IP1 so it does not compete with light for build time on a hurdle assessment.
+
+**3. VR↔MR switching reframed from a phase boundary into a product feature.**
+Peers asked for an easy way to change between the VR and MR environments. The plan already moved from VR (IP1, IP2a) to MR (IP2b) across prototypes, but as a one-way progression. The feedback reframes it as a **runtime toggle**: view the same scheme in your real room via passthrough, then in an idealised virtual version of it — honest versus aspirational, the difference between a photograph and a magazine.
+
+Assigned to **IP2b**, where it doubles as the "significantly different interactions" the brief requires of that prototype.
+
+### Kept, unchanged
+
+- **The core loop** — pull from a kept surface, hold up to preview, rotate to tune, release to commit. No feedback challenged it.
+- **Constraint-generated options.** Nothing in this session tested it. It remains the single most important open question, and A2 is where IP1's testing time should go.
+
+### Still unresolved — carried to IP1
+
+- Q1–Q5 in full. This session produced design direction, not protocol data.
+- Whether *tuning* rotation (twist the sample) and *layout* rotation (turn the sofa) can share a gesture vocabulary without collision, now that both exist.
+- Whether three lighting states is enough, or whether continuous time-of-day is needed.

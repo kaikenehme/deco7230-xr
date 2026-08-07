@@ -1,7 +1,7 @@
-# XR Renovation Previewer — Concept Design (v1)
+# XR Renovation Previewer — Concept Design (v1.1)
 
 **DECO7230 · Semester 2, 2026 · Kaike Nehme**
-**Status:** v1, written before the low-fi paper prototype session. Expected to change — those changes are the ideation evidence for Criterion 3.
+**Status:** v1.1 — revised 7 Aug 2026 after Week 2 studio peer feedback. Three additions accepted (light control, furniture layout, VR↔MR toggle); the core interaction loop unchanged. Revision history is the ideation evidence for Criterion 3.
 
 ---
 
@@ -72,9 +72,15 @@ The brief is explicit that this is "not a final product with all the functionali
 
 | | Modality | Genuinely functional | Present but shallow |
 |---|---|---|---|
-| **IP1** Wk 5 | VR, Quest, **controllers** | Full loop — mark, pull, hold, tune, commit — **on walls only** | Furniture as static props; one alternate material displayed but not swappable |
-| **IP2a** Wk 9 | VR | Whatever IP1's data shows is weakest, rebuilt properly, plus scheme comparison | — |
-| **IP2b** Wk 12 | **MR passthrough** | Same loop, pulling samples off the participant's **real** floor and furniture | — |
+| **IP1** Wk 5 | VR, Quest, **controllers** | Full loop — mark, pull, hold, tune, commit — **on walls only** · **diegetic light control** (warm / cool / daylight) | Furniture as static props; one alternate material displayed but not swappable |
+| **IP2a** Wk 9 | VR | Whatever IP1's data shows is weakest, rebuilt properly · scheme comparison · **furniture grab, move and rotate** | — |
+| **IP2b** Wk 12 | **MR passthrough** | Same loop, pulling samples off the participant's **real** floor and furniture · **runtime VR↔MR toggle** | — |
+
+**Three additions came from Week 2 studio peer feedback** — see [`2026-08-07-lowfi-prototype-test-plan.md` §9](2026-08-07-lowfi-prototype-test-plan.md):
+
+- **Light control into IP1.** Peers independently asked for it after seeing two LED tea lights on the cardboard model, which confirms the concept's central claim from outside. Built as a lamp you touch or a wall switch — never a floating button — so the no-menus rule holds. Three states rather than on/off, because "does this green survive a warm bulb at 9pm?" is the question worth asking.
+- **Furniture repositioning into IP2a.** Peers asked to rotate furniture; the intent was genuine layout change, not a viewing workaround. Grab/move/rotate is its own system and is kept out of IP1 so it cannot compete with light for build time on a hurdle.
+- **VR↔MR as a runtime toggle in IP2b.** Originally a one-way progression across prototypes; peers wanted to switch at will. Comparing a scheme in the real room against an idealised virtual one — honest versus aspirational — also serves as the "significantly different" interaction IP2b demands.
 
 IP1 scene: one room. **Keeping** — timber floor, a sofa. **Changing** — four walls, ceiling, trim, door.
 
@@ -153,9 +159,9 @@ Paper sheet per participant, one row per measure. Quest headset screen-recording
 
 Standardised instruments (SUS, presence questionnaires) are deliberately excluded from IP1: they are built for longer sessions and would report noise at five minutes. They belong in IP2b, where the brief points to them directly.
 
-## 11. Open — to be resolved by the paper prototype
+## 11. Open questions
 
-The low-fi session should play-act the gestures rather than only build the room, and each of these should come back answered:
+The Week 2 studio session produced **peer design feedback, not protocol data** — the Wizard-of-Oz run was not executed against the timed protocol, so no behavioural measures were captured. The interaction questions therefore remain open and carry to IP1 in Week 5:
 
 1. Does **twist-to-tune** feel natural when physically performed, or arbitrary?
 2. Is **proximity-preview** legible without instruction, or does it need a visible trigger?
@@ -163,7 +169,12 @@ The low-fi session should play-act the gestures rather than only build the room,
 4. Does pulling a sample off a kept surface read as obvious, or does it need a visual cue on kept surfaces?
 5. Do three schemes feel like enough for comparison?
 
-Whatever changes as a result gets recorded in the concept report as the refinement evidence Criterion 3 requires.
+Two further questions arise from the accepted feedback:
+
+6. Can **tuning rotation** (twisting the held sample) and **layout rotation** (turning a piece of furniture) share a gesture vocabulary without colliding, now that both exist?
+7. Are three lighting states sufficient, or is continuous time-of-day needed to make the light claim properly testable?
+
+Question 6 is the one to watch. Two different meanings for the same wrist movement, distinguished only by what is in your hand, is exactly the kind of ambiguity that reads as a bug to a participant.
 
 ## 12. Risks
 
