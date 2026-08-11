@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Design Concept Report — XR Renovation Previewer</title>
+<style>
+  @page { size: A4; margin: 13mm 14mm 11mm 14mm; }
+  :root{
+    --ink:#16130f; --muted:#7a7167; --kraft:#b08968;
+    --red:#c0392b; --green:#6fa03c; --flame:#e8912a;
+    --tint:#faf7f2; --rule:#e5ded4;
+  }
+  *{ box-sizing:border-box; }
+  html{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  body{ margin:0; font-family:Georgia,"Times New Roman",serif; font-size:8.1pt; line-height:1.36; color:var(--ink); }
+  h1,h2,h3,.eyebrow,th,.step-t,.step-n,.tag{ font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; }
+
+  .masthead{ border-bottom:2.5px solid var(--ink); padding-bottom:6px; margin-bottom:10px; }
+  .eyebrow{ font-size:6.6pt; letter-spacing:.17em; text-transform:uppercase; color:var(--muted); font-weight:700; margin-bottom:5px; }
+  h1{ font-size:15.5pt; line-height:1.1; margin:0; letter-spacing:-.015em; font-weight:700; }
+  h1 .sub{ display:block; font-size:9.4pt; font-weight:400; color:var(--muted); margin-top:3px; letter-spacing:0; }
+  .byline{ font-size:7.2pt; color:var(--muted); margin-top:6px; }
+  .byline strong{ color:var(--ink); font-weight:600; }
+
+  h2{ font-size:7.2pt; letter-spacing:.14em; text-transform:uppercase; font-weight:700;
+      margin:9px 0 5px; padding-bottom:3px; border-bottom:1px solid var(--rule);
+      page-break-after:avoid; break-after:avoid; }
+  h2 .num{ color:var(--kraft); margin-right:6px; }
+  h3{ font-size:8.1pt; margin:7px 0 3px; font-weight:700; page-break-after:avoid; break-after:avoid; }
+  p{ margin:0 0 5px; }
+  table,.steps,.plates,.note{ page-break-inside:avoid; break-inside:avoid; }
+
+  table{ width:100%; border-collapse:collapse; margin:6px 0 3px; font-size:8pt; }
+  th{ text-align:left; font-size:6.4pt; letter-spacing:.1em; text-transform:uppercase; font-weight:700;
+      color:var(--muted); border-bottom:1.4px solid var(--ink); padding:0 7px 3px 0; vertical-align:bottom; }
+  td{ padding:3px 7px 3px 0; border-bottom:1px solid var(--rule); vertical-align:top; line-height:1.33; }
+  tr:last-child td{ border-bottom:0; }
+  td.k{ font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; font-weight:700; color:var(--kraft); white-space:nowrap; }
+  td.b{ font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; font-weight:700; font-size:7.8pt; }
+
+  .cat{ display:inline-block; background:var(--ink); color:#fff; font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+        font-size:6.6pt; font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:2.5px 6px; }
+
+  .steps{ display:flex; gap:4px; margin:7px 0 3px; }
+  .step{ flex:1; border:1px solid var(--rule); border-top:2.2px solid var(--kraft); padding:6px 6px 7px; }
+  .step-n{ font-size:6.2pt; font-weight:700; color:var(--kraft); letter-spacing:.09em; }
+  .step-t{ font-size:8pt; font-weight:700; margin:2px 0 3px; }
+  .step-d{ font-size:7.1pt; line-height:1.34; color:#3d372f; }
+
+  .plates{ display:flex; gap:7px; margin:7px 0 3px; }
+  .plate{ flex:1; }
+  .plate img{ width:100%; height:33mm; object-fit:cover; object-position:50% 44%; display:block; border:1px solid var(--rule); }
+  .cap{ font-size:6.7pt; color:var(--muted); margin-top:3px; line-height:1.3; }
+  .cap b{ color:var(--ink); font-weight:600; }
+
+  .note{ border-left:2.5px solid var(--flame); background:#fdf8f0; padding:6px 9px; margin:7px 0 3px; font-size:7.8pt; line-height:1.4; }
+  .note b{ font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; font-size:7.4pt; letter-spacing:.03em; }
+
+  .two{ display:flex; gap:14px; }
+  .two > div{ flex:1; }
+
+  footer{ margin-top:10px; padding-top:5px; border-top:1px solid var(--rule); font-size:6.6pt; color:var(--muted); }
+  .pb{ page-break-before:always; }
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="eyebrow">DECO7230 · Design Concept Report · Submission 1</div>
+  <h1>XR Renovation Previewer
+    <span class="sub">Redesigning the phone paint-visualiser as an embodied XR tool</span>
+  </h1>
+  <div class="byline"><strong>Kaike Nehme</strong> · Semester 2, 2026 · Digital Prototyping and Extended Reality</div>
+</div>
+
+<h2><span class="num">01</span>The application, and why it needs XR</h2>
+<p><span class="cat">Category — Creation</span></p>
+<p style="margin-top:6px;">The application being redesigned is the <b>phone renovation-preview app</b> — Dulux Visualizer, Houzz, IKEA Kreativ, Home Depot Project Color. These are interior-design and space-planning tools: the user creates a scheme for a room they are about to change.</p>
+<p>They all fail in the same way. A candidate colour or finish is shown as a flat rectangle on a six-inch screen, rendered under generic lighting and detached from the room it is destined for. Yet the three variables that actually determine whether a renovation succeeds are all spatial:</p>
+<table>
+  <tr><td class="b" style="width:74px">Scale</td><td>Colour is perceived differently across a whole wall than in a thumbnail. A phone systematically misrepresents it.</td></tr>
+  <tr><td class="b">Adjacency</td><td>What matters is how a candidate sits <i>next to</i> the floor, sofa or benchtop being kept — not in an isolated swatch grid.</td></tr>
+  <tr><td class="b">Light</td><td>The variable that ruins real renovations. A phone shows one flat lighting condition; a room has many, and they change through the day.</td></tr>
+</table>
+<p>Each is a property of <i>being in the space at full size</i>. This is therefore a genuine redesign rather than a port — XR supplies what the phone app structurally cannot.</p>
+
+<h2><span class="num">02</span>User tasks and goals</h2>
+<table>
+  <thead><tr><th style="width:16px"></th><th style="width:41%">Task</th><th>Goal</th></tr></thead>
+  <tbody>
+    <tr><td class="k">T1</td><td>Distinguish what is staying in the room from what is changing</td><td>Establish the constraint set that any scheme must satisfy — most renovations are not blank slates</td></tr>
+    <tr><td class="k">T2</td><td>Evaluate a candidate finish against a fixed element, in place, at full size, under the room's own light</td><td>Judge a single choice with the context that actually decides it, rather than in isolation</td></tr>
+    <tr><td class="k">T3</td><td>Assemble and compare complete schemes that all respect that same constraint</td><td>Commit to a whole-room direction instead of a sequence of unrelated individual colours</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num">03</span>The XR concept</h2>
+<p><b>Immersive environment.</b> A domestic interior — one room. In the early prototypes this is a modelled virtual living room; in the final prototype it is the user's <i>own</i> room, seen through Meta Quest passthrough, so the fixed elements being designed around are real.</p>
+<p><b>The central idea.</b> You do not choose from a catalogue. You <b>pull a sample directly off something you are keeping</b> — the timber floor, the sofa — and that sample generates the range of finishes that work with it. The constraint that already exists in the room becomes the thing that produces the options, which removes both the menu and the choice paralysis in one move.</p>
+
+<div class="steps">
+  <div class="step"><div class="step-n">STEP 01</div><div class="step-t">Mark</div><div class="step-d">Sweep an open hand across each surface to tag it as staying or changing.</div></div>
+  <div class="step"><div class="step-n">STEP 02</div><div class="step-t">Pull</div><div class="step-d">Touch a kept surface and draw your hand away. A sample of it comes with you.</div></div>
+  <div class="step"><div class="step-n">STEP 03</div><div class="step-t">Hold up</div><div class="step-d">Raise it toward a changeable surface. As it nears, that surface previews the colour.</div></div>
+  <div class="step"><div class="step-n">STEP 04</div><div class="step-t">Tune</div><div class="step-d">Twist your wrist to move through the range that works with the source. Warmer, cooler, deeper.</div></div>
+  <div class="step"><div class="step-n">STEP 05</div><div class="step-t">Commit</div><div class="step-d">Release. Move away without releasing and the preview reverts.</div></div>
+</div>
+<p style="margin-top:6px;">There is no menu anywhere in that sequence. Lighting is controlled the same way — by touching a lamp or a wall switch, cycling warm bulb, cool bulb and daylight — so that every control is an object in the room rather than an interface laid over it.</p>
+
+<h2><span class="num">04</span>XR interactions and affordances</h2>
+<table>
+  <thead><tr><th style="width:24%">Affordance</th><th style="width:38%">What the user does</th><th>Why the phone cannot do this</th></tr></thead>
+  <tbody>
+    <tr><td class="b">Full-scale judgement</td><td>Stands in the room and sees a candidate across an entire wall</td><td>Colour perception is scale-dependent; a thumbnail is not a smaller version of the same experience</td></tr>
+    <tr><td class="b">Physical adjacency</td><td>Holds a sample so it visually touches the floor being kept</td><td>A phone can only place them side by side in a grid, never in contact in real space</td></tr>
+    <tr><td class="b">Real and variable light</td><td>Touches a lamp to switch between warm bulb, cool bulb and daylight</td><td>The app renders one fixed lighting condition, so the decision is made under light that will never exist</td></tr>
+    <tr><td class="b">Proprioceptive comparison</td><td>Holds the sample at arm's length, moves it into shadow, into the corner</td><td>This is already how people judge samples in shops. A touchscreen cannot recruit the arm at all</td></tr>
+    <tr><td class="b">Embodied parameter control</td><td>Rotates the wrist to travel a constrained colour range</td><td>Replaces a scrollable palette with a continuous physical movement through options that are already known to work</td></tr>
+    <tr><td class="b">Viewpoint by locomotion</td><td>Walks to where the sofa sits and looks back at the wall</td><td>Colour and finish shift with viewing angle and distance; a fixed camera hides this entirely</td></tr>
+  </tbody>
+</table>
+
+<h2><span class="num">05</span>Ideation and refinement</h2>
+<p>The initial idea was simply <i>"recolour the walls of a room in VR."</i> It reached its current form through two rounds of refinement.</p>
+
+<h3>Round 1 — low-fidelity physical prototype</h3>
+<p>A living room was built from paper, cardboard and playdoh in the Week 2 Studio — two hinged paper walls scribbled red and green, a bare kraft-card armchair, a playdoh sofa, a card table, two LED tea lights. Building it produced two unplanned findings:</p>
+<div class="plates">
+  <div class="plate"><img src="IMG1_B64" alt="Cardboard living room, front view">
+    <div class="cap"><b>Plate 1.</b> The same red paper reads warm orange beside the flame and cool pink away from it — one surface, two apparent colours.</div></div>
+  <div class="plate"><img src="IMG2_B64" alt="Cardboard living room at eye level">
+    <div class="cap"><b>Plate 2.</b> At eye level. The playdoh sofa was matched to the green wall and the card table to the red one, unprompted.</div></div>
+</div>
+<table style="margin-top:5px;">
+  <tr><td class="b" style="width:74px">Light</td><td>The tea lights were an afterthought, and became the most useful element. They demonstrated the concept's central claim — that apparent colour depends on light — in cardboard, before any code existed. Light control was promoted from "out of scope" to a core interaction.</td></tr>
+  <tr><td class="b">Matching</td><td>Furniture was coordinated to wall colours by hand while building, without being planned. The behaviour the concept is designed to support appeared spontaneously, which is weak but real support for the premise.</td></tr>
+</table>
+
+<h3>Round 2 — peer critique in Studio</h3>
+<p>Three requests came from peers, each phrased as a request for a button. Two had a better answer underneath:</p>
+<table>
+  <tr><td class="b" style="width:96px">Light on/off</td><td><b>Adopted, reframed.</b> Implemented as a lamp you touch rather than a menu button, and extended to three states so that "does this green survive a warm bulb at 9pm?" becomes answerable.</td></tr>
+  <tr><td class="b">Rotate furniture</td><td><b>Adopted, deferred.</b> Initially read as an artefact of tabletop scale — you cannot walk around a model on a desk. Checking with participants established the intent was genuine layout change, so it becomes its own system in a later prototype rather than a control bolted onto this one.</td></tr>
+  <tr><td class="b">Switch VR / MR</td><td><b>Adopted, promoted.</b> Originally a one-way progression between prototypes; reframed as a live switch, letting a scheme be compared in the real room against an idealised virtual version of it.</td></tr>
+</table>
+<p>The core loop was not challenged in either round and is carried forward unchanged.</p>
+
+<h2><span class="num">06</span>Initial testing plan</h2>
+<p><b>What will be tested.</b> The sample loop — pull from a kept surface, hold up to preview, twist to tune, release to commit — and the constraint mechanism that generates options from the kept surfaces. Scheme comparison, layout editing and passthrough are excluded from this first round.</p>
+
+<table>
+  <thead><tr><th style="width:16px"></th><th style="width:34%">Assumption</th><th>What would invalidate it</th></tr></thead>
+  <tbody>
+    <tr><td class="k">A1</td><td><b>Discoverability.</b> The loop can be performed without instruction</td><td>Participants tap or press surfaces, hunt for a menu, or need prompting before completing a single change</td></tr>
+    <tr><td class="k">A2</td><td><b>Constraint as help.</b> Generating options from what is staying reduces choice paralysis rather than causing frustration</td><td>Participants report the options as restrictive, ask for a full palette, or abandon the constraint when offered the chance</td></tr>
+  </tbody>
+</table>
+<p style="margin-top:5px;">A2 is the decisive one. The entire concept rests on it, and it can genuinely fail — an invalidation would be a substantive finding rather than a setback.</p>
+
+<h3>Data to be collected</h3>
+<table>
+  <thead><tr><th style="width:47%">Measure</th><th style="width:20%">Type</th><th>Method</th></tr></thead>
+  <tbody>
+    <tr><td>Time to first unprompted successful change</td><td>quantitative</td><td>Observer, stopwatch</td></tr>
+    <tr><td>Number of facilitator prompts required</td><td>quantitative</td><td>Observer tally</td></tr>
+    <tr><td>Whether twist-to-tune is discovered unprompted</td><td>boolean</td><td>Observation</td></tr>
+    <tr><td>Samples tried before committing to one</td><td>quantitative</td><td>Observer count</td></tr>
+    <tr><td>Confidence in the final choice, 1–5</td><td>quantitative</td><td>Post-task question</td></tr>
+    <tr><td>Whether the limited option set felt helpful or restrictive, and why</td><td>qualitative</td><td>Post-task question — <b>primary evidence for A2</b></td></tr>
+    <tr><td>Reasons given for rejecting a candidate</td><td>qualitative</td><td>Think-aloud, recorded verbatim</td></tr>
+  </tbody>
+</table>
+
+<p style="margin-top:5px;"><b>Method.</b> Think-aloud with no prior explanation of the interface, since discoverability cannot be measured once it has been described. Five minutes per participant, minimum five participants, run in the Studio session with peers and a tutor, screen-recorded from the headset with consent. Standardised instruments such as SUS and presence questionnaires are deliberately excluded at this stage — they are built for longer sessions and would report noise at five minutes.</p>
+
+<footer>
+  Design Concept Report · XR Renovation Previewer · Kaike Nehme · DECO7230, Semester 2 2026 · Submission 1, due 14 August 2026
+</footer>
+
+</body>
+</html>

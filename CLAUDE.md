@@ -108,7 +108,7 @@ Print CSS gotchas already solved in `lowfi-plan-print.html`: `page-break-after:a
 
 **Done:** repo scaffolded · Unity + Android chain installed · concept spec v1.1 · low-fi prototype built (cardboard living room, photos in `concept/`) · test plan + 5-page PDF · Week 2 peer feedback folded in.
 
-**Next:** Design Concept Report, **due Fri 14 Aug 12:00**, 2 pages max. Four of its five sections already exist in the concept spec — it needs drafting, not inventing.
+**Next:** Design Concept Report **drafted** — `concept/Concept-Report-Kaike-Nehme.pdf`, exactly 2 pages, source in `concept-report-print.html`. Still needs: Kaike's own voice pass, student number if required, and the **AI acknowledgement coversheet** (open assessment — AI is permitted but must be declared). Due **Fri 14 Aug 12:00**, Blackboard + this repo.
 
 **Not started:** any Unity code. Kaike has **zero Unity experience** — budget ramp time accordingly.
 
