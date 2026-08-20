@@ -144,6 +144,18 @@ public static class SceneBuilder
 
     static void WireControllers(GameObject rig, GameObject samplePrefab, SchemeManager schemeMgr)
     {
+        // Locked decision (concept §7): controllers, not hand tracking. Strip the
+        // hand references from the modality manager so hand tracking can never
+        // steal the input modality during a test.
+        var modality = rig.GetComponentInChildren<UnityEngine.XR.Interaction.Toolkit.Inputs.XRInputModalityManager>(true);
+        if (modality != null)
+        {
+            if (modality.leftHand != null) modality.leftHand.SetActive(false);
+            if (modality.rightHand != null) modality.rightHand.SetActive(false);
+            modality.leftHand = null;
+            modality.rightHand = null;
+        }
+
         WireHand(rig, "Left Controller", "LeftHand", samplePrefab);
         var right = WireHand(rig, "Right Controller", "RightHand", samplePrefab);
 
