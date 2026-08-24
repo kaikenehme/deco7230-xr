@@ -5,9 +5,9 @@ public enum SurfaceState { Keep, Change }
 
 /// <summary>
 /// State machine for one renovatable surface. Holds Keep/Change state and the
-/// committed vs previewed colour. Never knows samples exist (concept spec §8).
-/// ExecuteAlways so the static registry works in EditMode tests and scene tooling;
-/// renderer writes are guarded to play mode.
+/// committed vs previewed colour AND material. Never knows samples or menus
+/// exist (concept spec §8). ExecuteAlways so the static registry works in
+/// EditMode tests and scene tooling; renderer writes are guarded to play mode.
 /// </summary>
 [ExecuteAlways]
 public class Surface : MonoBehaviour
@@ -15,19 +15,33 @@ public class Surface : MonoBehaviour
     public static readonly List<Surface> All = new();
 
     [SerializeField] SurfaceState state = SurfaceState.Change;
+    [SerializeField] SurfaceKind kind = SurfaceKind.None;
 
     public SurfaceState State => state;
+    public SurfaceKind Kind => kind;
+
     public Color CommittedColor { get; private set; } = Color.white;
     public Color DisplayColor { get; private set; } = Color.white;
+    /// <summary>Material committed via the menu; null = whatever the scene shipped with.</summary>
+    public Material CommittedMaterial { get; private set; }
+    public Material DisplayMaterial { get; private set; }
     public bool IsPreviewing { get; private set; }
 
     Renderer rend;
+    Material baseMaterial;   // the material the scene shipped with, for revert-to-original
 
-    void Awake()
+    void Awake() => RebindRenderer();
+
+    /// <summary>Re-read the renderer (root or first child). Call after swapping the visual.</summary>
+    public void RebindRenderer()
     {
         rend = GetComponent<Renderer>();
+        if (rend == null) rend = GetComponentInChildren<Renderer>();
         if (rend != null && rend.sharedMaterial != null)
+        {
+            baseMaterial = rend.sharedMaterial;
             CommittedColor = DisplayColor = rend.sharedMaterial.color;
+        }
     }
 
     void OnEnable()
@@ -38,15 +52,17 @@ public class Surface : MonoBehaviour
     void OnDisable() => All.Remove(this);
 
     public void SetState(SurfaceState s) => state = s;
+    public void SetKind(SurfaceKind k) => kind = k;
 
     public void ToggleState() =>
         state = state == SurfaceState.Keep ? SurfaceState.Change : SurfaceState.Keep;
 
+    // ---- colour ----
     public void Preview(Color c)
     {
         if (state == SurfaceState.Keep) return; // kept surfaces are sources, never targets
         IsPreviewing = true;
-        Apply(c);
+        ApplyColor(c);
     }
 
     public void Commit(Color c)
@@ -54,19 +70,48 @@ public class Surface : MonoBehaviour
         if (state == SurfaceState.Keep) return;
         CommittedColor = c;
         IsPreviewing = false;
-        Apply(c);
+        ApplyColor(c);
     }
 
+    // ---- material ----
+    public void PreviewMaterial(Material m)
+    {
+        if (state == SurfaceState.Keep) return;
+        IsPreviewing = true;
+        ApplyMaterial(m);
+    }
+
+    public void CommitMaterial(Material m)
+    {
+        if (state == SurfaceState.Keep) return;
+        CommittedMaterial = m;
+        IsPreviewing = false;
+        ApplyMaterial(m);
+    }
+
+    /// <summary>A preview must never stick: restore committed material then committed colour.</summary>
     public void Revert()
     {
         IsPreviewing = false;
-        Apply(CommittedColor);
+        ApplyMaterial(CommittedMaterial);
+        ApplyColor(CommittedColor);
     }
 
-    void Apply(Color c)
+    void ApplyColor(Color c)
     {
         DisplayColor = c;
         if (Application.isPlaying && rend != null)
             rend.material.color = c;
+    }
+
+    void ApplyMaterial(Material m)
+    {
+        DisplayMaterial = m;
+        if (!Application.isPlaying || rend == null) return;
+        var src = m != null ? m : baseMaterial;
+        if (src == null) return;
+        // Instance so tint edits never write into the shared asset.
+        var inst = new Material(src) { color = DisplayColor };
+        rend.material = inst;
     }
 }
