@@ -2306,16 +2306,10 @@ git commit -m "docs(ip1): AI-use log — controller menu + catalogue work"
 
 ---
 
-## STATUS — paused Tue 25 Aug 2026 ~10:30 (resume here)
+## STATUS — Tue 25 Aug 2026 13:15 (resume here)
 
-**Done + committed on branch `feat/ip1-controller-menu`:** Tasks 1–8 (types, Surface material ext, schemes, FurnitureSlot, MenuTarget, ControllerMenu, importer, SceneBuilder wiring). EditMode 49/49, PlayMode 6/6 at commit `00d9e94`. Task 9 rehearsal: menu verified in Play mode (paint/material/furniture/keep-prompt/scheme paths all correct; screenshots looked right). Fixes applied in the WIP commit: swatch labels (best-fit 11–24 + overflow), hovered-option echo in title, detach-before-destroy for tabs/grid, material repeat sizes → 1–2 m.
+**Green + committed on `feat/ip1-controller-menu` @ `df72be0`:** Tasks 1–9 (automated part). Furniture now = Poly Haven **FBX** baked to standalone Mesh `.asset` + URP/Lit `.mat` (glTFast removed — its ScriptedImporter failed on every reload; folders must be created via `AssetDatabase.CreateFolder`, else `CreateAsset` throws a modal "Moving file failed" that killed the Editor once). EditMode 50/50, PlayMode 6/6, reload error-free. Play-mode renders verified: menu on left hand with title echo, tabs, texture swatches; floor material tiling; Poly Haven armchair/coffee table/sofa swap; scheme round-trip.
 
-**In flight (WIP commit, NOT green):** furniture pipeline is being switched from glTFast to **Poly Haven FBX + bake** — the glTFast ScriptedImporter imports once then fails on every reload (`TypeLoadException GLTFast.AnimationMethod`, "immutable package altered" = corrupted cache). `CatalogueImporter.BakePrefab()` (meshes → `Assets/Catalogue/Meshes/*.asset`, URP/Lit mats → `Assets/Catalogue/Materials/Furniture/`, pivot at floor) is written and compiles; the download branch still fetches glTF. `Assets/Catalogue/Furniture/`, `Prefabs/`, `CREDITS.md` were deleted; `Catalogue.asset` currently has **0 furniture** → `SceneWiringTests.Menu_IsOnLeftController_WithCatalogueAndEventSystem` will fail until furniture is re-imported.
+**Task 10 done (uncommitted → commit next):** testing plan v2 (A3, Menu bullet, data rows, Task 2 rewrite, trust question), data sheet rows 13–15 + prompt 5, `testing-data/ip1/README.md`. **Task 11:** AI-log rows appended; APK build launched async via `unity command build` — poll `build_status`.
 
-**Next steps, in order:**
-1. `CatalogueImporter.ImportFurniture`: fetch `files[id]["fbx"]["1k"]["fbx"]` (`url` + `include` — includes `.exr` normal/metallic; download only `.jpg` diffuse/roughness, skip `.exr`); save as `<id>.fbx`; `ImportAsset` → `LoadAssetAtPath<GameObject>` → `BakePrefab` → delete the `.fbx` (FBX importer makes Standard-shader mats = pink in URP; the bake's URP/Lit mats replace them). Check FBX scale in bounds (expect sofa ≈ 1.6 m wide; if 100× off set `ModelImporter.globalScale`).
-2. Remove `com.unity.cloud.gltfast` from `Packages/manifest.json` (nothing in `Assets/` references it).
-3. Re-run `Import()` (direct `eval`, ignore the 5 s timeout, poll for `CREDITS.md`), verify sizes/minY/textures, run all EditMode + PlayMode (async) tests, commit.
-4. Task 9 step 5 (Kaike, XR Device Simulator run) → Task 10 (testing plan v2, data sheet, `testing-data/ip1/README.md`) → Task 11 (AI log, APK via `unity command build`, Friday `adb install`).
-
-**Loop cheatsheet:** helper `scratchpad/ut.sh` (recompile | test EditMode <Filter> | eval '<C#>' | errors); PlayMode = `run_tests --mode PlayMode --async_tests true` then `test_status`. Screenshots: `capture_game_view`/`capture_scene_view` render from poses you don't control — use the temp-Camera-to-PNG eval snippet (`scratchpad/shot2.cs` pattern) instead. Unity Editor must be open on the project (Pipeline port 7800).
+**Still Kaike's:** Task 9 step 5 (XR Device Simulator run of the full Friday script) · `ip1/statement-of-originality.md` personal rewrite (mentions the "diegetic no-menus rule" — now historical; say the IP1 build adds a menu for the A3 comparison) · Friday `adb install -r Builds/ip1.apk`.
