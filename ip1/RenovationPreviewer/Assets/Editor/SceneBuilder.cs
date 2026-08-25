@@ -3,9 +3,11 @@ using System.Linq;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
+using UnityEngine.XR.Interaction.Toolkit.UI;
 
 /// <summary>
 /// Deterministic scene construction for IP1 (spec §7: one room; keeping timber
@@ -29,26 +31,36 @@ public static class SceneBuilder
         var tableWood = MakeMat("TableWood", new Color(0.35f, 0.24f, 0.15f));
 
         // --- Room shell. 4m x 3m footprint, 2.7m ceiling ---
-        MakeSurface("Floor", new Vector3(0, -0.05f, 0), new Vector3(4, 0.1f, 3), timber, SurfaceState.Keep);
-        MakeSurface("Wall_N", new Vector3(0, 1.35f, 1.55f), new Vector3(4, 2.7f, 0.1f), offwhite, SurfaceState.Change);
-        MakeSurface("Wall_S", new Vector3(0, 1.35f, -1.55f), new Vector3(4, 2.7f, 0.1f), offwhite, SurfaceState.Change);
-        MakeSurface("Wall_E", new Vector3(2.05f, 1.35f, 0), new Vector3(0.1f, 2.7f, 3.2f), offwhite, SurfaceState.Change);
-        MakeSurface("Wall_W", new Vector3(-2.05f, 1.35f, 0), new Vector3(0.1f, 2.7f, 3.2f), offwhite, SurfaceState.Change);
-        MakeSurface("Ceiling", new Vector3(0, 2.75f, 0), new Vector3(4, 0.1f, 3), offwhite, SurfaceState.Change);
-        MakeSurface("Door", new Vector3(1.2f, 1.05f, 1.48f), new Vector3(0.9f, 2.1f, 0.06f), trimWhite, SurfaceState.Change);
-        MakeSurface("Trim", new Vector3(-0.8f, 0.075f, 1.48f), new Vector3(2.4f, 0.15f, 0.06f), trimWhite, SurfaceState.Change);
+        MakeSurface("Floor", new Vector3(0, -0.05f, 0), new Vector3(4, 0.1f, 3), timber, SurfaceState.Keep, SurfaceKind.Floor);
+        MakeSurface("Wall_N", new Vector3(0, 1.35f, 1.55f), new Vector3(4, 2.7f, 0.1f), offwhite, SurfaceState.Change, SurfaceKind.Wall);
+        MakeSurface("Wall_S", new Vector3(0, 1.35f, -1.55f), new Vector3(4, 2.7f, 0.1f), offwhite, SurfaceState.Change, SurfaceKind.Wall);
+        MakeSurface("Wall_E", new Vector3(2.05f, 1.35f, 0), new Vector3(0.1f, 2.7f, 3.2f), offwhite, SurfaceState.Change, SurfaceKind.Wall);
+        MakeSurface("Wall_W", new Vector3(-2.05f, 1.35f, 0), new Vector3(0.1f, 2.7f, 3.2f), offwhite, SurfaceState.Change, SurfaceKind.Wall);
+        MakeSurface("Ceiling", new Vector3(0, 2.75f, 0), new Vector3(4, 0.1f, 3), offwhite, SurfaceState.Change, SurfaceKind.Ceiling);
+        MakeSurface("Door", new Vector3(1.2f, 1.05f, 1.48f), new Vector3(0.9f, 2.1f, 0.06f), trimWhite, SurfaceState.Change, SurfaceKind.Trim);
+        MakeSurface("Trim", new Vector3(-0.8f, 0.075f, 1.48f), new Vector3(2.4f, 0.15f, 0.06f), trimWhite, SurfaceState.Change, SurfaceKind.Trim);
 
-        // --- Sofa: kept prop, one Surface for the whole compound ---
+        // --- Sofa: kept prop (sample source) AND a furniture slot (swap/move) ---
         var sofa = new GameObject("Sofa");
+        sofa.transform.position = new Vector3(-1.2f, 0f, -0.9f);
         MakePart(sofa, "Seat", new Vector3(-1.2f, 0.25f, -0.9f), new Vector3(1.8f, 0.5f, 0.8f), sofaGrey);
         MakePart(sofa, "Back", new Vector3(-1.2f, 0.65f, -1.25f), new Vector3(1.8f, 0.8f, 0.2f), sofaGrey);
         MakePart(sofa, "ArmL", new Vector3(-2.05f, 0.45f, -0.9f), new Vector3(0.2f, 0.5f, 0.8f), sofaGrey);
         MakePart(sofa, "ArmR", new Vector3(-0.35f, 0.45f, -0.9f), new Vector3(0.2f, 0.5f, 0.8f), sofaGrey);
         var sofaSurf = sofa.AddComponent<Surface>();
         sofaSurf.SetState(SurfaceState.Keep);
+        var sofaRb = sofa.AddComponent<Rigidbody>(); sofaRb.isKinematic = true; sofaRb.useGravity = false;
         var sofaCol = sofa.AddComponent<BoxCollider>();
-        sofaCol.center = new Vector3(-1.2f, 0.5f, -1.0f);
+        sofaCol.center = new Vector3(0f, 0.5f, -0.1f);
         sofaCol.size = new Vector3(1.95f, 1.1f, 1.1f);
+        var sofaGrab = sofa.AddComponent<XRGrabInteractable>();
+        sofaGrab.movementType = XRBaseInteractable.MovementType.Kinematic;
+        sofaGrab.throwOnDetach = false;
+        sofaGrab.useDynamicAttach = true;
+        var floorBounds = new Bounds(Vector3.zero, new Vector3(4f, 0.1f, 3f));
+        var sofaSlot = sofa.AddComponent<FurnitureSlot>();
+        sofaSlot.BindGrab(floorBounds);
+        sofa.AddComponent<MenuTarget>();
 
         // --- Alternate material display: framed second timber tone on Wall_S,
         //     present but static (spec §7 "present but shallow") ---
@@ -99,6 +111,11 @@ public static class SceneBuilder
         var managers = new GameObject("Managers");
         var schemeMgr = managers.AddComponent<SchemeManager>();
 
+        // --- UI event system for the world-space menu (XRI input module) ---
+        var es = new GameObject("EventSystem");
+        es.AddComponent<EventSystem>();
+        es.AddComponent<XRUIInputModule>();
+
         // --- Sample prefab ---
         var samplePrefab = BuildSamplePrefab();
 
@@ -111,7 +128,7 @@ public static class SceneBuilder
         {
             rig = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(rigPath));
             rig.transform.position = new Vector3(0.5f, 0, 0.3f);
-            WireControllers(rig, samplePrefab, schemeMgr);
+            WireControllers(rig, samplePrefab, schemeMgr, floorBounds);
         }
         else
         {
@@ -142,7 +159,7 @@ public static class SceneBuilder
         return prefab;
     }
 
-    static void WireControllers(GameObject rig, GameObject samplePrefab, SchemeManager schemeMgr)
+    static void WireControllers(GameObject rig, GameObject samplePrefab, SchemeManager schemeMgr, Bounds floorBounds)
     {
         // Locked decision (concept §7): controllers, not hand tracking. Strip the
         // hand references from the modality manager so hand tracking can never
@@ -165,6 +182,33 @@ public static class SceneBuilder
             cycler.manager = schemeMgr;
             cycler.saveAction = ButtonAction("SaveScheme", "<XRController>{RightHand}/primaryButton");
             cycler.cycleAction = ButtonAction("CycleScheme", "<XRController>{RightHand}/secondaryButton");
+        }
+
+        // --- Controller menu on the left hand, select relay on the right ---
+        var left = rig.transform.Find("Camera Offset/Left Controller")?.gameObject;
+        var head = rig.transform.Find("Camera Offset/Main Camera");
+        var catalogue = AssetDatabase.LoadAssetAtPath<Catalogue>("Assets/Catalogue/Catalogue.asset");
+        if (catalogue == null) Debug.LogWarning("SceneBuilder: Assets/Catalogue/Catalogue.asset missing — run Renovation → Import Catalogue first");
+
+        ControllerMenu menu = null;
+        if (left != null)
+        {
+            var menuGo = new GameObject("ControllerMenu", typeof(RectTransform));
+            menuGo.transform.SetParent(left.transform, false);
+            menuGo.transform.localPosition = new Vector3(0.12f, 0.08f, 0.05f);   // beside/above the left hand
+            menu = menuGo.AddComponent<ControllerMenu>();
+            menu.catalogue = catalogue;
+            menu.head = head;
+            menu.floorBounds = floorBounds;
+        }
+
+        if (right != null && menu != null)
+        {
+            var relay = right.AddComponent<MenuSelectRelay>();
+            relay.menu = menu;
+            relay.rayOrigin = right.GetComponentInChildren<NearFarInteractor>()?.transform ?? right.transform;
+            relay.selectAction = ButtonAction("MenuSelect", "<XRController>{RightHand}/triggerPressed");
+            relay.closeAction = ButtonAction("MenuClose", "<XRController>{LeftHand}/secondaryButton");
         }
     }
 
@@ -212,7 +256,7 @@ public static class SceneBuilder
         return m;
     }
 
-    static GameObject MakeSurface(string name, Vector3 pos, Vector3 scale, Material m, SurfaceState state)
+    static GameObject MakeSurface(string name, Vector3 pos, Vector3 scale, Material m, SurfaceState state, SurfaceKind kind)
     {
         var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
         go.name = name;
@@ -221,6 +265,8 @@ public static class SceneBuilder
         go.GetComponent<Renderer>().sharedMaterial = m;
         var s = go.AddComponent<Surface>();
         s.SetState(state);
+        s.SetKind(kind);
+        go.AddComponent<MenuTarget>();
         return go;
     }
 

@@ -112,6 +112,16 @@ public class Surface : MonoBehaviour
         if (src == null) return;
         // Instance so tint edits never write into the shared asset.
         var inst = new Material(src) { color = DisplayColor };
+        // Catalogue materials store tiles-per-metre in mainTextureScale; a primitive cube's
+        // UVs span 0..1 per face, so multiply by the face size (two largest cube axes).
+        if (m != null)
+        {
+            var sc = transform.lossyScale;
+            float a = Mathf.Max(sc.x, sc.y, sc.z);
+            float c = Mathf.Min(sc.x, sc.y, sc.z);
+            float b = sc.x + sc.y + sc.z - a - c;
+            inst.mainTextureScale = new Vector2(src.mainTextureScale.x * a, src.mainTextureScale.y * b);
+        }
         rend.material = inst;
     }
 }

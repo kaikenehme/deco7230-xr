@@ -84,4 +84,35 @@ public class SceneWiringTests
         Object.Destroy(go);
         yield return null;
     }
+
+    [UnityTest]
+    public IEnumerator Menu_IsOnLeftController_WithCatalogueAndEventSystem()
+    {
+        yield return null;
+        var menu = Object.FindObjectsByType<ControllerMenu>(FindObjectsInactive.Include, FindObjectsSortMode.None).Single();
+        Assert.IsTrue(menu.transform.parent != null && menu.transform.parent.name == "Left Controller", "menu parented to Left Controller");
+        Assert.IsNotNull(menu.catalogue, "catalogue wired");
+        Assert.Greater(menu.catalogue.paints.Count, 0);
+        Assert.Greater(menu.catalogue.materials.Count, 0);
+        Assert.Greater(menu.catalogue.furniture.Count, 0);
+        Assert.IsNotNull(menu.head, "head wired");
+        Assert.IsNotNull(Object.FindFirstObjectByType<UnityEngine.XR.Interaction.Toolkit.UI.XRUIInputModule>(), "XRUIInputModule present");
+        var relay = Object.FindObjectsByType<MenuSelectRelay>(FindObjectsInactive.Include, FindObjectsSortMode.None).Single();
+        Assert.AreSame(menu, relay.menu);
+        Assert.IsNotNull(relay.selectAction.action);
+    }
+
+    [UnityTest]
+    public IEnumerator EverySurface_HasMenuTargetAndKind()
+    {
+        yield return null;
+        foreach (var s in Surface.All.Where(s => s != null))
+        {
+            Assert.IsNotNull(s.GetComponent<MenuTarget>(), $"{s.name}: MenuTarget");
+            if (s.name != "Sofa") Assert.AreNotEqual(SurfaceKind.None, s.Kind, $"{s.name}: kind set");
+        }
+        var sofa = Surface.All.Single(s => s != null && s.name == "Sofa");
+        Assert.IsNotNull(sofa.GetComponent<FurnitureSlot>(), "sofa is a furniture slot");
+        Assert.IsNotNull(sofa.GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>(), "sofa grabbable");
+    }
 }
