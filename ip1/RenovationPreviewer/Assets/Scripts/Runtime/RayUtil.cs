@@ -13,7 +13,9 @@ public static class RayUtil
         for (int i = 0; i < n; i++)
         {
             var h = Buffer[i];
-            if (ignoreRoot != null && h.collider.transform.IsChildOf(ignoreRoot)) continue;
+            // Skip the player's own body/controllers — but the menu panel also lives under the rig
+            // (child of the left controller) and must block the ray so UI clicks never hit the wall behind.
+            if (ignoreRoot != null && h.collider.transform.IsChildOf(ignoreRoot) && !h.collider.CompareTag("MenuPanel")) continue;
             if (h.distance < best) { best = h.distance; hit = h; }
         }
         return best < float.MaxValue;

@@ -2306,12 +2306,16 @@ git commit -m "docs(ip1): AI-use log — controller menu + catalogue work"
 
 ---
 
-## STATUS — Tue 25 Aug 2026 13:15 (resume here)
+## STATUS — Tue 25 Aug 2026 18:50, paused for the night (resume here)
 
-**Green + committed on `feat/ip1-controller-menu` @ `df72be0`:** Tasks 1–9 (automated part). Furniture now = Poly Haven **FBX** baked to standalone Mesh `.asset` + URP/Lit `.mat` (glTFast removed — its ScriptedImporter failed on every reload; folders must be created via `AssetDatabase.CreateFolder`, else `CreateAsset` throws a modal "Moving file failed" that killed the Editor once). EditMode 50/50, PlayMode 6/6, reload error-free. Play-mode renders verified: menu on left hand with title echo, tabs, texture swatches; floor material tiling; Poly Haven armchair/coffee table/sofa swap; scheme round-trip.
+**On `main`, green, APK built 18:09 (`Builds/ip1.apk`):** Tasks 1–11 + afternoon work — menu v2 (UiKit, paged chips, thumbnails, ✓ badges), ray feedback (reticle + emission glow, `RayUtil` ignores the rig), 5×4 m room (`RoomSpec`), floor `TeleportationArea` on interaction layer 31, rig starts facing the sofa, XR Device Simulator auto-spawns. EditMode 59/59, PlayMode 8/8 at `ebc0ae8`.
 
-**Task 10 done + committed (`240df47`, PDF `ip1/IP1-Testing-Plan-Kaike-Nehme.pdf`):** testing plan v2 (A3, Menu bullet, data rows, Task 2 rewrite, trust question), data sheet rows 13–15 + prompt 5, `testing-data/ip1/README.md`. **Task 11:** AI-log rows appended; **APK built OK** 25 Aug 13:17 (`Builds/ip1.apk`, 51.8 MB, Gradle fine from this path; `Builds/` is untracked).
+**WIP commit (UNTESTED, Editor was wedged):** two fixes on disk:
+1. `RayUtil` — a `MenuPanel`-tagged collider is never skipped (it hangs under the rig, so clicking a chip used to select the wall behind the menu). Test `RayUtilTests.MenuPanelUnderRig_IsStillHit` added.
+2. `RayFeedback.ReticleRotation(normal)` — safe up-vector when the hit normal is collinear with world-up (pointing at the floor). Suspected cause of the "Invalid AABB" NRE spam that saturated the Editor (7.2 GB `Editor.log`, 8 MB/s). Test `RayFeedbackTests.ReticleRotation_IsFiniteOnFloorAndWall` added.
 
-**25 Aug pm — menu v2 + ray feedback (reticle/glow) shipped; select ray ignores the rig; XR Device Simulator auto-spawns in Editor Play. EditMode 59/59, PlayMode 7/7.**
-
-**Still Kaike's:** Task 9 step 5 (XR Device Simulator run of the full Friday script) · `ip1/statement-of-originality.md` personal rewrite (mentions the "diegetic no-menus rule" — now historical; say the IP1 build adds a menu for the A3 comparison) · Friday `adb install -r Builds/ip1.apk`.
+**Tomorrow, in order:**
+1. Quit + relaunch Unity (rotates the 7 GB log to `Editor-prev.log` → delete it). Confirm `Editor.log` stays quiet in Play mode while pointing at the floor; if "Invalid AABB" persists, scan renderers for NaN bounds (eval snippet in the 25 Aug session) — next suspects: XRI teleport line visual, spawned furniture with zero scale.
+2. `ut.sh recompile` → EditMode (expect 61) → `SceneBuilder.Build()` → PlayMode (expect 8) → amend/commit → `unity command build --target Android --outputPath Builds/ip1.apk --confirm true` (~1 min incremental) → `adb install -r`.
+3. Kaike: simulator pass of the full Friday script; Statement of Originality (mention the menu is added for the A3 comparison); print data sheets; `git push`.
+4. Wed: pilot on one person; Thu: freeze + final APK.

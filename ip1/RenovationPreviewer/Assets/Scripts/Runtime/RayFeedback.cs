@@ -85,6 +85,14 @@ public class RayFeedback : MonoBehaviour
         go.transform.localScale = Vector3.one * reticleSize;
     }
 
+    /// <summary>Rotation that faces the ring along -normal; safe when the normal is collinear with world-up.</summary>
+    public static Quaternion ReticleRotation(Vector3 normal)
+    {
+        var n = -normal;
+        var up = Mathf.Abs(Vector3.Dot(n, Vector3.up)) > 0.99f ? Vector3.forward : Vector3.up;
+        return Quaternion.LookRotation(n, up);
+    }
+
     void OnDisable() { glow.ClearAll(); if (reticle != null) reticle.enabled = false; Hovered = null; }
 
     void Update()
@@ -98,7 +106,9 @@ public class RayFeedback : MonoBehaviour
             hit = onPanel ? null : h.collider.GetComponentInParent<MenuTarget>();
             reticle.enabled = !onPanel;
             reticle.transform.position = h.point + h.normal * 0.004f;
-            reticle.transform.rotation = Quaternion.LookRotation(-h.normal, Vector3.up);
+            // Floor/ceiling hits make the normal collinear with world-up; LookRotation then degenerates
+            // (NaN rotation → NaN bounds → "Invalid AABB" spam). Pick a safe up vector.
+            reticle.transform.rotation = ReticleRotation(h.normal);
             reticle.color = hit != null ? UiKit.Accent : new Color(1f, 1f, 1f, 0.8f);
         }
         else reticle.enabled = false;

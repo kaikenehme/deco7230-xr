@@ -62,4 +62,16 @@ public class RayFeedbackTests
         Assert.IsNotNull(UiKit.Ring);
         Assert.Greater(UiKit.Rounded.border.x, 0, "rounded sprite is 9-sliced");
     }
+
+    [Test]
+    public void ReticleRotation_IsFiniteOnFloorAndWall()
+    {
+        foreach (var normal in new[] { Vector3.up, Vector3.down, Vector3.forward, Vector3.right, new Vector3(0.001f, 1f, 0f).normalized })
+        {
+            var q = RayFeedback.ReticleRotation(normal);
+            Assert.IsFalse(float.IsNaN(q.x) || float.IsNaN(q.y) || float.IsNaN(q.z) || float.IsNaN(q.w), $"NaN for normal {normal}");
+            var fwd = q * Vector3.forward;
+            Assert.AreEqual(1f, Vector3.Dot(fwd, -normal), 1e-3f, $"faces along -normal for {normal}");
+        }
+    }
 }

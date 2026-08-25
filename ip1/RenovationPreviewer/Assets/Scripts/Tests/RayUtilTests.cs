@@ -38,4 +38,17 @@ public class RayUtilTests
     {
         Assert.IsFalse(RayUtil.TryHit(new Vector3(0, 1, -0.5f), Vector3.back, 10f, rig.transform, out _));
     }
+
+    [Test]
+    public void MenuPanelUnderRig_IsStillHit()
+    {
+        // The menu canvas is a child of the Left Controller (under the rig); its blocker must still stop the ray.
+        var panel = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        panel.tag = "MenuPanel";
+        panel.transform.SetParent(rig.transform); panel.transform.position = new Vector3(0, 1, 1.5f);
+        panel.transform.localScale = new Vector3(0.3f, 0.2f, 0.01f);
+        Physics.SyncTransforms();
+        Assert.IsTrue(RayUtil.TryHit(new Vector3(0, 1, 1.0f), Vector3.forward, 10f, rig.transform, out var hit));
+        Assert.AreEqual(panel, hit.collider.gameObject, "panel wins over the wall behind it");
+    }
 }
