@@ -1,0 +1,161 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3c33f4435a8e4138bb10c98e368c141, type: 3}
+  m_Name: Catalogue
+  m_EditorClassIdentifier: 
+  paints:
+  - name: Whisper White
+    code: SW1C2
+    color: {r: 0.92156863, g: 0.9137255, b: 0.8784314, a: 1}
+  - name: Antique White U.S.A.
+    code: SW1H7
+    color: {r: 0.9372549, g: 0.91764706, b: 0.8784314, a: 1}
+  - name: Highgate
+    code: SP2B6
+    color: {r: 0.8509804, g: 0.8666667, b: 0.8745098, a: 1}
+  - name: Grey Pebble
+    code: S14B1
+    color: {r: 0.8117647, g: 0.7921569, b: 0.75686276, a: 1}
+  - name: Clay Pipe
+    code: S10D1
+    color: {r: 0.8509804, g: 0.78039217, b: 0.7137255, a: 1}
+  - name: Sandy Day
+    code: S14C1
+    color: {r: 0.84313726, g: 0.80784315, b: 0.75686276, a: 1}
+  - name: Beige Royal
+    code: S15B1
+    color: {r: 0.8117647, g: 0.78039217, b: 0.72156864, a: 1}
+  - name: Warm Neutral
+    code: S13D3
+    color: {r: 0.7529412, g: 0.6862745, b: 0.6117647, a: 1}
+  - name: Silkwort
+    code: SN4H2
+    color: {r: 0.7137255, g: 0.70980394, b: 0.7019608, a: 1}
+  - name: Tranquil Retreat
+    code: SN4G1
+    color: {r: 0.7647059, g: 0.76862746, b: 0.7607843, a: 1}
+  - name: Powder Blue
+    code: S40G1
+    color: {r: 0.69803923, g: 0.8039216, b: 0.92156863, a: 1}
+  - name: Mustard Seed
+    code: S17E9
+    color: {r: 0.5647059, g: 0.48235294, b: 0.22352941, a: 1}
+  - name: Berry Crush
+    code: S01F6
+    color: {r: 0.6666667, g: 0.40392157, b: 0.45490196, a: 1}
+  - name: Domino
+    code: SG6G8
+    color: {r: 0.23529412, g: 0.24313726, b: 0.24705882, a: 1}
+  - name: Black
+    code: SG6G9
+    color: {r: 0.14117648, g: 0.13725491, b: 0.13333334, a: 1}
+  - name: Oil Of Lavender
+    code: S03A1
+    color: {r: 0.78039217, g: 0.74509805, b: 0.74509805, a: 1}
+  - name: Play School
+    code: S09H9
+    color: {r: 0.80784315, g: 0.3254902, b: 0.14117648, a: 1}
+  - name: Raw Cashew Nut
+    code: S13C2
+    color: {r: 0.78431374, g: 0.7411765, b: 0.69411767, a: 1}
+  - name: Dieskau
+    code: SN4H1
+    color: {r: 0.79607844, g: 0.7882353, b: 0.77254903, a: 1}
+  - name: Paris Creek
+    code: S18B5
+    color: {r: 0.5294118, g: 0.5294118, b: 0.44705883, a: 1}
+  - name: Pure Apple
+    code: S23H8
+    color: {r: 0.43137255, g: 0.70980394, b: 0.29411766, a: 1}
+  - name: Celtic Sky
+    code: SN4B4
+    color: {r: 0.79607844, g: 0.80784315, b: 0.8039216, a: 1}
+  - name: Coral Coast
+    code: S31G5
+    color: {r: 0.023529412, g: 0.5764706, b: 0.61960787, a: 1}
+  - name: Vanilla Ice Quarter
+    code: S35B1Q
+    color: {r: 0.78431374, g: 0.85490197, b: 0.8862745, a: 1}
+  materials:
+  - name: Stone tiles
+    sourceId: Tiles040
+    material: {fileID: 2100000, guid: d7b0f342d234043a49b9a087110e6f81, type: 2}
+    targets: 1
+  - name: Hex tiles
+    sourceId: Tiles107
+    material: {fileID: 2100000, guid: 69bcb2c6fd650413489fd7df0df46ed7, type: 2}
+    targets: 3
+  - name: Terrazzo tiles
+    sourceId: Tiles133A
+    material: {fileID: 2100000, guid: 2c3f876fc518f4846b7b39a59dc6ca1e, type: 2}
+    targets: 1
+  - name: Marble
+    sourceId: Marble012
+    material: {fileID: 2100000, guid: 40c31fd310d4b4d59a5845217f5a89c1, type: 2}
+    targets: 3
+  - name: Oak boards
+    sourceId: WoodFloor051
+    material: {fileID: 2100000, guid: 0fd9ca2da3791455ea176ba2d5735d93, type: 2}
+    targets: 1
+  - name: Dark timber
+    sourceId: WoodFloor043
+    material: {fileID: 2100000, guid: 8c18149a0b1dd4600bb55f3ddaefc6bc, type: 2}
+    targets: 1
+  - name: Carpet
+    sourceId: Carpet016
+    material: {fileID: 2100000, guid: ace3c9e2305cf4ee8a0ef314ad3e2857, type: 2}
+    targets: 1
+  - name: Plaster
+    sourceId: Plaster001
+    material: {fileID: 2100000, guid: e8b25e5019ff744b784fd426176d20f8, type: 2}
+    targets: 6
+  - name: Painted plaster
+    sourceId: PaintedPlaster017
+    material: {fileID: 2100000, guid: ae885b53e1bbf4aa48608b8ecd11e206, type: 2}
+    targets: 6
+  - name: Concrete
+    sourceId: Concrete034
+    material: {fileID: 2100000, guid: 39f81c08d6aa6434489f405a827ed53c, type: 2}
+    targets: 3
+  furniture:
+  - name: Sofa (grey)
+    sourceId: Sofa_01
+    prefab: {fileID: 5234134971070601419, guid: 3baa9cfc68a9a451da6c9965e09e19be, type: 3}
+    category: 0
+  - name: Sofa (leather)
+    sourceId: sofa_02
+    prefab: {fileID: 8357937635048892445, guid: 3dc84ecf5540440abbd771e9b099ea9d, type: 3}
+    category: 0
+  - name: Armchair
+    sourceId: ArmChair_01
+    prefab: {fileID: 3166713994484865528, guid: adfbffb32fe914303a821797e908d54a, type: 3}
+    category: 0
+  - name: Lounge chair
+    sourceId: mid_century_lounge_chair
+    prefab: {fileID: 1407041714467367779, guid: b815216ad6ead4925b498982a02f0bef, type: 3}
+    category: 0
+  - name: Coffee table
+    sourceId: modern_coffee_table_01
+    prefab: {fileID: 3347731505781659148, guid: 7e769376c52aa4c6589b8b52821d287a, type: 3}
+    category: 1
+  - name: Round coffee table
+    sourceId: coffee_table_round_01
+    prefab: {fileID: 4981788871377359016, guid: 9d841b01b4ce646cdabc64597c42ba1e, type: 3}
+    category: 1
+  - name: Side table
+    sourceId: side_table_01
+    prefab: {fileID: 8511007972683711880, guid: f7eb335539eae4031b6fa4add22e86d2, type: 3}
+    category: 1
+  - name: Shelves
+    sourceId: painted_wooden_shelves
+    prefab: {fileID: 4975651058408230291, guid: f51c9aabeec894276854206d4d11ae61, type: 3}
+    category: 2
