@@ -6,21 +6,17 @@ using UnityEngine;
 /// </summary>
 public class MenuTarget : MonoBehaviour
 {
-    public Surface Surface { get; private set; }
-    public FurnitureSlot Slot { get; private set; }
+    Surface surface;
+    FurnitureSlot slot;
 
-    void Awake()
-    {
-        Surface = GetComponent<Surface>();
-        Slot = GetComponent<FurnitureSlot>();
-    }
+    // Lazy so the lookup works whether or not Awake has run (EditMode tests, AddComponent at runtime).
+    public Surface Surface => surface != null ? surface : (surface = GetComponent<Surface>());
+    public FurnitureSlot Slot => slot != null ? slot : (slot = GetComponent<FurnitureSlot>());
 
     public MenuTab Tabs
     {
         get
         {
-            if (Slot == null) Slot = GetComponent<FurnitureSlot>();
-            if (Surface == null) Surface = GetComponent<Surface>();
             if (Slot != null) return MenuTab.Swap | MenuTab.Remove;
             if (Surface == null) return MenuTab.None;
             if (Surface.State == SurfaceState.Keep) return MenuTab.KeepPrompt;
