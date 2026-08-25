@@ -148,7 +148,7 @@ public class ControllerMenu : MonoBehaviour
 
     void BuildTabs(MenuTab tabs)
     {
-        for (int i = tabBar.childCount - 1; i >= 0; i--) DestroyNow(tabBar.GetChild(i).gameObject);
+        for (int i = tabBar.childCount - 1; i >= 0; i--) { var c = tabBar.GetChild(i); c.SetParent(null, false); DestroyNow(c.gameObject); }
         if (tabs.HasFlag(MenuTab.KeepPrompt)) return;   // no tab bar for the prompt
         foreach (var t in TabOrder)
         {
@@ -185,8 +185,8 @@ public class ControllerMenu : MonoBehaviour
         {
             var opt = p;
             var b = MakeSwatch(p.name, p.color, null);
-            b.onHover.AddListener(() => s.Preview(opt.color));
-            b.onExit.AddListener(() => s.Revert());
+            b.onHover.AddListener(() => { s.Preview(opt.color); Echo(opt.name); });
+            b.onExit.AddListener(() => { s.Revert(); Echo(null); });
             b.onClick.AddListener(() => s.Commit(opt.color));
         }
     }
@@ -198,8 +198,8 @@ public class ControllerMenu : MonoBehaviour
         {
             var opt = m;
             var b = MakeSwatch(m.name, Color.white, m.material != null ? m.material.mainTexture : null);
-            b.onHover.AddListener(() => s.PreviewMaterial(opt.material));
-            b.onExit.AddListener(() => s.Revert());
+            b.onHover.AddListener(() => { s.PreviewMaterial(opt.material); Echo(opt.name); });
+            b.onExit.AddListener(() => { s.Revert(); Echo(null); });
             b.onClick.AddListener(() => { s.CommitMaterial(opt.material); s.Commit(Color.white); });
         }
     }
@@ -210,6 +210,8 @@ public class ControllerMenu : MonoBehaviour
         {
             var opt = f;
             var b = MakeSwatch(f.name, new Color(0.3f, 0.32f, 0.36f), null);
+            b.onHover.AddListener(() => Echo(opt.name));
+            b.onExit.AddListener(() => Echo(null));
             b.onClick.AddListener(() =>
             {
                 if (spawn) FurnitureSlot.Spawn(opt, SpawnPoint, floorBounds);
@@ -233,8 +235,15 @@ public class ControllerMenu : MonoBehaviour
 
     void ClearGrid()
     {
-        foreach (var b in grid) if (b != null) DestroyNow(b.gameObject);
+        foreach (var b in grid) if (b != null) { b.transform.SetParent(null, false); DestroyNow(b.gameObject); }
         grid.Clear();
+    }
+
+    /// <summary>Big, legible echo of the hovered option in the title bar.</summary>
+    void Echo(string optionName)
+    {
+        if (Current == null) return;
+        title.text = string.IsNullOrEmpty(optionName) ? Current.DisplayName : Current.DisplayName + "  \u2014  " + optionName;
     }
 
     void RevertPreview()

@@ -43,7 +43,9 @@ public class SwatchButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         label.alignment = TextAnchor.MiddleCenter;
         label.color = Color.white;
         label.raycastTarget = false;
-        label.resizeTextForBestFit = true; label.resizeTextMinSize = 18; label.resizeTextMaxSize = 28;
+        label.horizontalOverflow = HorizontalWrapMode.Wrap;
+        label.verticalOverflow = VerticalWrapMode.Overflow;   // never truncate to nothing
+        label.resizeTextForBestFit = true; label.resizeTextMinSize = 11; label.resizeTextMaxSize = 24;
     }
 
     public void Set(string text, Color tint, Texture tex)

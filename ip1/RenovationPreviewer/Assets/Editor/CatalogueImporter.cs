@@ -33,18 +33,19 @@ public static class CatalogueImporter
         ("painted_wooden_shelves", "Shelves", FurnitureCategory.Storage),
     };
 
+    // tile = metres per texture repeat (ambientCG textures are authored at roughly 1–2 m per repeat)
     static readonly (string id, string label, SurfaceKind targets, float tile)[] Materials =
     {
-        ("Tiles040", "Stone tiles", SurfaceKind.Floor, 0.5f),
-        ("Tiles107", "Hex tiles", SurfaceKind.Floor | SurfaceKind.Wall, 0.5f),
-        ("Tiles133A", "Terrazzo tiles", SurfaceKind.Floor, 0.6f),
-        ("Marble012", "Marble", SurfaceKind.Floor | SurfaceKind.Wall, 1.0f),
-        ("WoodFloor051", "Oak boards", SurfaceKind.Floor, 1.0f),
-        ("WoodFloor043", "Dark timber", SurfaceKind.Floor, 1.0f),
-        ("Carpet016", "Carpet", SurfaceKind.Floor, 0.5f),
-        ("Plaster001", "Plaster", SurfaceKind.Wall | SurfaceKind.Ceiling, 1.0f),
-        ("PaintedPlaster017", "Painted plaster", SurfaceKind.Wall | SurfaceKind.Ceiling, 1.0f),
-        ("Concrete034", "Concrete", SurfaceKind.Wall | SurfaceKind.Floor, 1.0f),
+        ("Tiles040", "Stone tiles", SurfaceKind.Floor, 2.0f),
+        ("Tiles107", "Hex tiles", SurfaceKind.Floor | SurfaceKind.Wall, 1.0f),
+        ("Tiles133A", "Terrazzo tiles", SurfaceKind.Floor, 2.0f),
+        ("Marble012", "Marble", SurfaceKind.Floor | SurfaceKind.Wall, 2.0f),
+        ("WoodFloor051", "Oak boards", SurfaceKind.Floor, 2.0f),
+        ("WoodFloor043", "Dark timber", SurfaceKind.Floor, 2.0f),
+        ("Carpet016", "Carpet", SurfaceKind.Floor, 1.0f),
+        ("Plaster001", "Plaster", SurfaceKind.Wall | SurfaceKind.Ceiling, 2.0f),
+        ("PaintedPlaster017", "Painted plaster", SurfaceKind.Wall | SurfaceKind.Ceiling, 2.0f),
+        ("Concrete034", "Concrete", SurfaceKind.Wall | SurfaceKind.Floor, 2.0f),
     };
 
     // 24 Dulux AU names; any missing from the dataset are topped up by hue spread.
@@ -193,24 +194,19 @@ public static class CatalogueImporter
                         if (!File.Exists(target)) File.WriteAllBytes(target, Get((string)kv.Value["url"]));
                     }
                 }
-                AssetDatabase.ImportAsset(gltfPath, ImportAssetOptions.ForceSynchronousImport);
-                var model = AssetDatabase.LoadAssetAtPath<GameObject>(gltfPath);
-                if (model == null) { Debug.LogWarning($"CatalogueImporter: glTF import produced no GameObject for {id}"); continue; }
-
                 var prefabPath = $"{Root}/Prefabs/{id}.prefab";
-                var wrapper = new GameObject(id);
-                var inst = (GameObject)PrefabUtility.InstantiatePrefab(model, wrapper.transform);
-                inst.transform.localPosition = Vector3.zero;
-                // Pivot at the floor: lift so the lowest renderer point sits on y = 0.
-                var rends = wrapper.GetComponentsInChildren<Renderer>();
-                if (rends.Length > 0)
+                var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
+                if (prefab == null)
                 {
-                    var b = rends[0].bounds; foreach (var r in rends) b.Encapsulate(r.bounds);
-                    inst.transform.localPosition = new Vector3(-b.center.x, -b.min.y, -b.center.z);
+                    if (!File.Exists(gltfPath)) throw new Exception("no prefab and no glTF on disk — delete the folder and re-run");
+                    AssetDatabase.ImportAsset(gltfPath, ImportAssetOptions.ForceSynchronousImport);
+                    var model = AssetDatabase.LoadAssetAtPath<GameObject>(gltfPath);
+                    if (model == null) { Debug.LogWarning($"CatalogueImporter: glTF import produced no GameObject for {id}"); continue; }
+                    prefab = BakePrefab(id, model, dir, prefabPath);
+                    // The glTF ScriptedImporter is only needed once; baked assets need no importer at reload/build.
+                    AssetDatabase.DeleteAsset(gltfPath);
+                    foreach (var bin in Directory.GetFiles(dir, "*.bin")) AssetDatabase.DeleteAsset(bin.Replace('\\', '/'));
                 }
-                var prefab = PrefabUtility.SaveAsPrefabAsset(wrapper, prefabPath);
-                UnityEngine.Object.DestroyImmediate(wrapper);
-
                 cat.furniture.Add(new FurnitureOption { name = label, sourceId = id, prefab = prefab, category = category });
                 credits.AppendLine($"- {id} — https://polyhaven.com/a/{id}");
             }
@@ -220,6 +216,93 @@ public static class CatalogueImporter
             }
         }
         credits.AppendLine();
+    }
+
+    /// <summary>
+    /// Copy meshes + materials out of the glTFast-imported model into standalone assets
+    /// (Mesh .asset, URP/Lit .mat reusing the downloaded jpgs) and save a prefab whose
+    /// pivot sits at the floor. Nothing in the prefab references the .gltf afterwards.
+    /// </summary>
+    static GameObject BakePrefab(string id, GameObject model, string dir, string prefabPath)
+    {
+        var meshDir = $"{Root}/Meshes"; Directory.CreateDirectory(meshDir);
+        var matDir = $"{Root}/Materials/Furniture"; Directory.CreateDirectory(matDir);
+        var lit = Shader.Find("Universal Render Pipeline/Lit");
+        var src = (GameObject)PrefabUtility.InstantiatePrefab(model);
+        var wrapper = new GameObject(id);
+        int mi = 0;
+        foreach (var mf in src.GetComponentsInChildren<MeshFilter>())
+        {
+            if (mf.sharedMesh == null) continue;
+            var mesh = UnityEngine.Object.Instantiate(mf.sharedMesh);
+            mesh.name = $"{id}_{mi}";
+            var meshPath = $"{meshDir}/{id}_{mi}.asset";
+            AssetDatabase.CreateAsset(mesh, meshPath);
+
+            var go = new GameObject(mf.gameObject.name);
+            go.transform.SetParent(wrapper.transform, false);
+            go.transform.position = mf.transform.position;
+            go.transform.rotation = mf.transform.rotation;
+            go.transform.localScale = mf.transform.lossyScale;
+            go.AddComponent<MeshFilter>().sharedMesh = AssetDatabase.LoadAssetAtPath<Mesh>(meshPath);
+            var mr = go.AddComponent<MeshRenderer>();
+            var srcMr = mf.GetComponent<MeshRenderer>();
+            var mats = new List<Material>();
+            var srcMats = srcMr != null ? srcMr.sharedMaterials : new Material[0];
+            for (int k = 0; k < Mathf.Max(1, srcMats.Length); k++)
+            {
+                var sm = k < srcMats.Length ? srcMats[k] : null;
+                var matPath = $"{matDir}/{id}_{mi}_{k}.mat";
+                var mat = AssetDatabase.LoadAssetAtPath<Material>(matPath);
+                if (mat == null) { mat = new Material(lit); AssetDatabase.CreateAsset(mat, matPath); }
+                mat.shader = lit;
+                Texture baseTex = null, normalTex = null; Color tint = Color.white;
+                if (sm != null)
+                {
+                    baseTex = sm.HasProperty("baseColorTexture") ? sm.GetTexture("baseColorTexture") : sm.mainTexture;
+                    normalTex = sm.HasProperty("normalTexture") ? sm.GetTexture("normalTexture") : null;
+                    if (sm.HasProperty("baseColorFactor")) tint = sm.GetColor("baseColorFactor");
+                }
+                // Fallback: the jpgs Poly Haven shipped alongside the model.
+                if (baseTex == null) baseTex = FindTexture(dir, "_diff_");
+                if (normalTex == null) normalTex = FindTexture(dir, "_nor_gl_");
+                mat.SetTexture("_BaseMap", baseTex);
+                if (normalTex != null) { mat.SetTexture("_BumpMap", normalTex); mat.EnableKeyword("_NORMALMAP"); }
+                mat.color = tint;
+                mat.SetFloat("_Smoothness", 0.3f);
+                EditorUtility.SetDirty(mat);
+                mats.Add(mat);
+            }
+            mr.sharedMaterials = mats.ToArray();
+            mi++;
+        }
+        UnityEngine.Object.DestroyImmediate(src);
+
+        // Pivot at the floor, centred in XZ.
+        var rends = wrapper.GetComponentsInChildren<Renderer>();
+        if (rends.Length > 0)
+        {
+            var b = rends[0].bounds; foreach (var r in rends) b.Encapsulate(r.bounds);
+            var shift = new Vector3(-b.center.x, -b.min.y, -b.center.z);
+            foreach (Transform c in wrapper.transform) c.position += shift;
+        }
+        var prefab = PrefabUtility.SaveAsPrefabAsset(wrapper, prefabPath);
+        UnityEngine.Object.DestroyImmediate(wrapper);
+        return prefab;
+    }
+
+    static Texture2D FindTexture(string dir, string tag)
+    {
+        var texDir = Path.Combine(dir, "textures");
+        if (!Directory.Exists(texDir)) return null;
+        foreach (var f in Directory.GetFiles(texDir, "*.jpg"))
+            if (f.Contains(tag))
+            {
+                var ap = f.Replace('\\', '/');
+                if (tag.Contains("nor")) MarkNormal(ap);
+                return AssetDatabase.LoadAssetAtPath<Texture2D>(ap);
+            }
+        return null;
     }
 
     static byte[] Get(string url)
