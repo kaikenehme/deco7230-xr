@@ -2312,4 +2312,6 @@ git commit -m "docs(ip1): AI-use log — controller menu + catalogue work"
 
 **Task 10 done + committed (`240df47`, PDF `ip1/IP1-Testing-Plan-Kaike-Nehme.pdf`):** testing plan v2 (A3, Menu bullet, data rows, Task 2 rewrite, trust question), data sheet rows 13–15 + prompt 5, `testing-data/ip1/README.md`. **Task 11:** AI-log rows appended; **APK built OK** 25 Aug 13:17 (`Builds/ip1.apk`, 51.8 MB, Gradle fine from this path; `Builds/` is untracked).
 
+**25 Aug pm — menu v2 + ray feedback (reticle/glow) shipped; select ray ignores the rig; XR Device Simulator auto-spawns in Editor Play. EditMode 59/59, PlayMode 7/7.**
+
 **Still Kaike's:** Task 9 step 5 (XR Device Simulator run of the full Friday script) · `ip1/statement-of-originality.md` personal rewrite (mentions the "diegetic no-menus rule" — now historical; say the IP1 build adds a menu for the A3 comparison) · Friday `adb install -r Builds/ip1.apk`.
