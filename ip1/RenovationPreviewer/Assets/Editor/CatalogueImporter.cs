@@ -60,7 +60,7 @@ public static class CatalogueImporter
     [MenuItem("Renovation/Import Catalogue")]
     public static void Import()
     {
-        Directory.CreateDirectory(Root);
+        EnsureFolder(Root);
         var credits = new StringBuilder("# Catalogue credits\n\nAll 3D models and textures are CC0 (public domain). Colour data is public Dulux Australia colour information used for display names only.\n\n");
         var cat = AssetDatabase.LoadAssetAtPath<Catalogue>($"{Root}/Catalogue.asset");
         if (cat == null)
@@ -93,7 +93,7 @@ public static class CatalogueImporter
 
     static void ImportPaints(Catalogue cat, StringBuilder credits)
     {
-        var dir = $"{Root}/Paints"; Directory.CreateDirectory(dir);
+        var dir = $"{Root}/Paints"; EnsureFolder(dir);
         var path = $"{dir}/dulux.json";
         if (!File.Exists(path))
             File.WriteAllBytes(path, Get("https://raw.githubusercontent.com/shanmoorthy/dulux-paint-colour-data/master/data/colours.json"));
@@ -127,7 +127,7 @@ public static class CatalogueImporter
         {
             var (id, label, targets, tile) = Materials[i];
             EditorUtility.DisplayProgressBar("Catalogue", $"Material {id}", (float)i / Materials.Length);
-            var dir = $"{Root}/Materials/{id}"; Directory.CreateDirectory(dir);
+            var dir = $"{Root}/Materials/{id}"; EnsureFolder(dir);
             var colorPath = $"{dir}/{id}_1K-JPG_Color.jpg";
             var normalPath = $"{dir}/{id}_1K-JPG_NormalGL.jpg";
             if (!File.Exists(colorPath))
@@ -172,40 +172,48 @@ public static class CatalogueImporter
     static void ImportFurniture(Catalogue cat, StringBuilder credits)
     {
         credits.AppendLine("## Furniture (Poly Haven, CC0)");
-        Directory.CreateDirectory($"{Root}/Prefabs");
+        EnsureFolder($"{Root}/Prefabs");
         for (int i = 0; i < Furniture.Length; i++)
         {
             var (id, label, category) = Furniture[i];
             EditorUtility.DisplayProgressBar("Catalogue", $"Furniture {id}", (float)i / Furniture.Length);
             try
             {
-                var dir = $"{Root}/Furniture/{id}"; Directory.CreateDirectory(dir);
-                var gltfPath = $"{dir}/{id}.gltf";
-                if (!File.Exists(gltfPath))
+                var dir = $"{Root}/Furniture/{id}"; EnsureFolder(dir);
+                var fbxPath = $"{dir}/{id}.fbx";
+                var prefabPath0 = $"{Root}/Prefabs/{id}.prefab";
+                if (!File.Exists(fbxPath) && AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath0) == null)
                 {
-                    // files/<id> → { gltf: { "1k": { gltf: { url, include: { "<rel>": { url } } } } } }
+                    // files/<id> → { fbx: { "1k": { fbx: { url, include: { "<rel>": { url } } } } }, gltf: {...} }
+                    // FBX = Unity's native importer (no package). Textures: jpg only (skip .exr); the
+                    // glTF entry is the one that ships a jpg normal map, so merge both include lists.
                     var files = JObject.Parse(Encoding.UTF8.GetString(Get($"https://api.polyhaven.com/files/{id}")));
-                    var gltf = files["gltf"]["1k"]["gltf"];
-                    File.WriteAllBytes(gltfPath, Get((string)gltf["url"]));
-                    foreach (var kv in (JObject)gltf["include"])
+                    var fbx = files["fbx"]["1k"]["fbx"];
+                    File.WriteAllBytes(fbxPath, Get((string)fbx["url"]));
+                    var includes = new Dictionary<string, string>();
+                    foreach (var kv in (JObject)fbx["include"]) includes[kv.Key] = (string)kv.Value["url"];
+                    var gltfInc = files["gltf"]?["1k"]?["gltf"]?["include"] as JObject;
+                    if (gltfInc != null) foreach (var kv in gltfInc) includes[kv.Key] = (string)kv.Value["url"];
+                    foreach (var kv in includes)
                     {
+                        if (!kv.Key.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase)) continue;
                         var target = $"{dir}/{kv.Key}";
-                        Directory.CreateDirectory(Path.GetDirectoryName(target));
-                        if (!File.Exists(target)) File.WriteAllBytes(target, Get((string)kv.Value["url"]));
+                        EnsureFolder(Path.GetDirectoryName(target).Replace('\\', '/'));
+                        if (!File.Exists(target)) File.WriteAllBytes(target, Get(kv.Value));
                     }
                 }
                 var prefabPath = $"{Root}/Prefabs/{id}.prefab";
                 var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
                 if (prefab == null)
                 {
-                    if (!File.Exists(gltfPath)) throw new Exception("no prefab and no glTF on disk — delete the folder and re-run");
-                    AssetDatabase.ImportAsset(gltfPath, ImportAssetOptions.ForceSynchronousImport);
-                    var model = AssetDatabase.LoadAssetAtPath<GameObject>(gltfPath);
-                    if (model == null) { Debug.LogWarning($"CatalogueImporter: glTF import produced no GameObject for {id}"); continue; }
+                    if (!File.Exists(fbxPath)) throw new Exception("no prefab and no FBX on disk — delete the folder and re-run");
+                    AssetDatabase.ImportAsset(fbxPath, ImportAssetOptions.ForceSynchronousImport);
+                    var model = AssetDatabase.LoadAssetAtPath<GameObject>(fbxPath);
+                    if (model == null) { Debug.LogWarning($"CatalogueImporter: FBX import produced no GameObject for {id}"); continue; }
                     prefab = BakePrefab(id, model, dir, prefabPath);
-                    // The glTF ScriptedImporter is only needed once; baked assets need no importer at reload/build.
-                    AssetDatabase.DeleteAsset(gltfPath);
-                    foreach (var bin in Directory.GetFiles(dir, "*.bin")) AssetDatabase.DeleteAsset(bin.Replace('\\', '/'));
+                    // The FBX is only needed once; baked meshes/materials need no importer at reload/build,
+                    // and the importer's auto-materials (Standard shader) would render pink under URP.
+                    AssetDatabase.DeleteAsset(fbxPath);
                 }
                 cat.furniture.Add(new FurnitureOption { name = label, sourceId = id, prefab = prefab, category = category });
                 credits.AppendLine($"- {id} — https://polyhaven.com/a/{id}");
@@ -225,8 +233,8 @@ public static class CatalogueImporter
     /// </summary>
     static GameObject BakePrefab(string id, GameObject model, string dir, string prefabPath)
     {
-        var meshDir = $"{Root}/Meshes"; Directory.CreateDirectory(meshDir);
-        var matDir = $"{Root}/Materials/Furniture"; Directory.CreateDirectory(matDir);
+        var meshDir = $"{Root}/Meshes"; EnsureFolder(meshDir);
+        var matDir = $"{Root}/Materials/Furniture"; EnsureFolder(matDir);
         var lit = Shader.Find("Universal Render Pipeline/Lit");
         var src = (GameObject)PrefabUtility.InstantiatePrefab(model);
         var wrapper = new GameObject(id);
@@ -299,10 +307,25 @@ public static class CatalogueImporter
             if (f.Contains(tag))
             {
                 var ap = f.Replace('\\', '/');
+                AssetDatabase.ImportAsset(ap);          // freshly downloaded files are not in the database yet
                 if (tag.Contains("nor")) MarkNormal(ap);
                 return AssetDatabase.LoadAssetAtPath<Texture2D>(ap);
             }
         return null;
+    }
+
+    /// <summary>Create an Assets/... folder so the AssetDatabase knows it (plain Directory.CreateDirectory
+    /// leaves CreateAsset's temp-file move failing with a modal "Moving file failed").</summary>
+    static void EnsureFolder(string assetPath)
+    {
+        var parts = assetPath.Replace('\\', '/').Split('/');
+        var cur = parts[0];
+        for (int i = 1; i < parts.Length; i++)
+        {
+            var next = cur + "/" + parts[i];
+            if (!AssetDatabase.IsValidFolder(next)) AssetDatabase.CreateFolder(cur, parts[i]);
+            cur = next;
+        }
     }
 
     static byte[] Get(string url)

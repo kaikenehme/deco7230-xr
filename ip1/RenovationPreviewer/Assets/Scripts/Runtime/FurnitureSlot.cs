@@ -18,7 +18,7 @@ public class FurnitureSlot : MonoBehaviour
 
     public void Swap(FurnitureOption option)
     {
-        if (Visual != null) DestroyNow(Visual);
+        ClearChildren();   // every child is visual — the scene-built sofa's parts included
         Current = option;
         if (option == null || option.prefab == null) { Visual = null; return; }
 
@@ -37,9 +37,20 @@ public class FurnitureSlot : MonoBehaviour
 
     public void Remove()
     {
-        if (Visual != null) DestroyNow(Visual);
+        ClearChildren();
         Visual = null;
         Current = null;
+    }
+
+    void ClearChildren()
+    {
+        for (int i = transform.childCount - 1; i >= 0; i--)
+        {
+            var c = transform.GetChild(i);
+            c.SetParent(null, false);   // immediate: childCount/bounds are right this frame
+            DestroyNow(c.gameObject);
+        }
+        Visual = null;
     }
 
     /// <summary>Create a new grabbable slot on the floor at floorPoint, clamped inside floorBounds.</summary>

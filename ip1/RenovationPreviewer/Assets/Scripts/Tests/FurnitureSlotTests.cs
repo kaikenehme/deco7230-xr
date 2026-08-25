@@ -84,4 +84,22 @@ public class FurnitureSlotTests
         Assert.IsTrue(slot.GetComponent<Rigidbody>().isKinematic);
         Assert.IsNotNull(slot.GetComponent<MenuTarget>());
     }
+
+    [Test]
+    public void Swap_OnSceneBuiltSlot_RemovesPreExistingParts()
+    {
+        var root = new GameObject("Sofa");
+        for (int i = 0; i < 4; i++)
+        {
+            var part = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            part.name = "Part" + i;
+            part.transform.SetParent(root.transform);
+        }
+        var slot = root.AddComponent<FurnitureSlot>();
+        slot.Swap(Option("New"));
+        Assert.AreEqual(1, root.transform.childCount, "old parts gone, one visual left");
+        Assert.AreEqual("New", root.transform.GetChild(0).name);
+        slot.Remove();
+        Assert.AreEqual(0, root.transform.childCount);
+    }
 }
