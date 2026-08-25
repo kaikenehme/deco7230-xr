@@ -3,65 +3,89 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-/// <summary>One cell of the menu grid. Emits hover / exit / click; owns no logic.</summary>
-[RequireComponent(typeof(Image))]
+/// <summary>
+/// One chip of the menu grid: rounded swatch (colour or texture) with the name
+/// below, a white ring + 1.08× lift on hover and a ✓ badge when committed.
+/// Emits hover / exit / click; owns no logic.
+/// </summary>
 public class SwatchButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     public UnityEvent onHover = new();
     public UnityEvent onExit = new();
     public UnityEvent onClick = new();
 
-    Image image;
-    Text label;
-    Outline outline;
+    public bool IsHovered { get; private set; }
+    public bool IsCommitted { get; private set; }
+
+    Image hitArea, ring, chip, badge;
+    Text label, badgeText;
 
     void Awake() => Build();
 
     public void Build()
     {
-        if (image != null) return;
-        image = GetComponent<Image>();
-        outline = gameObject.GetComponent<Outline>();
-        if (outline == null) outline = gameObject.AddComponent<Outline>();
-        outline.effectColor = new Color(0, 0, 0, 0.6f);
-        outline.effectDistance = new Vector2(2, -2);
+        if (chip != null) return;
+        // whole cell is the raycast target so the label counts too
+        hitArea = gameObject.GetComponent<Image>();
+        if (hitArea == null) hitArea = gameObject.AddComponent<Image>();
+        hitArea.color = new Color(0, 0, 0, 0);
+        hitArea.raycastTarget = true;
 
-        var t = new GameObject("Label", typeof(RectTransform));
-        t.transform.SetParent(transform, false);
-        var rt = (RectTransform)t.transform;
-        rt.anchorMin = new Vector2(0, 0); rt.anchorMax = new Vector2(1, 0.38f);
-        rt.offsetMin = new Vector2(4, 4); rt.offsetMax = new Vector2(-4, 0);
-        var bg = t.AddComponent<Image>();
-        bg.color = new Color(0, 0, 0, 0.55f);
-        bg.raycastTarget = false;
-        var lt = new GameObject("Text", typeof(RectTransform));
-        lt.transform.SetParent(t.transform, false);
-        var lrt = (RectTransform)lt.transform; lrt.anchorMin = Vector2.zero; lrt.anchorMax = Vector2.one; lrt.offsetMin = lrt.offsetMax = Vector2.zero;
-        label = lt.AddComponent<Text>();
-        label.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-        label.fontSize = 28;
-        label.alignment = TextAnchor.MiddleCenter;
-        label.color = Color.white;
-        label.raycastTarget = false;
-        label.horizontalOverflow = HorizontalWrapMode.Wrap;
-        label.verticalOverflow = VerticalWrapMode.Overflow;   // never truncate to nothing
-        label.resizeTextForBestFit = true; label.resizeTextMinSize = 11; label.resizeTextMaxSize = 24;
+        var ringRt = UiKit.Child("Ring", transform);
+        ringRt.anchorMin = new Vector2(0.04f, 0.34f); ringRt.anchorMax = new Vector2(0.96f, 0.98f);
+        ringRt.offsetMin = new Vector2(-4, -4); ringRt.offsetMax = new Vector2(4, 4);
+        ring = UiKit.RoundedImage(ringRt, Color.white); ring.raycastTarget = false; ring.enabled = false;
+
+        var chipRt = UiKit.Child("Chip", transform);
+        chipRt.anchorMin = new Vector2(0.04f, 0.34f); chipRt.anchorMax = new Vector2(0.96f, 0.98f);
+        chipRt.offsetMin = chipRt.offsetMax = Vector2.zero;
+        chip = UiKit.RoundedImage(chipRt, Color.white); chip.raycastTarget = false;
+
+        var labelRt = UiKit.Child("Label", transform);
+        labelRt.anchorMin = new Vector2(0, 0); labelRt.anchorMax = new Vector2(1, 0.32f);
+        labelRt.offsetMin = new Vector2(2, 0); labelRt.offsetMax = new Vector2(-2, 0);
+        label = UiKit.Label(labelRt, "", 20, UiKit.Text, TextAnchor.UpperCenter, bestFit: true, minSize: 14);
+
+        var badgeRt = UiKit.Child("Badge", transform);
+        badgeRt.anchorMin = new Vector2(0.72f, 0.74f); badgeRt.anchorMax = new Vector2(0.98f, 0.98f);
+        badgeRt.offsetMin = badgeRt.offsetMax = Vector2.zero;
+        badge = badgeRt.gameObject.AddComponent<Image>(); badge.sprite = UiKit.Circle; badge.color = UiKit.Accent; badge.raycastTarget = false;
+        badgeText = UiKit.Label(badgeRt, "✓", 22, UiKit.AccentText, TextAnchor.MiddleCenter);
+        badge.enabled = false; badgeText.enabled = false;
     }
 
     public void Set(string text, Color tint, Texture tex)
     {
         Build();
         label.text = text;
-        image.color = tint;
         if (tex is Texture2D t2)
         {
-            image.sprite = Sprite.Create(t2, new Rect(0, 0, t2.width, t2.height), new Vector2(0.5f, 0.5f));
-            image.color = Color.white;
+            chip.sprite = Sprite.Create(t2, new Rect(0, 0, t2.width, t2.height), new Vector2(0.5f, 0.5f));
+            chip.type = Image.Type.Simple; chip.preserveAspect = false;
+            chip.color = Color.white;
         }
-        else image.sprite = null;
+        else
+        {
+            chip.sprite = UiKit.Rounded; chip.type = Image.Type.Sliced;
+            chip.color = tint;
+        }
     }
 
-    public void OnPointerEnter(PointerEventData e) { outline.effectColor = Color.yellow; onHover.Invoke(); }
-    public void OnPointerExit(PointerEventData e) { outline.effectColor = new Color(0, 0, 0, 0.6f); onExit.Invoke(); }
+    public void SetCommitted(bool on)
+    {
+        Build();
+        IsCommitted = on;
+        badge.enabled = on; badgeText.enabled = on;
+    }
+
+    public void OnPointerEnter(PointerEventData e) { SetHover(true); onHover.Invoke(); }
+    public void OnPointerExit(PointerEventData e) { SetHover(false); onExit.Invoke(); }
     public void OnPointerClick(PointerEventData e) => onClick.Invoke();
+
+    void SetHover(bool on)
+    {
+        IsHovered = on;
+        ring.enabled = on;
+        transform.localScale = on ? Vector3.one * 1.08f : Vector3.one;
+    }
 }

@@ -14,6 +14,7 @@ public class MenuSelectRelay : MonoBehaviour
     public Transform rayOrigin;      // defaults to this transform
     public ControllerMenu menu;
     public float maxDistance = 6f;
+    public Transform ignoreRoot;     // the XR Origin — never select your own body/controllers
 
     void OnEnable() { selectAction.action?.Enable(); closeAction.action?.Enable(); }
 
@@ -24,7 +25,7 @@ public class MenuSelectRelay : MonoBehaviour
         if (selectAction.action == null || !selectAction.action.WasPressedThisFrame()) return;
 
         var origin = rayOrigin != null ? rayOrigin : transform;
-        if (!Physics.Raycast(origin.position, origin.forward, out var hit, maxDistance, ~0, QueryTriggerInteraction.Ignore))
+        if (!RayUtil.TryHit(origin.position, origin.forward, maxDistance, ignoreRoot, out var hit))
         {
             menu.Hide();
             return;

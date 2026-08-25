@@ -131,31 +131,39 @@ MonoBehaviour:
     sourceId: Sofa_01
     prefab: {fileID: 2817075060120719113, guid: 3baa9cfc68a9a451da6c9965e09e19be, type: 3}
     category: 0
+    thumbnail: {fileID: 2800000, guid: 27a5c71f8e2024241b57aa7131b21a44, type: 3}
   - name: Sofa (leather)
     sourceId: sofa_02
     prefab: {fileID: 4856406272613619818, guid: 3dc84ecf5540440abbd771e9b099ea9d, type: 3}
     category: 0
+    thumbnail: {fileID: 2800000, guid: 4ffd4c1b11efd49e1acf337b8a9e5433, type: 3}
   - name: Armchair
     sourceId: ArmChair_01
     prefab: {fileID: 5745618726594557402, guid: adfbffb32fe914303a821797e908d54a, type: 3}
     category: 0
+    thumbnail: {fileID: 2800000, guid: 5e6316829bc104ca3aa7d421b3cabd87, type: 3}
   - name: Lounge chair
     sourceId: mid_century_lounge_chair
     prefab: {fileID: 8481773726226837597, guid: b815216ad6ead4925b498982a02f0bef, type: 3}
     category: 0
+    thumbnail: {fileID: 2800000, guid: b71dc64f02e7d40c397eb977a29d4af0, type: 3}
   - name: Coffee table
     sourceId: modern_coffee_table_01
     prefab: {fileID: 6929100118333320373, guid: 7e769376c52aa4c6589b8b52821d287a, type: 3}
     category: 1
+    thumbnail: {fileID: 2800000, guid: cebaba2ecea7641acbefe9245ba9b521, type: 3}
   - name: Round coffee table
     sourceId: coffee_table_round_01
     prefab: {fileID: 1755855577972015388, guid: 9d841b01b4ce646cdabc64597c42ba1e, type: 3}
     category: 1
+    thumbnail: {fileID: 2800000, guid: 106c2f7f25a9b452ca7606d80baa00a1, type: 3}
   - name: Side table
     sourceId: side_table_01
     prefab: {fileID: 7634158258502642757, guid: f7eb335539eae4031b6fa4add22e86d2, type: 3}
     category: 1
+    thumbnail: {fileID: 2800000, guid: cf07510e71ef74bb6b211a088ce3b2fd, type: 3}
   - name: Shelves
     sourceId: painted_wooden_shelves
     prefab: {fileID: 7837290744674949193, guid: f51c9aabeec894276854206d4d11ae61, type: 3}
     category: 2
+    thumbnail: {fileID: 2800000, guid: 567c3df27807049be9e6319ed0794c17, type: 3}

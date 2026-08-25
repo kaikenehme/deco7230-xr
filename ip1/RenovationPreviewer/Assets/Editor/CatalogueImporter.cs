@@ -215,7 +215,8 @@ public static class CatalogueImporter
                     // and the importer's auto-materials (Standard shader) would render pink under URP.
                     AssetDatabase.DeleteAsset(fbxPath);
                 }
-                cat.furniture.Add(new FurnitureOption { name = label, sourceId = id, prefab = prefab, category = category });
+                var thumb = EnsureThumbnail(id, prefab);
+                cat.furniture.Add(new FurnitureOption { name = label, sourceId = id, prefab = prefab, category = category, thumbnail = thumb });
                 credits.AppendLine($"- {id} — https://polyhaven.com/a/{id}");
             }
             catch (Exception ex)
@@ -326,6 +327,44 @@ public static class CatalogueImporter
             if (!AssetDatabase.IsValidFolder(next)) AssetDatabase.CreateFolder(cur, parts[i]);
             cur = next;
         }
+    }
+
+    /// <summary>Render a 256² PNG of the prefab (3/4 view) once; imported as a plain 2D texture for the menu chip.</summary>
+    static Texture2D EnsureThumbnail(string id, GameObject prefab)
+    {
+        var dir = $"{Root}/Thumbs"; EnsureFolder(dir);
+        var path = $"{dir}/{id}.png";
+        var existing = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
+        if (existing != null) return existing;
+
+        var inst = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
+        inst.transform.position = new Vector3(1000f, 1000f, 1000f);   // away from the scene
+        var rends = inst.GetComponentsInChildren<Renderer>();
+        var b = rends[0].bounds; foreach (var r in rends) b.Encapsulate(r.bounds);
+        var camGo = new GameObject("__thumbcam");
+        var cam = camGo.AddComponent<Camera>();
+        cam.clearFlags = CameraClearFlags.SolidColor; cam.backgroundColor = new Color(0.16f, 0.16f, 0.19f, 1f);
+        cam.fieldOfView = 30f; cam.nearClipPlane = 0.05f;
+        float radius = b.extents.magnitude;
+        var dirv = new Vector3(1f, 0.8f, -1.2f).normalized;
+        cam.transform.position = b.center + dirv * (radius / Mathf.Tan(15f * Mathf.Deg2Rad) * 1.05f);
+        cam.transform.LookAt(b.center);
+        var light = new GameObject("__thumblight").AddComponent<Light>();
+        light.type = LightType.Directional; light.transform.rotation = Quaternion.Euler(45f, -30f, 0f); light.intensity = 1.2f;
+
+        var rt = new RenderTexture(256, 256, 24); cam.targetTexture = rt; cam.Render();
+        var prev = RenderTexture.active; RenderTexture.active = rt;
+        var tex = new Texture2D(256, 256, TextureFormat.RGB24, false);
+        tex.ReadPixels(new Rect(0, 0, 256, 256), 0, 0); tex.Apply();
+        RenderTexture.active = prev;
+        File.WriteAllBytes(path, tex.EncodeToPNG());
+        UnityEngine.Object.DestroyImmediate(tex); cam.targetTexture = null; rt.Release();
+        UnityEngine.Object.DestroyImmediate(camGo); UnityEngine.Object.DestroyImmediate(light.gameObject); UnityEngine.Object.DestroyImmediate(inst);
+
+        AssetDatabase.ImportAsset(path);
+        var imp = AssetImporter.GetAtPath(path) as TextureImporter;
+        if (imp != null) { imp.textureType = TextureImporterType.Default; imp.mipmapEnabled = false; imp.SaveAndReimport(); }
+        return AssetDatabase.LoadAssetAtPath<Texture2D>(path);
     }
 
     static byte[] Get(string url)

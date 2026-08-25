@@ -29,6 +29,7 @@ public class FurnitureOption
     public string sourceId;  // Poly Haven asset id
     public GameObject prefab;
     public FurnitureCategory category;
+    public Texture2D thumbnail;   // rendered at import; shown on the menu chip
 }
 
 /// <summary>

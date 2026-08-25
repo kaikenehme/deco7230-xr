@@ -115,4 +115,16 @@ public class SceneWiringTests
         Assert.IsNotNull(sofa.GetComponent<FurnitureSlot>(), "sofa is a furniture slot");
         Assert.IsNotNull(sofa.GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>(), "sofa grabbable");
     }
+
+    [UnityTest]
+    public IEnumerator RayFeedback_IsOnRightController()
+    {
+        yield return null;
+        var fb = Object.FindObjectsByType<RayFeedback>(FindObjectsInactive.Include, FindObjectsSortMode.None).Single();
+        Assert.AreEqual("Right Controller", fb.transform.name);
+        Assert.IsNotNull(fb.menu, "menu wired");
+        Assert.IsNotNull(fb.rayOrigin, "ray origin wired");
+        Assert.IsNotNull(fb.emissionCarrier, "emission carrier material wired");
+        Assert.IsTrue(fb.emissionCarrier.IsKeywordEnabled("_EMISSION"));
+    }
 }

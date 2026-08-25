@@ -195,7 +195,7 @@ public static class SceneBuilder
         {
             var menuGo = new GameObject("ControllerMenu", typeof(RectTransform));
             menuGo.transform.SetParent(left.transform, false);
-            menuGo.transform.localPosition = new Vector3(0.12f, 0.08f, 0.05f);   // beside/above the left hand
+            menuGo.transform.localPosition = new Vector3(0f, 0.15f, 0.08f);   // above the left hand, facing the eyes
             menu = menuGo.AddComponent<ControllerMenu>();
             menu.catalogue = catalogue;
             menu.head = head;
@@ -209,6 +209,20 @@ public static class SceneBuilder
             relay.rayOrigin = right.GetComponentInChildren<NearFarInteractor>()?.transform ?? right.transform;
             relay.selectAction = ButtonAction("MenuSelect", "<XRController>{RightHand}/triggerPressed");
             relay.closeAction = ButtonAction("MenuClose", "<XRController>{LeftHand}/secondaryButton");
+            relay.ignoreRoot = rig.transform;
+
+            // Ray feedback: reticle + glow. The carrier material keeps the _EMISSION variant in the build.
+            var fb = right.AddComponent<RayFeedback>();
+            fb.menu = menu;
+            fb.rayOrigin = relay.rayOrigin;
+            fb.ignoreRoot = rig.transform;
+            var carrier = MakeMat("HighlightCarrier", Color.white);
+            carrier.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
+            carrier.EnableKeyword("_EMISSION");
+            carrier.SetColor("_EmissionColor", new Color(0.949f, 0.702f, 0.239f) * 0.3f);
+            EditorUtility.SetDirty(carrier);
+            AssetDatabase.SaveAssets();   // a keyword set on a just-created material is lost unless saved before the scene save
+            fb.emissionCarrier = carrier;
         }
     }
 

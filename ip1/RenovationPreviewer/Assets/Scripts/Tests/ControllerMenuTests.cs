@@ -129,4 +129,32 @@ public class ControllerMenuTests
         Assert.IsNull(slot.Current);
         Assert.IsFalse(menu.IsOpen, "menu closes after remove");
     }
+
+    [Test]
+    public void Paint_PagesAtEight_AndNavigates()
+    {
+        for (int i = cat.paints.Count; i < 20; i++) cat.paints.Add(new PaintOption { name = "P" + i, color = Color.grey });
+        menu.Show(Surf(SurfaceState.Change, SurfaceKind.Wall));
+        Assert.AreEqual(ControllerMenu.PageSize, menu.GridButtonCount);
+        Assert.AreEqual(3, menu.PageCount, "20 paints → 3 pages of 8");
+        menu.SetPage(2);
+        Assert.AreEqual(4, menu.GridButtonCount, "last page holds the remaining 4");
+        menu.SetPage(9);
+        Assert.AreEqual(2, menu.Page, "clamped");
+        menu.SetPage(-1);
+        Assert.AreEqual(0, menu.Page);
+    }
+
+    [Test]
+    public void CommittedOption_ShowsBadge()
+    {
+        var t = Surf(SurfaceState.Change, SurfaceKind.Wall);
+        menu.Show(t);
+        menu.ClickGrid(1);   // Domino
+        var chips = menu.GetComponentsInChildren<SwatchButton>(true);
+        Assert.IsTrue(chips.Count(c => c.IsCommitted) == 1, "exactly one badge");
+        menu.Show(t);        // rebuilt from state
+        chips = menu.GetComponentsInChildren<SwatchButton>(true);
+        Assert.IsTrue(chips.Single(c => c.IsCommitted).name == "Domino");
+    }
 }
