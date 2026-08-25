@@ -9,7 +9,7 @@ This project is a phone paint-visualiser app — Dulux Visualizer, Houzz, Home D
 
 ## Testing Objective
 
-From my concept, I have identified two assumptions that need testing:
+From my concept, I have identified three assumptions that need testing:
 
 - **A1** — People understand "pull a sample off what you're keeping, hold it against what you're changing" without being told.
 - **A2** — Constraining the colour options to what harmonises with the kept surfaces **helps** people decide, rather than frustrating them.
