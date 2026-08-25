@@ -7,6 +7,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
+using UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation;
 using UnityEngine.XR.Interaction.Toolkit.UI;
 
 /// <summary>
@@ -16,6 +17,11 @@ using UnityEngine.XR.Interaction.Toolkit.UI;
 /// </summary>
 public static class SceneBuilder
 {
+    // Room envelope (metres) lives in RoomSpec (runtime) so tests can read it. Everything here derives from it.
+    const float RoomW = RoomSpec.W, RoomD = RoomSpec.D, RoomH = RoomSpec.H;
+    const float T = 0.1f;   // wall/slab thickness
+    const int TeleportLayer = RoomSpec.TeleportLayer;
+
     public static void Build()
     {
         var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
@@ -31,22 +37,28 @@ public static class SceneBuilder
         var tableWood = MakeMat("TableWood", new Color(0.35f, 0.24f, 0.15f));
 
         // --- Room shell. 4m x 3m footprint, 2.7m ceiling ---
-        MakeSurface("Floor", new Vector3(0, -0.05f, 0), new Vector3(4, 0.1f, 3), timber, SurfaceState.Keep, SurfaceKind.Floor);
-        MakeSurface("Wall_N", new Vector3(0, 1.35f, 1.55f), new Vector3(4, 2.7f, 0.1f), offwhite, SurfaceState.Change, SurfaceKind.Wall);
-        MakeSurface("Wall_S", new Vector3(0, 1.35f, -1.55f), new Vector3(4, 2.7f, 0.1f), offwhite, SurfaceState.Change, SurfaceKind.Wall);
-        MakeSurface("Wall_E", new Vector3(2.05f, 1.35f, 0), new Vector3(0.1f, 2.7f, 3.2f), offwhite, SurfaceState.Change, SurfaceKind.Wall);
-        MakeSurface("Wall_W", new Vector3(-2.05f, 1.35f, 0), new Vector3(0.1f, 2.7f, 3.2f), offwhite, SurfaceState.Change, SurfaceKind.Wall);
-        MakeSurface("Ceiling", new Vector3(0, 2.75f, 0), new Vector3(4, 0.1f, 3), offwhite, SurfaceState.Change, SurfaceKind.Ceiling);
-        MakeSurface("Door", new Vector3(1.2f, 1.05f, 1.48f), new Vector3(0.9f, 2.1f, 0.06f), trimWhite, SurfaceState.Change, SurfaceKind.Trim);
-        MakeSurface("Trim", new Vector3(-0.8f, 0.075f, 1.48f), new Vector3(2.4f, 0.15f, 0.06f), trimWhite, SurfaceState.Change, SurfaceKind.Trim);
+        float hw = RoomW / 2f, hd = RoomD / 2f, hh = RoomH / 2f;
+        var floor = MakeSurface("Floor", new Vector3(0, -T / 2f, 0), new Vector3(RoomW, T, RoomD), timber, SurfaceState.Keep, SurfaceKind.Floor);
+        MakeSurface("Wall_N", new Vector3(0, hh, hd + T / 2f), new Vector3(RoomW, RoomH, T), offwhite, SurfaceState.Change, SurfaceKind.Wall);
+        MakeSurface("Wall_S", new Vector3(0, hh, -(hd + T / 2f)), new Vector3(RoomW, RoomH, T), offwhite, SurfaceState.Change, SurfaceKind.Wall);
+        MakeSurface("Wall_E", new Vector3(hw + T / 2f, hh, 0), new Vector3(T, RoomH, RoomD + 2 * T), offwhite, SurfaceState.Change, SurfaceKind.Wall);
+        MakeSurface("Wall_W", new Vector3(-(hw + T / 2f), hh, 0), new Vector3(T, RoomH, RoomD + 2 * T), offwhite, SurfaceState.Change, SurfaceKind.Wall);
+        MakeSurface("Ceiling", new Vector3(0, RoomH + T / 2f, 0), new Vector3(RoomW, T, RoomD), offwhite, SurfaceState.Change, SurfaceKind.Ceiling);
+        MakeSurface("Door", new Vector3(hw - 0.8f, 1.05f, hd - 0.02f), new Vector3(0.9f, 2.1f, 0.06f), trimWhite, SurfaceState.Change, SurfaceKind.Trim);
+        MakeSurface("Trim", new Vector3(-hw + 1.2f, 0.075f, hd - 0.02f), new Vector3(2.4f, 0.15f, 0.06f), trimWhite, SurfaceState.Change, SurfaceKind.Trim);
+
+        // Teleport target: only the rig's Teleport Interactors (layer 31) can select it, so a
+        // menu click on the floor never teleports.
+        var tele = floor.AddComponent<TeleportationArea>();
+        tele.interactionLayers = (UnityEngine.XR.Interaction.Toolkit.InteractionLayerMask)(1 << TeleportLayer);
 
         // --- Sofa: kept prop (sample source) AND a furniture slot (swap/move) ---
         var sofa = new GameObject("Sofa");
-        sofa.transform.position = new Vector3(-1.2f, 0f, -0.9f);
-        MakePart(sofa, "Seat", new Vector3(-1.2f, 0.25f, -0.9f), new Vector3(1.8f, 0.5f, 0.8f), sofaGrey);
-        MakePart(sofa, "Back", new Vector3(-1.2f, 0.65f, -1.25f), new Vector3(1.8f, 0.8f, 0.2f), sofaGrey);
-        MakePart(sofa, "ArmL", new Vector3(-2.05f, 0.45f, -0.9f), new Vector3(0.2f, 0.5f, 0.8f), sofaGrey);
-        MakePart(sofa, "ArmR", new Vector3(-0.35f, 0.45f, -0.9f), new Vector3(0.2f, 0.5f, 0.8f), sofaGrey);
+        sofa.transform.position = new Vector3(-hw + 1.3f, 0f, -hd + 0.6f);
+        MakePart(sofa, "Seat", new Vector3(0f, 0.25f, 0f), new Vector3(1.8f, 0.5f, 0.8f), sofaGrey);
+        MakePart(sofa, "Back", new Vector3(0f, 0.65f, -0.35f), new Vector3(1.8f, 0.8f, 0.2f), sofaGrey);
+        MakePart(sofa, "ArmL", new Vector3(-0.85f, 0.45f, 0f), new Vector3(0.2f, 0.5f, 0.8f), sofaGrey);
+        MakePart(sofa, "ArmR", new Vector3(0.85f, 0.45f, 0f), new Vector3(0.2f, 0.5f, 0.8f), sofaGrey);
         var sofaSurf = sofa.AddComponent<Surface>();
         sofaSurf.SetState(SurfaceState.Keep);
         var sofaRb = sofa.AddComponent<Rigidbody>(); sofaRb.isKinematic = true; sofaRb.useGravity = false;
@@ -57,7 +69,7 @@ public static class SceneBuilder
         sofaGrab.movementType = XRBaseInteractable.MovementType.Kinematic;
         sofaGrab.throwOnDetach = false;
         sofaGrab.useDynamicAttach = true;
-        var floorBounds = new Bounds(Vector3.zero, new Vector3(4f, 0.1f, 3f));
+        var floorBounds = new Bounds(Vector3.zero, new Vector3(RoomW, T, RoomD));
         var sofaSlot = sofa.AddComponent<FurnitureSlot>();
         sofaSlot.BindGrab(floorBounds);
         sofa.AddComponent<MenuTarget>();
@@ -66,13 +78,13 @@ public static class SceneBuilder
         //     present but static (spec §7 "present but shallow") ---
         var altFrame = GameObject.CreatePrimitive(PrimitiveType.Cube);
         altFrame.name = "AltMaterialFrame";
-        altFrame.transform.position = new Vector3(1.2f, 1.4f, -1.48f);
+        altFrame.transform.position = new Vector3(hw - 1.3f, 1.4f, -(hd - 0.02f));
         altFrame.transform.localScale = new Vector3(0.55f, 0.55f, 0.04f);
         altFrame.GetComponent<Renderer>().sharedMaterial = trimWhite;
         Object.DestroyImmediate(altFrame.GetComponent<Collider>());
         var altSwatch = GameObject.CreatePrimitive(PrimitiveType.Cube);
         altSwatch.name = "AltMaterialSwatch";
-        altSwatch.transform.position = new Vector3(1.2f, 1.4f, -1.46f);
+        altSwatch.transform.position = new Vector3(hw - 1.3f, 1.4f, -(hd - 0.04f));
         altSwatch.transform.localScale = new Vector3(0.45f, 0.45f, 0.04f);
         altSwatch.GetComponent<Renderer>().sharedMaterial = timberAlt;
         Object.DestroyImmediate(altSwatch.GetComponent<Collider>());
@@ -80,13 +92,13 @@ public static class SceneBuilder
         // --- Lamp on side table (diegetic light control, spec §7) ---
         var table = GameObject.CreatePrimitive(PrimitiveType.Cube);
         table.name = "SideTable";
-        table.transform.position = new Vector3(1.5f, 0.25f, -1.1f);
+        table.transform.position = new Vector3(hw - 0.5f, 0.25f, -hd + 0.4f);
         table.transform.localScale = new Vector3(0.4f, 0.5f, 0.4f);
         table.GetComponent<Renderer>().sharedMaterial = tableWood;
 
         var lamp = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         lamp.name = "Lamp";
-        lamp.transform.position = new Vector3(1.5f, 0.75f, -1.1f);
+        lamp.transform.position = new Vector3(hw - 0.5f, 0.75f, -hd + 0.4f);
         lamp.transform.localScale = Vector3.one * 0.25f;
         lamp.GetComponent<Collider>().isTrigger = true;
         var lampMat = MakeMat("LampShade", new Color(1f, 0.95f, 0.8f));
@@ -127,7 +139,8 @@ public static class SceneBuilder
         if (rigPath != null)
         {
             rig = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(rigPath));
-            rig.transform.position = new Vector3(0.5f, 0, 0.3f);
+            rig.transform.position = new Vector3(0.3f, 0, 0.8f);
+            rig.transform.rotation = Quaternion.Euler(0f, 180f, 0f);   // start facing the kept sofa + floor
             WireControllers(rig, samplePrefab, schemeMgr, floorBounds);
         }
         else
@@ -288,8 +301,8 @@ public static class SceneBuilder
     {
         var p = GameObject.CreatePrimitive(PrimitiveType.Cube);
         p.name = name;
-        p.transform.SetParent(parent.transform);
-        p.transform.position = pos;
+        p.transform.SetParent(parent.transform, false);
+        p.transform.localPosition = pos;
         p.transform.localScale = scale;
         p.GetComponent<Renderer>().sharedMaterial = m;
         Object.DestroyImmediate(p.GetComponent<Collider>());

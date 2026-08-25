@@ -127,4 +127,18 @@ public class SceneWiringTests
         Assert.IsNotNull(fb.emissionCarrier, "emission carrier material wired");
         Assert.IsTrue(fb.emissionCarrier.IsKeywordEnabled("_EMISSION"));
     }
+
+    [UnityTest]
+    public IEnumerator Room_IsRoomWByRoomD_AndFloorTeleports()
+    {
+        yield return null;
+        var floor = Surface.All.Single(s => s != null && s.name == "Floor");
+        Assert.AreEqual(RoomSpec.W, floor.transform.localScale.x, 0.001f);
+        Assert.AreEqual(RoomSpec.D, floor.transform.localScale.z, 0.001f);
+        var tele = floor.GetComponent<UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation.TeleportationArea>();
+        Assert.IsNotNull(tele, "floor is a teleport area");
+        Assert.AreEqual(1 << RoomSpec.TeleportLayer, tele.interactionLayers.value, "teleport layer only");
+        var rig = GameObject.Find("XR Origin (XR Rig)");
+        Assert.AreEqual(180f, rig.transform.eulerAngles.y, 0.5f, "rig faces the sofa");
+    }
 }
