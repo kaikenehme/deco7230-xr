@@ -88,3 +88,4 @@ crashlytics-build.properties
 # structure, review before committing anything into it.
 # ---------------------------------------------------------------------
 testing-data/**/raw-private/
+.utmp/
