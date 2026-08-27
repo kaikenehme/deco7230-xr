@@ -2306,7 +2306,23 @@ git commit -m "docs(ip1): AI-use log — controller menu + catalogue work"
 
 ---
 
-## STATUS — Tue 25 Aug 2026 18:50, paused for the night (resume here)
+## STATUS — Thu 27 Aug 2026, freeze day (supersedes the Tue block below)
+
+**Verified + committed (`6667849`, `ed9715f`):** Tuesday's two untested fixes are green —
+EditMode 61/61 (both new tests pass), PlayMode 8/8, **zero "Invalid AABB"** across scene
+rebuild + PlayMode logs (9.5 GB Editor.log deleted, Unity was closed). Room.unity
+regenerated. Settings churn from the wedged session committed. Final APK build running
+headless. `ip1/ai-acknowledgement.md` created (UQ coversheet table), running log updated,
+one-page `ip1/IP1-Data-Sheet-Print.pdf` added.
+
+**Left for Kaike before Friday:**
+1. Simulator pass of the full Friday script (GUI, ~15 min) — last chance to catch feel bugs.
+2. Statement of originality: own-voice pass + student number + sign. Ack table: student number.
+3. Print `ip1/IP1-Data-Sheet-Print.pdf` × 8.
+4. Sideload `Builds/ip1.apk` when a Quest is in hand (none was connected today); charge controllers.
+5. Blackboard: confirm what uploads there vs repo.
+
+## STATUS (superseded) — Tue 25 Aug 2026 18:50, paused for the night
 
 **On `main`, green, APK built 18:09 (`Builds/ip1.apk`):** Tasks 1–11 + afternoon work — menu v2 (UiKit, paged chips, thumbnails, ✓ badges), ray feedback (reticle + emission glow, `RayUtil` ignores the rig), 5×4 m room (`RoomSpec`), floor `TeleportationArea` on interaction layer 31, rig starts facing the sofa, XR Device Simulator auto-spawns. EditMode 59/59, PlayMode 8/8 at `ebc0ae8`.
 
