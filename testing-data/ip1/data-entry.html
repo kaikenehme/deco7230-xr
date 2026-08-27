@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IP1 Data Entry — Fri 28 Aug 2026</title>
+<style>
+  :root{ --uq:#51247a; --ink:#1c1c1c; --muted:#6a6a6a; --rule:#d9d3e0; --tint:#f6f3f8;
+         --ok:#1c7c40; --bg:#fbfafc; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; font-family:-apple-system,"Helvetica Neue",Arial,sans-serif;
+        font-size:15px; line-height:1.4; color:var(--ink); background:var(--bg); }
+  header{ position:sticky; top:0; z-index:5; background:var(--uq); color:#fff;
+          padding:10px 16px; display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+  header h1{ font-size:17px; margin:0; font-weight:700; }
+  header .status{ font-size:12.5px; opacity:.85; }
+  .tabs{ display:flex; gap:6px; }
+  .tabs button{ border:1px solid rgba(255,255,255,.5); background:transparent; color:#fff;
+        border-radius:6px; padding:6px 12px; font-size:14px; cursor:pointer; }
+  .tabs button.active{ background:#fff; color:var(--uq); font-weight:700; }
+  .tabs button.filled:not(.active){ background:rgba(255,255,255,.22); }
+  main{ max-width:880px; margin:0 auto; padding:14px 16px 90px; }
+  .row{ background:#fff; border:1px solid var(--rule); border-radius:8px;
+        padding:10px 12px; margin-bottom:8px; }
+  .row .q{ font-weight:600; margin-bottom:6px; }
+  .row .q .n{ display:inline-block; min-width:22px; color:var(--uq); font-weight:700; }
+  .opts{ display:flex; flex-wrap:wrap; gap:8px; }
+  .opts label{ border:1.5px solid var(--rule); border-radius:7px; padding:8px 14px;
+        cursor:pointer; user-select:none; background:var(--tint); font-size:14.5px; }
+  .opts input{ display:none; }
+  .opts input:checked + span{ font-weight:700; }
+  .opts label:has(input:checked){ background:var(--uq); color:#fff; border-color:var(--uq); }
+  input[type=text], input[type=number], textarea{
+        width:100%; border:1.5px solid var(--rule); border-radius:7px; padding:8px 10px;
+        font:inherit; background:#fff; }
+  textarea{ min-height:56px; resize:vertical; }
+  .inline{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+  .inline input[type=number]{ width:84px; }
+  .counter{ display:flex; align-items:center; gap:10px; }
+  .counter button{ width:44px; height:44px; font-size:22px; border-radius:8px;
+        border:1.5px solid var(--rule); background:var(--tint); cursor:pointer; }
+  .counter .val{ min-width:34px; text-align:center; font-size:20px; font-weight:700; }
+  .hint{ font-size:12.5px; color:var(--muted); margin-top:4px; }
+  h2{ color:var(--uq); font-size:15px; margin:18px 0 8px; }
+  .footerbar{ position:fixed; bottom:0; left:0; right:0; background:#fff;
+        border-top:1px solid var(--rule); padding:10px 16px; display:flex; gap:10px;
+        flex-wrap:wrap; justify-content:center; }
+  .footerbar button{ border:none; border-radius:8px; padding:10px 16px; font-size:14.5px;
+        font-weight:600; cursor:pointer; background:var(--tint); color:var(--uq); }
+  .footerbar button.primary{ background:var(--uq); color:#fff; }
+  .footerbar button.danger{ background:#fbeaea; color:#a02020; }
+  #toast{ position:fixed; bottom:70px; left:50%; transform:translateX(-50%);
+        background:var(--ok); color:#fff; padding:8px 18px; border-radius:20px;
+        font-size:14px; opacity:0; transition:opacity .25s; pointer-events:none; }
+  .prompts-ref{ font-size:13px; color:var(--muted); background:var(--tint);
+        border-radius:8px; padding:8px 12px; margin-bottom:10px; }
+  .prompts-ref ol{ margin:4px 0 0; padding-left:20px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>IP1 data entry</h1>
+  <div class="tabs" id="tabs"></div>
+  <div class="status" id="savestate">—</div>
+</header>
+
+<main>
+  <div class="prompts-ref">
+    <b>Scripted prompts (only after ~20 s stuck; +1 the tally in row 4):</b>
+    <ol>
+      <li>"The floor and sofa are staying — everything else can change."</li>
+      <li>"Try touching something that's staying."</li>
+      <li>"Try holding it near a wall."</li>
+      <li>"Try twisting your wrist while holding it."</li>
+      <li>"Point at the floor and press the trigger."</li>
+      <li>"Squeeze the grip to grab the furniture; let go to drop it."</li>
+    </ol>
+  </div>
+  <div id="form"></div>
+</main>
+
+<div class="footerbar">
+  <button class="primary" onclick="copyMd()">Copy README.md</button>
+  <button onclick="downloadMd()">Download README.md</button>
+  <button onclick="downloadJson()">Backup JSON</button>
+  <button class="danger" onclick="clearAll()">Clear all</button>
+</div>
+<div id="toast"></div>
+
+<script>
+const N = 8;
+const FIELDS = [
+  {k:'consent',  q:'Screen-recording consent', t:'radio', o:['yes','no']},
+  {k:'recfile',  q:'Recording file #', t:'text'},
+  {k:'first',    n:'1',  q:'Reached for first (free look, no instruction) — what/where?', t:'text'},
+  {k:'touched',  n:'2',  q:'Floor or sofa touched during free look?', t:'radio', o:['yes','no']},
+  {k:'time',     n:'3',  q:'Time to first unprompted commit (from Task 1 start)', t:'time'},
+  {k:'prompts',  n:'4',  q:'Facilitator prompts needed', t:'count'},
+  {k:'twist',    n:'5',  q:'Twist-to-tune discovered unprompted?', t:'radio', o:['yes','no','after prompt']},
+  {k:'samples',  n:'6',  q:'Samples tried before first commit', t:'count'},
+  {k:'scheme',   n:'7',  q:'Scheme save/cycle used in Task 2?', t:'radio', o:['saved','cycled','both','neither']},
+  {k:'lamp',     n:'8',  q:'Lamp/light discovered or used?', t:'radio', o:['unprompted','prompted','no']},
+  {k:'conf',     n:'9',  q:'Confidence in final choice (ask: "1–5?")', t:'radio', o:['1','2','3','4','5']},
+  {k:'helpful',  n:'10', q:'"Did the limited options feel helpful or restrictive?" (verbatim)', t:'textarea'},
+  {k:'reject',   n:'11', q:'Think-aloud: why was a candidate rejected? (verbatim)', t:'textarea'},
+  {k:'confused', n:'12', q:'One thing that confused you (verbatim)', t:'textarea'},
+  {k:'methodfirst', n:'13', q:'Method used first after Task 1 prompt', t:'radio', o:['hold-up','menu']},
+  {k:'keptvia',  n:'14', q:'Method that produced the kept choice', t:'radio', o:['hold-up','menu','both']},
+  {k:'menuopen', n:'15a', q:'Menu opened…', t:'radio', o:['unprompted','prompted','not opened']},
+  {k:'furn',     n:'15b', q:'Furniture…', t:'multi', o:['placed','moved','failed']},
+  {k:'grab',     n:'16', q:'Furniture grab (grip) discovered unprompted?', t:'radio', o:['unprompted','prompted','no']},
+  {k:'trusted',  q:'"Which method did you trust more, and why?" (verbatim)', t:'textarea'},
+  {k:'notes',    q:'Observer notes (gestures, hesitations, errors, stuck previews, anything broken)', t:'textarea'},
+];
+
+let data = {}, cur = 1;
+try { data = JSON.parse(localStorage.getItem('ip1data') || '{}'); } catch(e) { data = {}; }
+const P = () => (data['p'+cur] = data['p'+cur] || {});
+
+function save(){
+  try { localStorage.setItem('ip1data', JSON.stringify(data)); flag('saved ✓'); }
+  catch(e){ flag('NOT SAVED — use Backup JSON!'); }
+  paintTabs();
+}
+let flagT;
+function flag(msg){
+  const s = document.getElementById('savestate');
+  s.textContent = msg;
+  clearTimeout(flagT); flagT = setTimeout(()=>s.textContent='autosave on', 1500);
+}
+function hasData(i){ const p = data['p'+i]; return p && Object.values(p).some(v => v!=='' && v!=null && (!Array.isArray(v)||v.length)); }
+
+function paintTabs(){
+  const t = document.getElementById('tabs'); t.innerHTML='';
+  for(let i=1;i<=N;i++){
+    const b=document.createElement('button');
+    b.textContent='P'+i;
+    b.className=(i===cur?'active ':'')+(hasData(i)?'filled':'');
+    b.onclick=()=>{cur=i; render();};
+    t.appendChild(b);
+  }
+}
+
+function ctl(f){
+  const v = P()[f.k];
+  if(f.t==='text') return `<input type="text" value="${esc(v||'')}" oninput="set('${f.k}',this.value)">`;
+  if(f.t==='textarea') return `<textarea oninput="set('${f.k}',this.value)">${esc(v||'')}</textarea>`;
+  if(f.t==='time'){
+    const t=v||{};
+    return `<div class="inline"><input type="number" min="0" value="${t.m??''}" placeholder="m" oninput="setT('m',this.value)"> m
+            <input type="number" min="0" max="59" value="${t.s??''}" placeholder="s" oninput="setT('s',this.value)"> s
+            <span class="hint">blank = never committed unprompted</span></div>`;
+  }
+  if(f.t==='count'){
+    const n=v??0;
+    return `<div class="counter"><button onclick="bump('${f.k}',-1)">−</button>
+            <span class="val" id="c_${f.k}">${n}</span>
+            <button onclick="bump('${f.k}',1)">+</button></div>`;
+  }
+  if(f.t==='radio') return `<div class="opts">`+f.o.map(o=>
+      `<label><input type="radio" name="${f.k}" ${v===o?'checked':''} onchange="set('${f.k}','${o}')"><span>${o}</span></label>`).join('')+`</div>`;
+  if(f.t==='multi'){ const a=v||[];
+    return `<div class="opts">`+f.o.map(o=>
+      `<label><input type="checkbox" ${a.includes(o)?'checked':''} onchange="tog('${f.k}','${o}')"><span>${o}</span></label>`).join('')+`</div>`;
+  }
+}
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;'); }
+
+function render(){
+  paintTabs();
+  document.getElementById('form').innerHTML = FIELDS.map(f=>
+    `<div class="row"><div class="q">${f.n?`<span class="n">${f.n}</span>`:''}${f.q}</div>${ctl(f)}</div>`).join('');
+}
+function set(k,v){ P()[k]=v; save(); if(FIELDS.find(f=>f.k===k).t==='radio') render(); }
+function setT(part,v){ const t=P().time||{}; t[part]=v===''?null:+v; P().time=t; save(); }
+function bump(k,d){ P()[k]=Math.max(0,(P()[k]??0)+d); document.getElementById('c_'+k).textContent=P()[k]; save(); }
+function tog(k,o){ const a=P()[k]||[]; const i=a.indexOf(o); i<0?a.push(o):a.splice(i,1); P()[k]=a; save(); }
+
+// ---- export ----
+const cell = s => String(s??'').replace(/\|/g,'/').replace(/\n/g,' ').trim();
+function md(){
+  let out = `# IP1 testing results — Fri 28 Aug 2026\n\nPosted before leaving the studio (brief requirement). One row per participant, anonymised (P1…). Raw sheets/photos go in \`raw-private/\` (gitignored).\n\n`;
+  out += `| P | First reached for | Floor/sofa touched | Time to 1st commit | Prompts | Twist found | Samples tried | Method first (13) | Kept via (14) | Menu (15) | Grab (16) | Save/cycle | Lamp | Confidence | Helpful/restrictive (verbatim) | Trusted method (verbatim) | Confused by |\n`;
+  out += `|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|\n`;
+  let notes = '';
+  for(let i=1;i<=N;i++){
+    if(!hasData(i)) continue;
+    const p = data['p'+i]||{};
+    const t = p.time||{};
+    const time = (t.m==null&&t.s==null)?'—':`${t.m??0}m ${t.s??0}s`;
+    const menu = [p.menuopen, (p.furn||[]).join('+')].filter(Boolean).join(' · ');
+    out += `| P${i} | ${cell(p.first)} | ${cell(p.touched)} | ${time} | ${p.prompts??0} | ${cell(p.twist)} | ${p.samples??0} | ${cell(p.methodfirst)} | ${cell(p.keptvia)} | ${cell(menu)} | ${cell(p.grab)} | ${cell(p.scheme)} | ${cell(p.lamp)} | ${cell(p.conf)} | ${cell(p.helpful)} | ${cell(p.trusted)} | ${cell(p.confused)} |\n`;
+    const extra = [p.consent?`consent: ${p.consent}`:'', p.recfile?`recording #${p.recfile}`:'', p.notes||''].filter(Boolean).join(' · ');
+    if(extra) notes += `- **P${i}** — ${extra}\n`;
+  }
+  out += `\n## Observer notes\n\n${notes || '_none recorded_\n'}`;
+  return out;
+}
+function copyMd(){ navigator.clipboard.writeText(md()).then(()=>toast('Markdown copied — paste into testing-data/ip1/README.md'),()=>toast('Copy failed — use Download')); }
+function dl(name, text, type){ const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([text],{type})); a.download=name; a.click(); }
+function downloadMd(){ dl('README.md', md(), 'text/markdown'); toast('README.md downloaded'); }
+function downloadJson(){ dl('ip1-raw-backup.json', JSON.stringify(data,null,2), 'application/json'); toast('JSON backup downloaded'); }
+function clearAll(){ if(confirm('Erase ALL participants? Download a backup first?')) { data={}; save(); render(); } }
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.style.opacity=1;
+  setTimeout(()=>t.style.opacity=0, 2500); }
+
+render(); flag('autosave on');
+</script>
+</body>
+</html>

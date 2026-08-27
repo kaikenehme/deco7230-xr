@@ -9,7 +9,7 @@ The design of this prototype is my own work: the concept (an XR renovation previ
 
 AI tooling (Claude Code, Anthropic) was used, with my direction and review, for implementation scaffolding of the Unity project: project configuration scripts, the C# implementations of the architecture I specified in the concept document (§8), automated tests, and document formatting. Every AI contribution is itemised in the accompanying AI acknowledgement table (`ip1/ai-acknowledgement.md`), kept as a running log during development per UQ Library guidance.
 
-All third-party assets are limited to Unity's official packages (URP, XR Interaction Toolkit, OpenXR plugin, Input System) and their bundled starter samples, used under Unity's licence. No other code, assets, or text were sourced externally.
+All third-party assets are limited to Unity's official packages (URP, XR Interaction Toolkit, OpenXR plugin, Input System) and their bundled starter samples, used under Unity's licence, plus CC0 textures (Poly Haven, ambientCG) and publicly available Dulux colour values recorded in the AI acknowledgement. No other code, assets, or text were sourced externally.
 
 The in-class testing, data collection, and all analysis are my own work.
 
