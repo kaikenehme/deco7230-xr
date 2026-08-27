@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>XR Renovation Previewer — IP1 Testing Plan</title>
+<style>
+  @page { size: A4; margin: 16mm 16mm 14mm 16mm; }
+  :root{ --uq:#51247a; --ink:#1c1c1c; --muted:#5c5c5c; --rule:#d5d0da; --tint:#f6f3f8; }
+  *{ box-sizing:border-box; }
+  html{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  body{ margin:0; font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+        font-size:9.6pt; line-height:1.45; color:var(--ink); }
+  h1{ font-size:17pt; font-weight:700; color:var(--uq); margin:0 0 4px; letter-spacing:-.01em; }
+  h2{ font-size:11pt; font-weight:700; color:var(--uq); margin:12px 0 4px;
+      page-break-after:avoid; break-after:avoid; }
+  p{ margin:0 0 6px; }
+  .meta{ color:var(--muted); font-size:9pt; margin-bottom:8px; }
+  ul, ol{ margin:0 0 8px; padding-left:18px; }
+  li{ margin-bottom:2px; }
+  b.tag{ color:var(--uq); }
+  table{ width:100%; border-collapse:collapse; margin:6px 0 8px; font-size:8.8pt; }
+  th{ text-align:left; font-weight:700; color:#fff; background:var(--uq);
+      padding:4px 7px; border:1px solid var(--uq); }
+  td{ padding:4px 7px; border:1px solid var(--rule); vertical-align:top; }
+  tbody tr:nth-child(even) td{ background:var(--tint); }
+</style>
+</head>
+<body>
+  <h1>XR Renovation Previewer — Testing plan for Interactive Prototype 1</h1>
+  <p class="meta">DECO7230 · Kaike Nehme · Studio test: Fri 28 Aug 2026 (Week 5) · v3 (furniture grab measure, 27 Aug) ·
+  Template: IP1 brief p.3 · Concept: <code>concept/2026-08-07-xr-renovation-concept-design.md</code> (v1.1)</p>
+
+  <h2>Pitch</h2>
+  <p>This project is a phone paint-visualiser app — Dulux Visualizer, Houzz, Home Depot Project Color — but using XR so you can hold a colour sample up against the surfaces you're keeping, at full size, in your own light. Samples are pulled directly off the things staying in the room — the timber floor, the sofa — and those samples generate the options that work with them. Alongside that, a menu on the left controller offers the full catalogue: paint colours, floor and wall materials, and furniture to swap or add. The test asks which of the two people actually use, and which they trust.</p>
+
+  <h2>Testing Objective</h2>
+  <p>From my concept, I have identified three assumptions that need testing:</p>
+  <ul>
+    <li><b class="tag">A1</b> — People understand "pull a sample off what you're keeping, hold it against what you're changing" without being told.</li>
+    <li><b class="tag">A2</b> — Constraining the colour options to what harmonises with the kept surfaces <b>helps</b> people decide, rather than frustrating them.</li>
+    <li><b class="tag">A3</b> — When both are available, people reach for the constrained hold-up loop <i>or</i> the open catalogue menu — and the open catalogue raises, or lowers, their confidence in the final choice compared with the constrained options.</li>
+  </ul>
+  <p><b>A2 is the primary objective</b> — the whole concept rests on it and it can genuinely fail; a negative result is still a strong Evaluation 1. This test aims to discover (a) whether the core loop is discoverable without instruction (time to first unprompted commit, prompts needed, twist-to-tune discovery), and (b) whether the constrained option space increases or decreases decision confidence (samples tried, self-reported confidence, helpful-vs-restrictive judgement), and (c) which method is used first and which produces the choice the participant keeps (A3).</p>
+
+  <h2>Testing Methodologies</h2>
+  <p>This testing plan uses <b>structured observation with a timed task protocol, think-aloud, and a short post-test interview</b> to evaluate a digital prototype made in Unity. The first phase is deliberately uninstructed (free exploration) to measure discoverability before any priming; the second phase is task-directed; the interview captures the A2 judgement in the participant's own words. Quantitative measures are logged live on a paper sheet, one row per measure; the headset view is screen-recorded with consent as backup and appendix material. Standardised instruments (SUS, presence questionnaires) are deliberately excluded: at five minutes per session they would report noise; they belong to IP2b, where the brief points to them.</p>
+
+  <h2>Prototype description / requirements</h2>
+  <p>The prototype was designed to make the full core loop testable at horizontal breadth: a single furnished virtual living room (timber floor and sofa are <b>kept</b>; four walls, ceiling, door and trim are <b>changeable</b>) in VR on Quest with controllers. It supports:</p>
+  <ul>
+    <li><b>Mark</b> — sweeping a controller across a surface while holding grip toggles it between keep and change.</li>
+    <li><b>Pull</b> — touching a kept surface (floor, sofa) and pressing trigger pulls a colour sample off it into the hand.</li>
+    <li><b>Hold</b> — bringing the held sample near a changeable surface previews that colour on the whole surface; moving away always reverts.</li>
+    <li><b>Tune</b> — twisting the wrist while holding the sample walks through seven options harmonised to the sample (analogous, tonal, triadic, complementary).</li>
+    <li><b>Commit</b> — releasing the sample against a surface applies the colour; releasing in mid-air discards it.</li>
+    <li><b>Light</b> — touching the lamp cycles warm / cool / daylight, relighting the whole room.</li>
+    <li><b>Compare</b> — controller A saves the current scheme (up to 3), B cycles between saved schemes.</li>
+    <li><b>Menu</b> — pointing the right controller at a surface or piece of furniture and pressing trigger opens a menu on the left hand: paint colours (Dulux), materials (tiles, timber, carpet, plaster) and furniture to add; hovering previews, clicking commits, moving away reverts. Furniture can be swapped and removed via the menu.</li>
+    <li><b>Move</b> — squeezing the grip while pointing at any piece of furniture (the kept sofa included) grabs it; it drags with the ray and, on release, snaps flat to the floor inside the room. Grip-to-grab has no visual affordance yet — its discoverability is measured (sheet row 16, prompt 6).</li>
+  </ul>
+  <p>Every control is either a physical act on the room or a controller input; the menu is the one non-diegetic element and exists so the two approaches can be compared (A3). The lamp cannot be swapped.</p>
+
+  <h2>Data collection method</h2>
+  <p>During the testing process, I will observe silently through the first uninstructed phase, then issue the two task prompts verbatim, tallying on a paper data sheet (one sheet per participant, one row per measure) and noting think-aloud remarks. The headset view is screen-recorded with consent. I will only intervene with a scripted prompt when a participant is stuck for ~20 seconds, and each prompt is tallied.</p>
+  <table>
+    <thead><tr><th>Measure</th><th>Type</th><th>Validates</th></tr></thead>
+    <tbody>
+      <tr><td>Time to first unprompted commit</td><td>quantitative (stopwatch)</td><td>A1</td></tr>
+      <tr><td>Facilitator prompts needed (tally)</td><td>quantitative</td><td>A1</td></tr>
+      <tr><td>Twist-to-tune discovered unprompted?</td><td>boolean</td><td>A1</td></tr>
+      <tr><td>Samples tried before first commit</td><td>quantitative</td><td>A2</td></tr>
+      <tr><td>"How confident are you in this choice?" (1–5)</td><td>quantitative</td><td>A2</td></tr>
+      <tr><td>"Did the limited options feel helpful or restrictive?"</td><td>qualitative</td><td><b>A2 — decisive</b></td></tr>
+      <tr><td>Think-aloud on why a candidate was rejected</td><td>qualitative</td><td>A2</td></tr>
+      <tr><td>Method used first after Task 1 prompt (hold-up / menu)</td><td>boolean</td><td>A3</td></tr>
+      <tr><td>Method that produced the kept choice (hold-up / menu / both)</td><td>categorical</td><td>A3</td></tr>
+      <tr><td>Furniture grab (grip) discovered unprompted?</td><td>categorical</td><td>A1</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Testing Setup</h2>
+  <p>Charge the Quest and controllers; sideload the current <code>ip1.apk</code> and verify it launches to the room scene. Print 6 data sheets and clip to a board with a stopwatch. Start headset screen-recording at the start of each session. Clear the previous participant's schemes by restarting the app between sessions (committed colours and saved schemes must not leak between participants). Have the consent line ready before recording. One chair placed for the participant to orient from; 2m × 2m clear floor space.</p>
+
+  <h2>Testing process (~5 min per participant, aim ≥5 participants)</h2>
+  <ul>
+    <li>Brief the participant: "You're in a living room you're renovating. The floor and sofa are staying." Consent for screen recording. Headset on, controllers in hand. <b>(30 seconds)</b></li>
+    <li>Free look, no instruction. Observe silently: what is reached for first? Is the floor touched? Log any unprompted discovery of pull / preview / twist. <b>(30 seconds)</b></li>
+    <li>Task 1, read verbatim: <b>"Repaint this room so it works with the floor and sofa you're keeping."</b> Start stopwatch. Log time to first unprompted commit, prompts, samples tried, twist discovery. <b>(1 minute 30)</b></li>
+    <li>Task 2, read verbatim: <b>"Now change the floor to tiles, add one piece of furniture and move it where you'd want it, then save this as a second version and switch between the two."</b> Log menu discovery, spawn success, grip-grab discovery (row 16), whether saving/cycling is used. <b>(1 minute 30)</b></li>
+    <li>Post-test, ask in order: confidence 1–5 in the final choice; "did the limited options feel helpful or restrictive — why?"; "you had two ways to choose — pulling from the room and the menu — which did you trust more, and why?"; one thing that confused you. <b>(1 minute)</b></li>
+  </ul>
+  <p><b>Results are posted to this repo (<code>testing-data/ip1/</code>) before leaving the room</b> (brief requirement).</p>
+</body>
+</html>

@@ -1,6 +1,6 @@
 # XR Renovation Previewer — Testing plan for Interactive Prototype 1
 
-**DECO7230 · Kaike Nehme · Studio test: Fri 28 Aug 2026 (Week 5) · v2 (menu + catalogue, 25 Aug)**
+**DECO7230 · Kaike Nehme · Studio test: Fri 28 Aug 2026 (Week 5) · v3 (furniture grab measure, 27 Aug)**
 Template: IP1 brief p.3. Concept: `../concept/2026-08-07-xr-renovation-concept-design.md` (v1.1).
 
 ## Pitch
@@ -32,7 +32,8 @@ The prototype was designed to make the full core loop testable at horizontal bre
 - **Commit** — releasing the sample against a surface applies the colour; releasing in mid-air discards it.
 - **Light** — touching the lamp cycles warm / cool / daylight, relighting the whole room.
 - **Compare** — controller A saves the current scheme (up to 3), B cycles between saved schemes.
-- **Menu** — pointing the right controller at a surface or piece of furniture and pressing trigger opens a menu on the left hand: paint colours (Dulux), materials (tiles, timber, carpet, plaster) and furniture to add; hovering previews, clicking commits, moving away reverts. Furniture can be swapped, removed, grabbed and moved.
+- **Menu** — pointing the right controller at a surface or piece of furniture and pressing trigger opens a menu on the left hand: paint colours (Dulux), materials (tiles, timber, carpet, plaster) and furniture to add; hovering previews, clicking commits, moving away reverts. Furniture can be swapped and removed via the menu.
+- **Move** — squeezing the grip while pointing at any piece of furniture (the kept sofa included) grabs it; it drags with the ray and, on release, snaps flat to the floor inside the room. Grip-to-grab has no visual affordance yet — its discoverability is measured (sheet row 16, prompt 6).
 
 Every control is either a physical act on the room or a controller input; the menu is the one non-diegetic element and exists so the two approaches can be compared (A3). The lamp cannot be swapped.
 
@@ -51,6 +52,7 @@ During the testing process, I will observe silently through the first uninstruct
 | Think-aloud on why a candidate was rejected | qualitative | A2 |
 | Method used first after Task 1 prompt (hold-up / menu) | boolean | A3 |
 | Method that produced the kept choice (hold-up / menu / both) | categorical | A3 |
+| Furniture grab (grip) discovered unprompted? | categorical | A1 |
 
 ## Testing Setup
 
@@ -61,7 +63,7 @@ Charge the Quest and controllers; sideload the current `ip1.apk` and verify it l
 - Brief the participant: "You're in a living room you're renovating. The floor and sofa are staying." Consent for screen recording. Headset on, controllers in hand. **(30 seconds)**
 - Free look, no instruction. Observe silently: what is reached for first? Is the floor touched? Log any unprompted discovery of pull / preview / twist. **(30 seconds)**
 - Task 1, read verbatim: **"Repaint this room so it works with the floor and sofa you're keeping."** Start stopwatch. Log time to first unprompted commit, prompts, samples tried, twist discovery. **(1 minute 30)**
-- Task 2, read verbatim: **"Now change the floor to tiles and add one piece of furniture, then save this as a second version and switch between the two."** Log menu discovery, spawn/move success, whether saving/cycling is used. **(1 minute 30)**
+- Task 2, read verbatim: **"Now change the floor to tiles, add one piece of furniture and move it where you'd want it, then save this as a second version and switch between the two."** Log menu discovery, spawn success, grip-grab discovery (row 16), whether saving/cycling is used. **(1 minute 30)**
 - Post-test, ask in order: confidence 1–5 in the final choice; "did the limited options feel helpful or restrictive — why?"; "you had two ways to choose — pulling from the room and the menu — which did you trust more, and why?"; one thing that confused you. **(1 minute)**
 
 **Results are posted to this repo (`testing-data/ip1/`) before leaving the room** (brief requirement).

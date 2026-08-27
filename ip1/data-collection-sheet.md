@@ -21,6 +21,7 @@
 | 13 | Method used first after Task 1 prompt | ☐ hold-up ☐ menu |
 | 14 | Method that produced the kept choice | ☐ hold-up ☐ menu ☐ both |
 | 15 | Menu: opened unprompted? furniture placed? | ☐ opened ☐ prompted · ☐ placed ☐ moved ☐ failed |
+| 16 | Furniture grab (grip) discovered unprompted? | ☐ unprompted ☐ prompted ☐ no |
 
 **Scripted prompts (use only after ~20 s stuck; tally each in row 4):**
 1. "The floor and sofa are staying — everything else can change."
@@ -28,6 +29,7 @@
 3. "Try holding it near a wall."
 4. "Try twisting your wrist while holding it."
 5. "Point at the floor and press the trigger."
+6. "Squeeze the grip to grab the furniture; let go to drop it."
 
 **Observer notes (gestures, hesitations, errors, stuck previews, anything broken):**
 
