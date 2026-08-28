@@ -2306,7 +2306,29 @@ git commit -m "docs(ip1): AI-use log — controller menu + catalogue work"
 
 ---
 
-## STATUS — Thu 27 Aug 2026, freeze day (supersedes the Tue block below)
+## STATUS — Fri 28 Aug 2026 end of studio day (supersedes both blocks below)
+
+**All on `main`, pushed through `2521a59`, tree clean.** Today: room enlarged to
+7×5.5 m (`RoomSpec`); fixed the "wall snaps to default blue" bug (material chip's
+`Commit(Color.white)` wiped the chosen paint, masked by the menu glow until close —
+now `Surface.HasUserColour` tint rule, WYSIWYG commit, scheme snapshots carry the
+flag); EditMode **63/63**, PlayMode 8/8. Feature-map PDF added (`ip1/IP1-Feature-Map.pdf`).
+Field-log artifact for data capture: https://claude.ai/code/artifact/336261ad-e901-48fc-8df2-2e78edfdc5f6
+(exports README.md for `testing-data/ip1/`). Test ran on the **simulator** (per Kaike);
+APK `Builds/ip1.apk` (14:57, has everything) built but **never sideloaded** — borrowed
+Quest stuck `unauthorized`, no USB dialog; managed-device suspicion, studio staff needed.
+
+**Tomorrow / next:**
+1. **Testing results** — if in-class data wasn't pushed yet: export README from the
+   field-log artifact (or `testing-data/ip1/data-entry.html`) into `testing-data/ip1/README.md`,
+   commit + push. Brief requires results in the repo.
+2. Blackboard submission check (testing plan, statement, AI acknowledgement — student
+   number still `[student number]` in statement + ack, and the statement is unsigned).
+3. Evaluation 1 due **Wed 2 Sep 12:00** (submit by 10:00) — builds on today's data; A2/A3
+   analysis is the core.
+4. Quest sideload path when a cooperative headset appears: `adb install -r Builds/ip1.apk`.
+
+## STATUS (superseded) — Thu 27 Aug 2026, freeze day
 
 **Verified + committed (`6667849`, `ed9715f`):** Tuesday's two untested fixes are green —
 EditMode 61/61 (both new tests pass), PlayMode 8/8, **zero "Invalid AABB"** across scene
