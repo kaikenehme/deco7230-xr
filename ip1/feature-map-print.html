@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>IP1 Feature Map — where everything is implemented</title>
+<style>
+  @page { size: A4; margin: 14mm 14mm 12mm 14mm; }
+  :root{ --uq:#51247a; --ink:#1c1c1c; --muted:#5c5c5c; --rule:#d5d0da; --tint:#f6f3f8; }
+  *{ box-sizing:border-box; }
+  html{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  body{ margin:0; font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+        font-size:8.8pt; line-height:1.4; color:var(--ink); }
+  h1{ font-size:15pt; font-weight:700; color:var(--uq); margin:0 0 2px; letter-spacing:-.01em; }
+  h2{ font-size:10pt; font-weight:700; color:var(--uq); margin:9px 0 3px;
+      page-break-after:avoid; break-after:avoid; }
+  p{ margin:0 0 5px; }
+  .meta{ color:var(--muted); font-size:8.5pt; margin-bottom:8px; }
+  code{ font-family:Menlo,Consolas,monospace; font-size:.9em; }
+  table{ width:100%; border-collapse:collapse; margin:3px 0 6px; table-layout:fixed; }
+  th{ text-align:left; font-weight:700; color:#fff; background:var(--uq);
+      padding:2.5px 6px; border:1px solid var(--uq); font-size:8.3pt; }
+  td{ padding:2.5px 6px; border:1px solid var(--rule); vertical-align:top; word-wrap:break-word; }
+  tbody tr:nth-child(even) td{ background:var(--tint); }
+  .w-feat{ width:17%; } .w-file{ width:31%; } .w-how{ width:52%; }
+  .principle{ background:var(--tint); border-left:3px solid var(--uq); padding:5px 9px;
+      margin:5px 0 7px; font-size:8.6pt; }
+  .cols{ display:table; width:100%; }
+</style>
+</head>
+<body>
+  <h1>IP1 Feature Map</h1>
+  <p class="meta">XR Renovation Previewer · DECO7230 · Kaike Nehme · Fri 28 Aug 2026 ·
+  All paths under <code>ip1/RenovationPreviewer/Assets/</code> · EditMode tests 61/61 (<code>Scripts/Tests/</code>) · PlayMode 8/8 (<code>Scripts/PlayModeTests/SceneWiringTests.cs</code>)</p>
+
+  <div class="principle"><b>Architecture rule (concept §8):</b> surfaces never know samples or menus exist.
+  <code>Surface</code> is a state machine; <code>HoldUpPreviewer</code> is the <i>sole</i> coupling point between a held
+  sample and a surface; the menu commits through the same <code>Surface</code> preview/commit API the hold-up loop uses.
+  One write path — that's why menu and hold-up can be compared fairly (assumption A3).</div>
+
+  <h2>The core loop — mark · pull · hold · tune · commit</h2>
+  <table>
+    <colgroup><col class="w-feat"><col class="w-file"><col class="w-how"></colgroup>
+    <thead><tr><th>Feature</th><th>Implementation</th><th>How it works</th></tr></thead>
+    <tbody>
+      <tr><td><b>Mark</b> (keep/change)</td><td><code>Scripts/Runtime/MarkTool.cs</code> · <code>Surface.cs</code></td><td>Brushing a controller across a surface while holding grip toggles Keep/Change. Grip gate + sweep-speed threshold stop accidental toggles (open Q3); per-surface debounce stops double fires.</td></tr>
+      <tr><td><b>Pull</b> (sample source)</td><td><code>Scripts/Runtime/SamplePuller.cs</code> · <code>Sample.cs</code></td><td>Touch a <b>Keep</b> surface + trigger → spawns a sample already held by that controller. Pulling from a Change surface is refused — only kept things are sources; that <i>is</i> the concept (§9).</td></tr>
+      <tr><td><b>Hold-up preview</b></td><td><code>Scripts/Runtime/HoldUpPreviewer.cs</code></td><td>While held: nearest Change surface in range previews the sample colour; leaving range always reverts (a preview must never stick, §9). Sole coupling point between Sample and Surface.</td></tr>
+      <tr><td><b>Tune</b> (twist)</td><td><code>Scripts/Runtime/HarmonyTuner.cs</code> · <code>HarmonyPalette.cs</code></td><td>Controller roll (relative to grab pose) indexes a 7-option palette generated from the pulled colour, ordered safe→bold: analogous pair, tonal pale/deep, triadic pair, complementary.</td></tr>
+      <tr><td><b>Commit / discard</b></td><td><code>HoldUpPreviewer.cs</code> · <code>Surface.cs</code></td><td>Release in range commits the previewed look to the surface; release mid-air discards the sample. Surface stores committed vs previewed colour AND material separately.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Diegetic controls — no floating menus</h2>
+  <table>
+    <colgroup><col class="w-feat"><col class="w-file"><col class="w-how"></colgroup>
+    <thead><tr><th>Feature</th><th>Implementation</th><th>How it works</th></tr></thead>
+    <tbody>
+      <tr><td><b>Light</b> (lamp)</td><td><code>Scripts/Runtime/LampController.cs</code></td><td>Touching the lamp cycles Warm → Cool → Daylight, relighting the room. Three states, not on/off: "does this green survive a warm bulb at 9pm?" (§7).</td></tr>
+      <tr><td><b>Compare</b> (schemes)</td><td><code>Scripts/Runtime/SchemeCycler.cs</code> · <code>SchemeManager.cs</code></td><td>Primary button saves the current scheme (max 3, colour+material snapshot per surface); secondary cycles saved schemes. Physical controller buttons — the no-menus rule holds.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Controller menu (added 25 Aug for the A3 comparison)</h2>
+  <table>
+    <colgroup><col class="w-feat"><col class="w-file"><col class="w-how"></colgroup>
+    <thead><tr><th>Feature</th><th>Implementation</th><th>How it works</th></tr></thead>
+    <tbody>
+      <tr><td><b>Open / target</b></td><td><code>Scripts/Runtime/MenuSelectRelay.cs</code> · <code>MenuTarget.cs</code> · <code>RayUtil.cs</code></td><td>Right trigger fires a physics ray → anything with <code>MenuTarget</code> opens the menu for it. Ray skips the rig's own colliders and never treats the menu panel as a wall (tag <code>MenuPanel</code>). Trigger on nothing closes.</td></tr>
+      <tr><td><b>Panel v2</b></td><td><code>Scripts/Runtime/ControllerMenu.cs</code> (361 ln) · <code>SwatchButton.cs</code> · <code>MenuTab.cs</code> · <code>UiKit.cs</code></td><td>World-space canvas above the left hand, facing the eyes: header, segmented tabs (Paint / Material / Add furniture), 4×2 paged chips with thumbnails, ✓ on the committed option. Hover previews via the same Surface API; click commits; moving off reverts. All sprites procedural (<code>UiKit</code>) — zero art assets.</td></tr>
+      <tr><td><b>Catalogue</b></td><td><code>Scripts/Runtime/Catalogue.cs</code> · <code>Editor/CatalogueImporter.cs</code> (376 ln)</td><td>One-shot idempotent importer: Poly Haven CC0 glTF furniture, ambientCG CC0 PBR materials, Dulux public colour data → URP materials + prefabs + <code>Catalogue.asset</code>. Bundled, no runtime downloads.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Furniture &amp; locomotion</h2>
+  <table>
+    <colgroup><col class="w-feat"><col class="w-file"><col class="w-how"></colgroup>
+    <thead><tr><th>Feature</th><th>Implementation</th><th>How it works</th></tr></thead>
+    <tbody>
+      <tr><td><b>Move</b> (grip-grab)</td><td><code>Scripts/Runtime/FurnitureSlot.cs</code></td><td>Every furniture piece is a slot: stable GameObject holds pose, box collider, <code>XRGrabInteractable</code> (kinematic, no throw); the visual is a swappable child. Grip grabs, drag with the ray; release snaps flat to floor, clamped inside the room. Discoverability = data-sheet row 16.</td></tr>
+      <tr><td><b>Swap / add / remove</b></td><td><code>FurnitureSlot.Swap()</code> / <code>.Spawn()</code> / <code>.Remove()</code></td><td>Menu's furniture tab spawns a new slot at the aimed floor point or swaps the targeted slot's visual; collider auto-fits renderer bounds; sofa is a slot too (kept = also a sample source).</td></tr>
+      <tr><td><b>Teleport</b></td><td><code>Editor/SceneBuilder.cs</code> · <code>RoomSpec.cs</code></td><td>Floor is a <code>TeleportationArea</code> on interaction layer 31 (reserved in <code>RoomSpec.TeleportLayer</code>) so teleport rays and select rays never collide. Point at floor + trigger.</td></tr>
+      <tr><td><b>Aim feedback</b></td><td><code>Scripts/Runtime/RayFeedback.cs</code> · <code>RayUtil.cs</code></td><td>4 cm reticle oriented to the hit normal (safe up-vector — the Invalid-AABB fix) + emission glow on whatever the ray points at. Pure per-frame state machine.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Scene, rig &amp; build infrastructure</h2>
+  <table>
+    <colgroup><col class="w-feat"><col class="w-file"><col class="w-how"></colgroup>
+    <thead><tr><th>Piece</th><th>Implementation</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><b>Scene generation</b></td><td><code>Editor/SceneBuilder.cs</code> (310 ln)</td><td>Room.unity is <i>generated, never hand-edited</i>: 5×4×2.7 m room (<code>RoomSpec</code>), kept timber floor + sofa, 4 changeable walls + ceiling + trim + door, lamp, rig start pose facing the sofa. Re-runnable from scratch.</td></tr>
+      <tr><td><b>XR rig / input</b></td><td>XRI 3.1.2 Starter Assets rig prefab + code-created <code>InputAction</code>s</td><td>Tool inputs bind to <code>&lt;XRController&gt;{Left|Right}Hand</code> paths directly, not the Starter action asset. Controllers only — hand tracking stripped (hurdle-risk decision). NearFar interactors do grab + UI.</td></tr>
+      <tr><td><b>Project config</b></td><td><code>Editor/ProjectConfigurator.cs</code></td><td>One-shot URP + OpenXR (Meta Quest feature) + Android IL2CPP/ARM64 setup.</td></tr>
+      <tr><td><b>Build</b></td><td><code>Editor/BuildScript.cs</code></td><td><code>BuildAndroid</code> → <code>Builds/ip1.apk</code>, headless via <code>-batchmode -executeMethod</code>.</td></tr>
+      <tr><td><b>Simulator QoL</b></td><td><code>Scripts/Runtime/SimulatorCursorLock.cs</code></td><td>Editor-only (<code>#if UNITY_EDITOR</code>): auto-locks the mouse in play mode for XR Device Simulator runs. Compiled out of the Quest build.</td></tr>
+      <tr><td><b>Tests</b></td><td><code>Scripts/Tests/</code> · <code>Scripts/PlayModeTests/</code></td><td>61 EditMode unit tests (palette maths, tuner, surfaces, schemes, menu, ray utils, furniture) + 8 PlayMode scene-wiring tests (rig, layers, teleport, menu bindings) — all green at submission.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="principle"><b>Input cheat-sheet:</b> trigger = pull sample / select / commit chip / teleport ·
+  grip = mark sweep / grab furniture · primary = save scheme · secondary = cycle schemes / close menu ·
+  touch lamp = light state. Simulator keys: Tab cycle device, left-click = trigger, G = grip, <code>\</code> = cursor lock.</div>
+</body>
+</html>
