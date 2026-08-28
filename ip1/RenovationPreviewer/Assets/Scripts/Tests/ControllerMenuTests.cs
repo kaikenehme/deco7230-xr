@@ -157,4 +157,32 @@ public class ControllerMenuTests
         chips = menu.GetComponentsInChildren<SwatchButton>(true);
         Assert.IsTrue(chips.Single(c => c.IsCommitted).name == "Domino");
     }
+
+    [Test]
+    public void CommitMaterial_AfterPaint_KeepsTheChosenColour()
+    {
+        // Repro of the studio-day bug: paint a wall, then pick a material, close the
+        // menu — the wall must stay in the chosen colour, not snap back to white.
+        var t = Surf(SurfaceState.Change, SurfaceKind.Wall);
+        var s = t.GetComponent<Surface>();
+        menu.Show(t);
+        menu.ClickGrid(1);                    // Domino (black)
+        menu.ShowTab(MenuTab.Material);
+        menu.ClickGrid(0);                    // Plaster
+        Assert.AreEqual(Color.black, s.CommittedColor, "material commit must not wipe the paint choice");
+        Assert.AreEqual("plaster", s.CommittedMaterial.name);
+    }
+
+    [Test]
+    public void CommitMaterial_OnUntouchedSurface_LeavesColourStateAlone()
+    {
+        var t = Surf(SurfaceState.Change, SurfaceKind.Wall);
+        var s = t.GetComponent<Surface>();
+        var before = s.CommittedColor;        // whatever the scene shipped with
+        menu.Show(t);
+        menu.ShowTab(MenuTab.Material);
+        menu.ClickGrid(0);                    // Plaster
+        Assert.AreEqual(before, s.CommittedColor);
+        Assert.IsFalse(s.HasUserColour, "no paint was ever chosen");
+    }
 }

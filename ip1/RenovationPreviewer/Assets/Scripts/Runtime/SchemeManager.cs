@@ -6,6 +6,7 @@ public struct SurfaceLook
 {
     public Color color;
     public Material material;   // null = the material the scene shipped with
+    public bool userColour;     // was the colour an explicit paint choice? (tint rule)
 }
 
 /// <summary>
@@ -26,7 +27,7 @@ public class SchemeManager : MonoBehaviour
         var snapshot = new Dictionary<Surface, SurfaceLook>();
         foreach (var s in Surface.All)
             if (s != null && s.State == SurfaceState.Change)
-                snapshot[s] = new SurfaceLook { color = s.CommittedColor, material = s.CommittedMaterial };
+                snapshot[s] = new SurfaceLook { color = s.CommittedColor, material = s.CommittedMaterial, userColour = s.HasUserColour };
 
         int slot = nextSlot;
         if (schemes.Count < MaxSchemes) schemes.Add(snapshot);
@@ -41,8 +42,7 @@ public class SchemeManager : MonoBehaviour
         foreach (var kv in schemes[slot])
         {
             if (kv.Key == null) continue;
-            kv.Key.CommitMaterial(kv.Value.material);   // material first, colour tints it
-            kv.Key.Commit(kv.Value.color);
+            kv.Key.Restore(kv.Value.color, kv.Value.material, kv.Value.userColour);
         }
     }
 }

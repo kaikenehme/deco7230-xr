@@ -272,7 +272,10 @@ public class ControllerMenu : MonoBehaviour
             b.SetCommitted(s.CommittedMaterial == opt.material);
             b.onHover.AddListener(() => { s.PreviewMaterial(opt.material); Echo(opt.name); });
             b.onExit.AddListener(() => { s.Revert(); Echo(null); });
-            b.onClick.AddListener(() => { s.CommitMaterial(opt.material); s.Commit(Color.white); MarkCommitted(b); });
+            // Commit exactly what the hover previewed — never reset the user's paint choice
+            // (the old Commit(Color.white) here caused the wall to snap to the texture's raw
+            // hue the moment the menu's glow cleared).
+            b.onClick.AddListener(() => { s.CommitMaterial(opt.material); MarkCommitted(b); });
         }
     }
 

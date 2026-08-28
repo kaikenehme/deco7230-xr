@@ -26,6 +26,10 @@ public class Surface : MonoBehaviour
     public Material CommittedMaterial { get; private set; }
     public Material DisplayMaterial { get; private set; }
     public bool IsPreviewing { get; private set; }
+    /// <summary>True once a paint colour was explicitly chosen. Until then a menu material
+    /// shows untinted (white) — CommittedColor still holds the scene's base colour, and
+    /// tinting a texture with that base is the "wall turns default blue" bug.</summary>
+    public bool HasUserColour { get; private set; }
 
     Renderer rend;
     Material baseMaterial;   // the material the scene shipped with, for revert-to-original
@@ -41,6 +45,7 @@ public class Surface : MonoBehaviour
         {
             baseMaterial = rend.sharedMaterial;
             CommittedColor = DisplayColor = rend.sharedMaterial.color;
+            HasUserColour = false;
         }
     }
 
@@ -62,15 +67,16 @@ public class Surface : MonoBehaviour
     {
         if (state == SurfaceState.Keep) return; // kept surfaces are sources, never targets
         IsPreviewing = true;
-        ApplyColor(c);
+        ApplyColor(c, true);
     }
 
     public void Commit(Color c)
     {
         if (state == SurfaceState.Keep) return;
         CommittedColor = c;
+        HasUserColour = true;
         IsPreviewing = false;
-        ApplyColor(c);
+        ApplyColor(c, true);
     }
 
     // ---- material ----
@@ -89,19 +95,32 @@ public class Surface : MonoBehaviour
         ApplyMaterial(m);
     }
 
+    /// <summary>Scheme restore: put back a saved look verbatim, including whether the
+    /// colour was a user choice (drives the material tint rule).</summary>
+    public void Restore(Color c, Material m, bool userColour)
+    {
+        if (state == SurfaceState.Keep) return;
+        CommittedMaterial = m;
+        CommittedColor = c;
+        HasUserColour = userColour;
+        IsPreviewing = false;
+        ApplyMaterial(m);
+        ApplyColor(c, userColour);
+    }
+
     /// <summary>A preview must never stick: restore committed material then committed colour.</summary>
     public void Revert()
     {
         IsPreviewing = false;
         ApplyMaterial(CommittedMaterial);
-        ApplyColor(CommittedColor);
+        ApplyColor(CommittedColor, HasUserColour);
     }
 
-    void ApplyColor(Color c)
+    void ApplyColor(Color c, bool userIntent)
     {
         DisplayColor = c;
         if (Application.isPlaying && rend != null)
-            rend.material.color = c;
+            rend.material.color = userIntent || DisplayMaterial == null ? c : Color.white;
     }
 
     void ApplyMaterial(Material m)
@@ -110,8 +129,9 @@ public class Surface : MonoBehaviour
         if (!Application.isPlaying || rend == null) return;
         var src = m != null ? m : baseMaterial;
         if (src == null) return;
-        // Instance so tint edits never write into the shared asset.
-        var inst = new Material(src) { color = DisplayColor };
+        // Instance so tint edits never write into the shared asset. A catalogue material
+        // shows untinted until a paint colour was explicitly chosen (WYSIWYG with hover).
+        var inst = new Material(src) { color = m != null && !HasUserColour ? Color.white : DisplayColor };
         // Catalogue materials store tiles-per-metre in mainTextureScale; a primitive cube's
         // UVs span 0..1 per face, so multiply by the face size (two largest cube axes).
         if (m != null)
