@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Evaluation 1 — XR Renovation Previewer</title>
+<style>
+  @page { size: A4; margin: 13mm 14mm 11mm 14mm; }
+  :root{
+    --ink:#16130f; --muted:#7a7167; --kraft:#b08968;
+    --red:#c0392b; --green:#6fa03c; --flame:#e8912a;
+    --tint:#faf7f2; --rule:#e5ded4;
+  }
+  *{ box-sizing:border-box; }
+  html{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  body{ margin:0; font-family:Georgia,"Times New Roman",serif; font-size:8.1pt; line-height:1.36; color:var(--ink); }
+  h1,h2,h3,.eyebrow,th,.tag,.cat{ font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; }
+
+  .masthead{ border-bottom:2.5px solid var(--ink); padding-bottom:6px; margin-bottom:9px; }
+  .eyebrow{ font-size:6.6pt; letter-spacing:.17em; text-transform:uppercase; color:var(--muted); font-weight:700; margin-bottom:5px; }
+  h1{ font-size:15.5pt; line-height:1.1; margin:0; letter-spacing:-.015em; font-weight:700; }
+  h1 .sub{ display:block; font-size:9.4pt; font-weight:400; color:var(--muted); margin-top:3px; letter-spacing:0; }
+  .byline{ font-size:7.2pt; color:var(--muted); margin-top:6px; }
+  .byline strong{ color:var(--ink); font-weight:600; }
+
+  h2{ font-size:7.2pt; letter-spacing:.14em; text-transform:uppercase; font-weight:700;
+      margin:8px 0 4px; padding-bottom:3px; border-bottom:1px solid var(--rule);
+      page-break-after:avoid; break-after:avoid; }
+  h2 .num{ color:var(--kraft); margin-right:6px; }
+  h3{ font-size:8.1pt; margin:6px 0 3px; font-weight:700; page-break-after:avoid; break-after:avoid; }
+  p{ margin:0 0 4px; }
+  table,.note{ page-break-inside:avoid; break-inside:avoid; }
+  table.long{ page-break-inside:auto; break-inside:auto; }
+
+  table{ width:100%; border-collapse:collapse; margin:5px 0 3px; font-size:7.7pt; }
+  th{ text-align:left; font-size:6.3pt; letter-spacing:.1em; text-transform:uppercase; font-weight:700;
+      color:var(--muted); border-bottom:1.4px solid var(--ink); padding:0 6px 3px 0; vertical-align:bottom; }
+  td{ padding:2.5px 6px 2.5px 0; border-bottom:1px solid var(--rule); vertical-align:top; line-height:1.32; }
+  tr:last-child td{ border-bottom:0; }
+  td.k{ font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; font-weight:700; color:var(--kraft); white-space:nowrap; }
+  td.b{ font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; font-weight:700; font-size:7.5pt; }
+  td.c, th.c{ text-align:center; }
+  td.n{ font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; font-weight:700; white-space:nowrap; }
+  .yes{ color:var(--green); font-weight:700; } .no{ color:var(--red); font-weight:700; }
+
+  .cat{ display:inline-block; background:var(--ink); color:#fff; font-size:6.6pt; font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:2.5px 6px; }
+  .tag{ display:inline-block; font-size:6.2pt; font-weight:700; letter-spacing:.08em; text-transform:uppercase; padding:1.5px 5px; border:1px solid var(--ink); margin-right:3px; }
+  .tag.inv{ border-color:var(--red); color:var(--red); }
+  .tag.unt{ border-color:var(--flame); color:var(--flame); }
+  .tag.half{ border-color:var(--kraft); color:var(--kraft); }
+
+  .note{ border-left:2.5px solid var(--flame); background:#fdf8f0; padding:5px 9px; margin:6px 0 3px; font-size:7.7pt; line-height:1.38; }
+  .note b{ font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; font-size:7.3pt; letter-spacing:.03em; }
+
+  .two{ display:flex; gap:14px; } .two > div{ flex:1; }
+  ul{ margin:2px 0 4px; padding-left:14px; } li{ margin-bottom:1.5px; }
+
+  footer{ margin-top:8px; padding-top:5px; border-top:1px solid var(--rule); font-size:6.6pt; color:var(--muted); }
+  .pb{ page-break-before:always; }
+
+  .scans{ display:flex; flex-wrap:wrap; gap:8px; margin-top:6px; }
+  .scan{ width:calc(50% - 4px); }
+  .scan img{ width:100%; display:block; border:1px solid var(--rule); }
+  .cap{ font-size:6.7pt; color:var(--muted); margin-top:3px; line-height:1.3; }
+  .cap b{ color:var(--ink); font-weight:600; }
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="eyebrow">DECO7230 · Interactive Prototype Outcome Evaluation 1 · Submission 2</div>
+  <h1>XR Renovation Previewer
+    <span class="sub">Evaluation of Interactive Prototype 1 — Week 5 studio testing, Fri 28 Aug 2026</span>
+  </h1>
+  <div class="byline"><strong>Kaike Nehme</strong> · s4959287 · Semester 2, 2026 · Digital Prototyping and Extended Reality<br>
+    Prototype, testing plan, raw data and this evaluation at <strong>github.com/kaikenehme/deco7230-xr</strong> · raw data in Appendices A–D</div>
+</div>
+
+<h2><span class="num">01</span>Objective and validation metrics</h2>
+<p><span class="cat">Category: Creation</span></p>
+<p style="margin-top:5px;">Interactive Prototype 1 is a VR living room (Unity 6, XR Interaction Toolkit, controllers) in which the floor and sofa are <b>staying</b> and everything else can change. The concept's hero interaction is a <b>hold-up loop</b>: touch a kept surface to pull a colour sample off it, hold the sample against a wall to preview a harmonised paint, twist the wrist to tune it, release to commit. Alongside it, for comparison only, sits a conventional <b>controller menu</b> with a 24-colour Dulux catalogue, floor materials and eight pieces of furniture. Secondary diegetic controls: a lamp that cycles warm / cool / daylight when touched, and a scheme save-and-cycle.</p>
+<p>The testing plan set three assumptions. <b>A2 was the primary objective</b> — the whole concept rests on it, and it could genuinely fail.</p>
+<table>
+  <tr><th style="width:8%">Aim</th><th style="width:40%">Assumption under test</th><th>Measures (data sheet row) and what would count as support</th></tr>
+  <tr><td class="k">A1</td><td>People understand "pull a sample off what you're keeping, hold it against what you're changing" <i>without being told</i></td><td>Time to first unprompted commit (3) · facilitator prompts needed, tallied after ~20 s stuck (4) · twist-to-tune found unprompted (5) · furniture grab found unprompted (16). Support = a commit through the hold-up loop inside Task 1 with few or no prompts</td></tr>
+  <tr><td class="k">A2</td><td>Constraining colour options to what harmonises with the kept surfaces <b>helps</b> people decide rather than frustrating them</td><td>Samples tried before first commit (6) · confidence 1–5 (9) · "did the limited options feel helpful or restrictive?" (10, <b>decisive</b>) · think-aloud on rejected candidates (11). Support = participants who used the constrained set call it helpful and report confidence not lower than menu users</td></tr>
+  <tr><td class="k">A3</td><td>With both routes available, which one people reach for, which produces the kept choice, and which they trust</td><td>Method used first after the Task 1 prompt (13) · method that produced the kept choice (14) · post-test "which did you trust more?"</td></tr>
+</table>
+<p>The plan fixed the measures and the 20-second prompt rule but did not set numeric pass marks; I judged each aim by the <i>direction</i> and <i>consistency</i> of the evidence across participants, and I say so in §4 rather than fit thresholds after the fact. Protocol per participant (~5 min): brief → 30 s uninstructed free look → Task 1 (<i>"repaint this room so it works with the floor and sofa you're keeping"</i>) → Task 2 (change the floor, add and move furniture, save and switch schemes) → four post-test questions. One paper sheet per participant, 16 rows; the sheet is in Appendix D.</p>
+
+<div class="note"><b>Setting — read before the results.</b> The studio session ran on the <b>XR Device Simulator</b> inside the Unity Editor on a laptop, with mouse and keyboard standing in for headset and controllers (grip = <code>G</code>, trigger = click, wrist twist = mouse-driven controller rotation). The borrowed Quest stayed <code>unauthorized</code> over USB and the built APK was never sideloaded. Every "controller" action below is therefore a mouse action. This confounds every discoverability measure, and I treat it as such throughout.</div>
+
+<h2><span class="num">02</span>Results</h2>
+<p>The studio session produced <b>two participants</b> (P1, P2 — course peers); the plan aimed for five or more, and studio time allowed two. To reach n = 5 I ran <b>three supplementary sessions</b> (P3–P5, flatmates) at home on the weekend of 29–30 Aug, on the same simulator setup, with the same printed sheet and protocol. They are <b>out-of-class data</b> and are reported separately in every table: counts are given as studio + supplementary. No session was screen-recorded (consent declined or not taken). Full rows and observer notes are in Appendices A–C.</p>
+
+<h3>What participants did</h3>
+<table>
+  <tr><th>Behaviour</th><th class="c">P1</th><th class="c">P2</th><th class="c">P3</th><th class="c">P4</th><th class="c">P5</th><th>Count (studio + supp.)</th></tr>
+  <tr><td>First thing reached for, uninstructed</td><td class="c">wall</td><td class="c">—</td><td class="c">floor</td><td class="c">sofa</td><td class="c">wall</td><td>kept surface first: 2 of 4 recorded</td></tr>
+  <tr><td>Touched a kept surface (floor/sofa) in free look</td><td class="c yes">yes</td><td class="c yes">yes</td><td class="c yes">yes</td><td class="c yes">yes</td><td class="c yes">yes</td><td class="n">5/5 (2 + 3)</td></tr>
+  <tr><td>Pulled a sample or held one against a wall (hold-up loop)</td><td class="c no">no</td><td class="c no">no</td><td class="c no">no</td><td class="c no">no</td><td class="c no">no</td><td class="n">0/5 (0 + 0)</td></tr>
+  <tr><td>Discovered twist-to-tune</td><td class="c">—</td><td class="c">—</td><td class="c no">no</td><td class="c no">no</td><td class="c no">no</td><td>0/3 recorded (no sample was ever held)</td></tr>
+  <tr><td>Opened the menu unprompted</td><td class="c no">no</td><td class="c no">no</td><td class="c">—</td><td class="c no">no</td><td class="c">—</td><td>0/3 recorded</td></tr>
+  <tr><td>Method used first · method that produced the kept choice</td><td class="c">menu · menu</td><td class="c">menu · menu</td><td class="c">menu · menu</td><td class="c">menu · menu</td><td class="c">menu · menu</td><td class="n">menu 5/5 (2 + 3)</td></tr>
+  <tr><td>Facilitator prompts needed</td><td class="c">5</td><td class="c">3</td><td class="c">4</td><td class="c">2</td><td class="c">4</td><td>mean 3.6 in a ~5 min session</td></tr>
+  <tr><td>Samples tried before first commit</td><td class="c">3</td><td class="c">2</td><td class="c">4</td><td class="c">2</td><td class="c">2</td><td>all via the menu</td></tr>
+  <tr><td>Time to first unprompted commit</td><td class="c">—</td><td class="c">~3 min</td><td class="c">~2 min</td><td class="c">~2 min</td><td class="c">~1 min</td><td>minutes only; seconds not logged</td></tr>
+  <tr><td>Grabbed furniture (grip) unprompted</td><td class="c no">no</td><td class="c no">no</td><td class="c no">no</td><td class="c yes">yes</td><td class="c no">no</td><td class="n">1/5 (0 + 1)</td></tr>
+  <tr><td>Used the lamp unprompted</td><td class="c no">no</td><td class="c no">no</td><td class="c no">no</td><td class="c yes">yes</td><td class="c yes">yes</td><td class="n">2/5 (0 + 2)</td></tr>
+  <tr><td>Saved or cycled schemes (Task 2)</td><td class="c no">neither</td><td class="c">—</td><td class="c no">neither</td><td class="c no">neither</td><td class="c no">neither</td><td class="n">0/4 recorded</td></tr>
+</table>
+
+<h3>What participants said (verbatim from the sheets)</h3>
+<table>
+  <tr><th style="width:19%">Question</th><th>P1</th><th>P2</th><th>P3</th><th>P4</th><th>P5</th></tr>
+  <tr><td>Confidence in final choice, 1–5</td><td class="c">3</td><td class="c">—</td><td class="c">3</td><td class="c">4</td><td class="c">2</td></tr>
+  <tr><td>"Did the limited options feel helpful or restrictive?"</td><td>"It's good"</td><td>"Enough for now"</td><td>"Feels a bit restrictive"</td><td>"Feels good for now"</td><td>"Need more painting options"</td></tr>
+  <tr><td>Why was a candidate rejected?</td><td>—</td><td>—</td><td>"The walls highlight"</td><td>"The furniture drag and drop"</td><td>"Furniture selection"</td></tr>
+  <tr><td>One thing that confused you</td><td>"Simulator is confusing"</td><td>"Drag and drop (hard)"</td><td>"The controller"</td><td>"The controller"</td><td>"Controller"</td></tr>
+  <tr><td>Observer notes</td><td>"Changing the highlight colour (frame)"</td><td>"Toggle to rotate furniture" · "Once you select the furniture you PLACE IT, not drop"</td><td>"Change the highlight for a framed one"</td><td>"When we select a furniture we should place it, not dropped in front"</td><td>"Have more options on furniture and maybe a room already set up"</td></tr>
+</table>
+<p><b>Data quality.</b> Studio sheets captured 11/16 and 10/16 rows; supplementary sheets 15/16 each. Not captured for anyone: which of the six scripted prompts was used (only the count), and the post-test "which method did you trust more?" — it was in the plan but never printed on the sheet. Row 11 ("why was a candidate rejected?") was answered by all three supplementary participants as <i>what was hard</i>, not as a reason for rejecting a colour. Row 10 was asked, as printed, of five people who had all chosen through the menu — so every answer describes the 24-colour catalogue, not the constrained set the question was written for.</p>
+
+<h2><span class="num">03</span>Analysis and insights</h2>
+<p>Five participants across two settings is a small sample, so I report counts, not percentages, and I only call something a pattern when it held for every participant it applied to.</p>
+<p><b>The loop's entry gesture happens; the loop never starts (5/5, 0/5).</b> Everyone touched the floor or sofa during free look — the exact gesture that begins the hold-up loop — and nobody pulled a sample. Touching a kept surface produces no response that reads as "you can take this". This held in the studio, at home, with a facilitator who had already run the protocol twice, and with participants who probably knew what the project was. It is the strongest thing IP1 produced, and it is a failure of <i>affordance</i>, not of the concept: the interaction was never reached, so it was never judged.</p>
+<p><b>The menu wins by default, not by preference (menu 5/5; unprompted 0/3 recorded).</b> Both routes to a paint choice were invisible. The menu produced every kept choice only because the facilitator's fifth scripted prompt ("point at the floor and press the trigger") reveals it directly, and nothing in the room reveals the hold-up loop. This is a discoverability result, and I do not read it as "people prefer menus".</p>
+<p><b>Prompt load was constant (5, 3 · 4, 2, 4).</b> Roughly one intervention per minute against a 20-second stuck rule, unchanged by facilitator practice or a familiar setting — the prototype, not the session, is what needs prompting.</p>
+<p><b>Confusion is about manipulation, not choice (5/5).</b> Every "confusing thing", every row-11 answer and every observer note is about moving things and reading feedback: the controller (×3), drag-and-drop (×2), the selection highlight (×2), rotating furniture, and — said independently by P2 and P4 in almost the same words — that selecting furniture should <i>place</i> it, not drop it at your feet. Nobody was confused by colours, options or the room. Some of this is simulator cost (a mouse standing in for a hand), but place-versus-drop and the highlight are prototype decisions and would be the same on a headset.</p>
+<p><b>The diegetic lamp <i>can</i> be found — but wasn't in the studio (0/2 vs 2/3).</b> Two flatmates touched the lamp unprompted; neither studio participant did. The data cannot separate a practised facilitator, prior exposure to the project, and more relaxed free look. Scheme save-and-cycle was found by nobody (0/4) in either setting.</p>
+<p><b>"Limited options" split once n grew — about the wrong thing.</b> Studio: "it's good", "enough for now". Home: "feels good for now" against "feels a bit restrictive" and "need more painting options". All five were rating the unconstrained 24-colour catalogue. That says nothing about A2 directly, but it is a warning: if 24 free colours already feel thin to two of five people, a seven-option harmony set will read as <i>fewer</i> unless the constraint visibly explains itself.</p>
+
+<h2><span class="num">04</span>Evaluation of aims</h2>
+<table>
+  <tr><th style="width:7%">Aim</th><th style="width:22%">Verdict</th><th>Grounds</th><th style="width:26%">How much weight it can carry</th></tr>
+  <tr><td class="k">A1</td><td><span class="tag inv">Invalidated</span> on the simulator</td><td>0/5 pulled a sample; 0/3 recorded found the menu unprompted; 2–5 prompts per person; twist-to-tune never seen</td><td>Moderate. Consistent across two settings and two participant pools. The simulator caps the claim at "invalidated with a mouse", not "invalidated in VR"</td></tr>
+  <tr><td class="k">A2</td><td><span class="tag unt">Untested</span> — the primary aim</td><td>No participant ever held a harmonised sample, so the constrained set was never seen. Row 10 answers (5/5) and confidence scores (3, 3, 4, 2) all belong to menu choices</td><td>None — there is no data on the assumption. Three extra sessions did not change this because the gate to A2 never opened</td></tr>
+  <tr><td class="k">A3</td><td><span class="tag half">Half answered</span></td><td>Used: menu 5/5, always after prompting where recorded. Trusted: never asked — the question was not on the printed sheet</td><td>Low. "Menu wins" is a consequence of A1 failing, not a comparison of two working routes</td></tr>
+</table>
+<p>Honest summary: IP1 tested the prototype's <b>discoverability on the simulator</b> and found the hold-up loop undiscoverable five times out of five. It did <b>not</b> test the concept's central claim. I would rather say that plainly than report a soft "A2 looked fine" from answers that were about a different feature. The negative A1 result is useful precisely because the uninstructed phase exposed it; a guided demo would have hidden it.</p>
+
+<h2><span class="num">05</span>Concept iteration</h2>
+<p>Every change below responds to a row in §3. The concept itself — match against what is staying, hold it up, no menus — is <b>affirmed as untested rather than changed</b>: nothing in the data argues against it, because nothing in the data reached it. The iteration is aimed at getting participants <i>to</i> it.</p>
+<table class="long">
+  <tr><th style="width:30%">Insight (from §3)</th><th>Change, fix or affirmation</th><th style="width:15%">Where</th></tr>
+  <tr><td>Touching a kept surface does nothing visible → loop never starts (5/5)</td><td><b>Fix — first-contact affordance.</b> Kept surfaces get a persistent pullable tab: a swatch hovering at the touch point, a hand-glow on proximity, and the sample visibly <i>peels</i> off on trigger. Feedback at the moment of contact, not a tutorial. This is the "weakest thing from IP1" that IP2a is meant to rebuild.</td><td>IP2a build</td></tr>
+  <tr><td>Both routes invisible; the one a prompt names wins</td><td><b>Change — diegetic is not the same as discoverable.</b> A ten-second in-world onboarding on entry: floor and sofa pulse once with a "staying" label; the lamp glows. No text panels, no menus — still diegetic, but no longer silent.</td><td>IP2a build</td></tr>
+  <tr><td>Complaints are about manipulation: place-vs-drop ×2, highlight ×2, rotate</td><td><b>Fix.</b> Grip = hold, release = <i>place</i> where the ray lands (P2 and P4's own words); rotate on thumbstick; selection highlight becomes a clear outline instead of a tinted frame.</td><td>IP2a build</td></tr>
+  <tr><td>A2 never reached after five sessions</td><td><b>Change to the test, not the design.</b> IP2a's Task 1 starts with a sample already in the participant's hand, so every participant reaches the constrained set and row 10 finally measures what it was written for. Free discovery of the entry gesture is measured separately in the uninstructed phase.</td><td>IP2a test plan</td></tr>
+  <tr><td>2/5 called a 24-colour catalogue restrictive</td><td><b>Change — the constraint must explain itself.</b> Each harmonised option shows <i>why</i> it matches (a thread of colour back to the floor or sofa it was derived from). Constraint that is visibly doing something reads as help; constraint that is silent reads as fewer options.</td><td>IP2a build + test</td></tr>
+  <tr><td>Lamp 0/2 studio, 2/3 home; save/cycle 0/4</td><td><b>Affirm the lamp</b> (it can be found) and give it a pull-cord and glow so studio-condition users find it too. <b>Cut scheme save/cycle</b> from the IP2a test, or move it to a visible object (a pinboard on the wall) — it was found by nobody.</td><td>IP2a build</td></tr>
+  <tr><td>Furniture drew the opinions ("more options", "room already set up")</td><td><b>Change.</b> IP2a starts from a furnished room so the task is <i>re-arranging</i>, not furnishing from empty; furniture grab/move/rotate was already planned for IP2a and is now the second-highest priority after the entry affordance.</td><td>IP2a build</td></tr>
+</table>
+
+<h2><span class="num">06</span>Reflection — concept, method, and the next round</h2>
+<div class="two">
+<div>
+<p><b>What worked.</b> The uninstructed phase did its job: it produced an unambiguous negative on the entry gesture that a guided demo would have hidden. Separating "did" from "said" on the sheet made the pattern in §3 easy to see. Adding three real supplementary sessions was cheap and turned a 2/2 observation into a 5/5 one without changing any verdict — which is itself worth knowing.</p>
+<p><b>What didn't.</b> The platform. A body interaction was tested through a mouse, five times, because the Quest would not authorise over USB on the day. This is also the pipeline risk for IP2b, so it gets solved first, not last. Solo facilitation with a paper tally lost about a third of the studio rows; at home, with practice, it lost almost none — but the same instrument gaps recurred because I did not revise the sheet between rounds.</p>
+</div>
+<div>
+<p><b>Instrument.</b> Three fixes for IP2a's sheet: row 10 branches (ask about constraint only if the constrained set was used; otherwise ask why the menu); row 11 is reworded so it stops collecting "what was hard"; the "trusted method" question is printed, not carried in the plan. Prompt <i>numbers</i>, not ticks, go in the tally boxes so I know which prompt unstuck whom. Screen-record, with consent, so lost rows can be recovered.</p>
+<p><b>Sample.</b> Flatmates got n to 5 but bring prior exposure, which may explain the lamp result. Next round: recruit outside the flat and log whether the participant has seen the project before. Budget seven minutes per participant, not five — setup and briefing ate the studio's time.</p>
+<p><b>Next.</b> IP2a on the headset, with the entry affordance rebuilt, Task 1 starting sample-in-hand, and A2 — still the primary aim — finally measured.</p>
+</div>
+</div>
+
+<footer>Kaike Nehme · s4959287 · DECO7230 Evaluation 1 · Raw data, sheet scans and the full synthesis (<code>testing-data/ip1/</code>) at github.com/kaikenehme/deco7230-xr</footer>
+
+<!-- ============================ APPENDICES ============================ -->
+<div class="pb"></div>
+<div class="masthead">
+  <div class="eyebrow">DECO7230 · Evaluation 1 · Appendices (not counted toward the 3-page limit)</div>
+  <h1>Appendices <span class="sub">A — studio results · B — supplementary results · C — observer and transcription notes · D — data sheets</span></h1>
+</div>
+
+<h2><span class="num">A</span>Studio session results — Fri 28 Aug 2026, Week 5 studio, n = 2</h2>
+<p>Transcribed from the two paper sheets on Sun 30 Aug. Blank = not recorded. Platform: XR Device Simulator (see §1). Facilitator: Kaike Nehme, solo. No recording.</p>
+<table class="long">
+  <tr><th style="width:4%">#</th><th style="width:40%">Measure</th><th>P1</th><th>P2</th></tr>
+  <tr><td class="k">1</td><td>Reached for first (free look)</td><td>wall</td><td></td></tr>
+  <tr><td class="k">2</td><td>Floor/sofa touched during free look</td><td>yes</td><td>yes</td></tr>
+  <tr><td class="k">3</td><td>Time to first unprompted commit</td><td></td><td>3 m (seconds not recorded)</td></tr>
+  <tr><td class="k">4</td><td>Facilitator prompts needed (tally)</td><td>5</td><td>3</td></tr>
+  <tr><td class="k">5</td><td>Twist-to-tune discovered</td><td></td><td></td></tr>
+  <tr><td class="k">6</td><td>Samples tried before first commit (tally)</td><td>3</td><td>2</td></tr>
+  <tr><td class="k">7</td><td>Scheme save / cycle used (Task 2)</td><td>neither</td><td></td></tr>
+  <tr><td class="k">8</td><td>Lamp / light discovered or used</td><td>no</td><td>no</td></tr>
+  <tr><td class="k">9</td><td>Confidence in final choice (1–5)</td><td>3</td><td></td></tr>
+  <tr><td class="k">10</td><td>"Limited options — helpful or restrictive?" (verbatim)</td><td>"It's good"</td><td>"Enough for now"</td></tr>
+  <tr><td class="k">11</td><td>Think-aloud: why was a candidate rejected?</td><td></td><td></td></tr>
+  <tr><td class="k">12</td><td>One thing that confused you (verbatim)</td><td>"Simulator is confusing"</td><td>"Drag and drop (hard)"</td></tr>
+  <tr><td class="k">13</td><td>Method used first after Task 1 prompt</td><td>menu</td><td>menu</td></tr>
+  <tr><td class="k">14</td><td>Method that produced the kept choice</td><td>menu</td><td>menu</td></tr>
+  <tr><td class="k">15</td><td>Menu opened unprompted? / furniture placed?</td><td>prompted · (placed/moved/failed not marked)</td><td>prompted · (placed/moved/failed not marked)</td></tr>
+  <tr><td class="k">16</td><td>Furniture grab (grip) discovered</td><td>prompted</td><td>prompted</td></tr>
+</table>
+<p>Post-test question "which method did you trust more?" — not on the sheet; no answer recorded.</p>
+
+<h2><span class="num">B</span>Supplementary sessions — weekend of 29–30 Aug 2026, at home, n = 3 (out of class)</h2>
+<p>Three flatmates; convenience sample, likely to have heard about the project beforehand. Same simulator setup, same printed sheet, same protocol, same facilitator. The instrument fixes listed in §6 were <b>not</b> applied before these sessions. Sheets carry the pre-printed studio date — ignore it. Screen-recording consent: no (×3).</p>
+<table class="long">
+  <tr><th style="width:4%">#</th><th style="width:34%">Measure</th><th>P3</th><th>P4</th><th>P5</th></tr>
+  <tr><td class="k">1</td><td>Reached for first (free look)</td><td>floor</td><td>sofa</td><td>wall</td></tr>
+  <tr><td class="k">2</td><td>Floor/sofa touched during free look</td><td>yes</td><td>yes</td><td>yes</td></tr>
+  <tr><td class="k">3</td><td>Time to first unprompted commit</td><td>2 m</td><td>2 m</td><td>1 m</td></tr>
+  <tr><td class="k">4</td><td>Facilitator prompts needed (tally)</td><td>4</td><td>2</td><td>4</td></tr>
+  <tr><td class="k">5</td><td>Twist-to-tune discovered</td><td>no</td><td>no</td><td>no</td></tr>
+  <tr><td class="k">6</td><td>Samples tried before first commit (tally)</td><td>4</td><td>2</td><td>2</td></tr>
+  <tr><td class="k">7</td><td>Scheme save / cycle used (Task 2)</td><td>neither</td><td>neither</td><td>neither</td></tr>
+  <tr><td class="k">8</td><td>Lamp / light discovered or used</td><td>no</td><td>unprompted</td><td>unprompted</td></tr>
+  <tr><td class="k">9</td><td>Confidence in final choice (1–5)</td><td>3</td><td>4</td><td>2</td></tr>
+  <tr><td class="k">10</td><td>"Limited options — helpful or restrictive?" (verbatim)</td><td>"Feels a bit restrictive"</td><td>"Feels good for now"</td><td>"Need more painting options"</td></tr>
+  <tr><td class="k">11</td><td>Think-aloud: why was a candidate rejected? (verbatim)</td><td>"The walls highlight"</td><td>"The furniture drag and drop"</td><td>"Furniture selection"</td></tr>
+  <tr><td class="k">12</td><td>One thing that confused you (verbatim)</td><td>"The controller"</td><td>"The controller"</td><td>"Controller"</td></tr>
+  <tr><td class="k">13</td><td>Method used first after Task 1 prompt</td><td>menu</td><td>menu</td><td>menu</td></tr>
+  <tr><td class="k">14</td><td>Method that produced the kept choice</td><td>menu</td><td>menu</td><td>menu</td></tr>
+  <tr><td class="k">15</td><td>Menu opened unprompted? / furniture placed?</td><td>(not marked) · placed</td><td>prompted · (not marked)</td><td>(not marked) · placed</td></tr>
+  <tr><td class="k">16</td><td>Furniture grab (grip) discovered</td><td>prompted</td><td>unprompted</td><td>prompted</td></tr>
+</table>
+
+<h2><span class="num">C</span>Observer notes and transcription notes</h2>
+<div class="two">
+<div>
+<h3>Observer notes, verbatim</h3>
+<ul>
+  <li><b>P1</b> — "Changing the highlight colour (frame)" · "Time on task [illegible] think [illegible]"</li>
+  <li><b>P2</b> — "Toggle to rotate furniture" · "Once you select the furniture you PLACE IT, not drop"</li>
+  <li><b>P3</b> — "Change the highlight for a framed one"</li>
+  <li><b>P4</b> — "When we select a furniture we should place it, not dropped in front"</li>
+  <li><b>P5</b> — "Have more options on furniture and maybe a room already set up"</li>
+</ul>
+</div>
+<div>
+<h3>Transcription notes</h3>
+<ul>
+  <li>Tallies read from ticked boxes at high zoom. Which of the six scripted prompts was used was not recorded on any sheet, only the count.</li>
+  <li>P1 "simulator is confusing" and P3–P5 "the controller" refer to the mouse/keyboard-emulated controller of the XR Device Simulator; treated as a setting confound, not a finding about a Quest controller.</li>
+  <li>Row 10 was asked of participants who chose via the menu (row 14 = menu, 5/5); answers describe the 24-colour catalogue, not the harmony-constrained set.</li>
+  <li>Row 11 (P3–P5) was answered as "what was hard", not as a reason for rejecting a colour; treated as extra confusion items.</li>
+  <li>Row 15 for P3 and P5: only "placed" ticked; whether the menu was opened unprompted is not recorded.</li>
+  <li>P3–P5 ink was very light; two cursive readings are approximate: "framed" (P3 note) and "highlight" (P3 row 11).</li>
+</ul>
+</div>
+</div>
+
+<div class="pb"></div>
+<h2><span class="num">D</span>Data sheets — scans of the five paper sheets (contrast-enhanced for legibility)</h2>
+<p>One sheet per participant, 16 rows plus the six scripted prompts and observer notes. Originals as PDF in <code>testing-data/ip1/sheets/</code>. No identifying information was written on any sheet.</p>
+<div class="scans">
+  <div class="scan"><img src="SHEET_P1"><div class="cap"><b>P1</b> — studio, Fri 28 Aug</div></div>
+  <div class="scan"><img src="SHEET_P2"><div class="cap"><b>P2</b> — studio, Fri 28 Aug</div></div>
+  <div class="scan"><img src="SHEET_P3"><div class="cap"><b>P3</b> — supplementary, at home (pre-printed date ignored)</div></div>
+  <div class="scan"><img src="SHEET_P4"><div class="cap"><b>P4</b> — supplementary, at home</div></div>
+  <div class="scan"><img src="SHEET_P5"><div class="cap"><b>P5</b> — supplementary, at home</div></div>
+</div>
+
+</body>
+</html>
