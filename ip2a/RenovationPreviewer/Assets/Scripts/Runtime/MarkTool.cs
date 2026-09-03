@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,6 +11,9 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody))]
 public class MarkTool : MonoBehaviour
 {
+    /// <summary>Every enabled controller cue — PullAffordance reads hand positions from here.</summary>
+    public static readonly List<MarkTool> All = new();
+
     public InputActionProperty gripAction;
 
     const float SpeedThreshold = 0.6f, HoldTime = 0.15f, Debounce = 0.5f;
@@ -24,7 +28,8 @@ public class MarkTool : MonoBehaviour
         GetComponent<Rigidbody>().isKinematic = true;
     }
 
-    void OnEnable() => gripAction.action?.Enable();
+    void OnEnable() { gripAction.action?.Enable(); if (!All.Contains(this)) All.Add(this); }
+    void OnDisable() => All.Remove(this);
 
     void Update()
     {

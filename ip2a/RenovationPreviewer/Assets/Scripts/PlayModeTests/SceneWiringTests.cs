@@ -48,15 +48,34 @@ public class SceneWiringTests
     }
 
     [UnityTest]
-    public IEnumerator Lamp_And_SchemeCycler_AreWired()
+    public IEnumerator Lamp_IsBulbOnly_StartsWarm_WithPullCord_AndSchemeCyclerStillWired()
     {
         yield return null;
         var lamp = Object.FindObjectsByType<LampController>(FindObjectsSortMode.None).Single();
-        Assert.IsNotNull(lamp.sun, "lamp: sun wired");
         Assert.IsNotNull(lamp.bulb, "lamp: bulb wired");
+        Assert.IsNotNull(lamp.shade, "lamp: shade wired");
+        Assert.AreEqual(LampController.LightState.Warm, lamp.Current, "starts on, warm");
+        Assert.IsTrue(lamp.bulb.enabled, "Start() applied the state");
+        Assert.IsNotNull(lamp.transform.Find("Cord"), "pull cord present");
+        Assert.IsTrue(lamp.shade.sharedMaterial.IsKeywordEnabled("_EMISSION"), "shade can glow");
 
         var cycler = Object.FindObjectsByType<SchemeCycler>(FindObjectsInactive.Include, FindObjectsSortMode.None).Single();
-        Assert.IsNotNull(cycler.manager, "cycler: SchemeManager wired");
+        Assert.IsNotNull(cycler.manager, "cycler: SchemeManager wired (kept, not in the IP2a test)");
+    }
+
+    [UnityTest]
+    public IEnumerator Sky_AndSun_AreAssigned_TimeOfDayOwnsThem()
+    {
+        yield return null;
+        var tod = Object.FindObjectsByType<TimeOfDayController>(FindObjectsSortMode.None).Single();
+        Assert.IsNotNull(tod.sun, "sun wired");
+        Assert.IsNotNull(tod.sky, "sky wired");
+        Assert.IsNotNull(RenderSettings.sun, "procedural sky follows the sun");
+        Assert.AreEqual(UnityEngine.Rendering.AmbientMode.Flat, RenderSettings.ambientMode, "ambient writes must take effect");
+        Assert.AreEqual(LightShadows.Soft, tod.sun.shadows, "window sun casts a patch");
+        Assert.AreEqual(10, tod.Current.hour, "starts at 10:00");
+        Assert.AreEqual(TimeOfDay.Stops[1].ambient, RenderSettings.ambientLight);
+        Assert.AreEqual(0, Object.FindObjectsByType<LampController>(FindObjectsSortMode.None).Count(l => l.bulb == tod.sun), "lamp never touches the sun");
     }
 
     [UnityTest]
@@ -140,5 +159,35 @@ public class SceneWiringTests
         Assert.AreEqual(1 << RoomSpec.TeleportLayer, tele.interactionLayers.value, "teleport layer only");
         var rig = GameObject.Find("XR Origin (XR Rig)");
         Assert.AreEqual(180f, rig.transform.eulerAngles.y, 0.5f, "rig faces the sofa");
+    }
+    [UnityTest]
+    public IEnumerator EverySurface_HasPullAffordance_AndControllersGlow()
+    {
+        yield return null;
+        foreach (var s in Surface.All.Where(s => s != null))
+            Assert.IsNotNull(s.GetComponent<PullAffordance>(), $"{s.name}: pull affordance");
+        var glows = Object.FindObjectsByType<HandGlow>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        Assert.AreEqual(2, glows.Length, "HandGlow on both controllers");
+    }
+
+    [UnityTest]
+    public IEnumerator SamplePrefab_EasesIntoTheHand()
+    {
+        yield return null;
+        var prefab = Object.FindObjectsByType<SamplePuller>(FindObjectsInactive.Include, FindObjectsSortMode.None)[0].samplePrefab;
+        var grab = prefab.GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>();
+        Assert.Greater(grab.attachEaseInTime, 0f, "peel: the sample flies from the tab into the hand");
+    }
+
+    [UnityTest]
+    public IEnumerator RightController_HasFacilitatorSpawn_AndMenuRelayKnowsThePuller()
+    {
+        yield return null;
+        var fac = Object.FindObjectsByType<FacilitatorSpawn>(FindObjectsInactive.Include, FindObjectsSortMode.None).Single();
+        Assert.AreEqual("Right Controller", fac.transform.name);
+        Assert.IsNotNull(fac.puller, "facilitator spawn uses the right hand's puller");
+        Assert.IsNotNull(fac.spawnAction.action, "left X bound");
+        var relay = Object.FindObjectsByType<MenuSelectRelay>(FindObjectsInactive.Include, FindObjectsSortMode.None).Single();
+        Assert.AreSame(fac.puller, relay.puller, "menu relay yields to the puller");
     }
 }

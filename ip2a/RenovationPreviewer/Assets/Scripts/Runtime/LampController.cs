@@ -1,58 +1,77 @@
 using UnityEngine;
 
 /// <summary>
-/// Diegetic light control: touching the lamp cycles Warm -> Cool -> Daylight.
-/// Three states, not on/off, because "does this green survive a warm bulb at
-/// 9pm?" is the question worth asking (concept spec §7).
+/// Diegetic light control: touching the lamp (or its pull cord) cycles Warm → Cool → Off.
+/// The bulb is all this owns — daylight now comes through the window from
+/// TimeOfDayController, so "does this green survive a warm bulb at 10pm?" is asked by
+/// combining the two. The shade pulses until first touch so studio-condition users
+/// find it (IP1: found 0/2 in the studio, 2/3 at home).
 /// </summary>
 public class LampController : MonoBehaviour
 {
-    public enum LightState { Warm, Cool, Daylight }
+    public enum LightState { Warm, Cool, Off }
 
-    public Light sun;
     public Light bulb;
-    public LightState Current { get; private set; } = LightState.Daylight;
+    public Renderer shade;
+    public LightState Current { get; private set; } = LightState.Warm;
+    public bool Touched { get; private set; }
+
+    public static readonly Color WarmColor = new(1f, 0.75f, 0.45f);
+    public static readonly Color CoolColor = new(0.85f, 0.92f, 1f);
+    public const float SteadyEmission = 0.25f, IdleMin = 0.15f, IdleMax = 0.5f, IdleHz = 1.2f;
 
     const float Debounce = 0.6f;
+    static readonly int EmissionId = Shader.PropertyToID("_EmissionColor");
     float lastTouch = -10f;
+    float pulseUntil = -1f;
 
     public static LightState Next(LightState s) => (LightState)(((int)s + 1) % 3);
+
+    public static (Color color, float intensity) Look(LightState s) => s switch
+    {
+        LightState.Warm => (WarmColor, 1.6f),
+        LightState.Cool => (CoolColor, 1.0f),
+        _ => (Color.black, 0f),
+    };
+
+    /// <summary>Shade emission while idle or pulsing: a slow sine between IdleMin and IdleMax.</summary>
+    public static float IdleEmission(float t) =>
+        Mathf.Lerp(IdleMin, IdleMax, 0.5f + 0.5f * Mathf.Sin(t * IdleHz * 2f * Mathf.PI));
+
+    void Start() => Apply(Current);
 
     void OnTriggerEnter(Collider other)
     {
         if (other.GetComponent<MarkTool>() == null) return; // only controller cues count
         if (Time.time - lastTouch < Debounce) return;
         lastTouch = Time.time;
+        Touched = true;
         Apply(Next(Current));
     }
 
     public void Apply(LightState s)
     {
         Current = s;
-        switch (s)
-        {
-            case LightState.Warm:
-                Set(sun, new Color(1f, 0.83f, 0.66f), 0.15f);
-                Set(bulb, new Color(1f, 0.75f, 0.45f), 1.6f);
-                RenderSettings.ambientLight = new Color(0.35f, 0.30f, 0.25f);
-                break;
-            case LightState.Cool:
-                Set(sun, new Color(0.75f, 0.86f, 1f), 0.4f);
-                Set(bulb, new Color(0.85f, 0.92f, 1f), 1.0f);
-                RenderSettings.ambientLight = new Color(0.30f, 0.35f, 0.40f);
-                break;
-            case LightState.Daylight:
-                Set(sun, new Color(1f, 0.96f, 0.89f), 1.0f);
-                Set(bulb, Color.black, 0f);
-                RenderSettings.ambientLight = new Color(0.45f, 0.45f, 0.45f);
-                break;
-        }
+        var (c, i) = Look(s);
+        if (bulb != null) { bulb.color = c; bulb.intensity = i; bulb.enabled = i > 0f; }
+        SetEmission(s == LightState.Off ? 0f : SteadyEmission);
     }
 
-    static void Set(Light l, Color c, float intensity)
+    /// <summary>Onboarding hook: keep the shade pulsing for a while regardless of touches.</summary>
+    public void Pulse(float seconds) => pulseUntil = Time.time + seconds;
+
+    void Update()
     {
-        if (l == null) return;
-        l.color = c;
-        l.intensity = intensity;
+        if (Current == LightState.Off) return;
+        if (!Touched || Time.time < pulseUntil) SetEmission(IdleEmission(Time.time));
+    }
+
+    void SetEmission(float k)
+    {
+        if (shade == null || !Application.isPlaying) return;
+        var tint = Look(Current == LightState.Off ? LightState.Warm : Current).color;
+        var m = shade.material;
+        m.EnableKeyword("_EMISSION");
+        m.SetColor(EmissionId, tint * k);
     }
 }

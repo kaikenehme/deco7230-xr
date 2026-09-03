@@ -41,6 +41,23 @@ public static class ProjectConfigurator
         Debug.Log("ProjectConfigurator: URP configured");
     }
 
+    /// <summary>Quest-safe shadow settings for the window sun: soft, 15 m, one cascade, 2048 map.
+    /// Serialized fields because the URP setters for soft shadows are internal.</summary>
+    public static void TuneRendering()
+    {
+        var asset = AssetDatabase.LoadAssetAtPath<UniversalRenderPipelineAsset>("Assets/Settings/URP-Asset.asset");
+        if (asset == null) { Debug.LogWarning("ProjectConfigurator: URP-Asset.asset missing"); return; }
+        var so = new SerializedObject(asset);
+        so.FindProperty("m_MainLightShadowsSupported").boolValue = true;
+        so.FindProperty("m_SoftShadowsSupported").boolValue = true;
+        so.FindProperty("m_ShadowDistance").floatValue = 15f;
+        so.FindProperty("m_ShadowCascadeCount").intValue = 1;
+        so.FindProperty("m_MainLightShadowmapResolution").intValue = 2048;
+        so.ApplyModifiedPropertiesWithoutUndo();
+        EditorUtility.SetDirty(asset);
+        Debug.Log("ProjectConfigurator: rendering tuned (soft shadows, 15 m, 1 cascade)");
+    }
+
     static void SetupPlayerAndAndroid()
     {
         PlayerSettings.colorSpace = ColorSpace.Linear;

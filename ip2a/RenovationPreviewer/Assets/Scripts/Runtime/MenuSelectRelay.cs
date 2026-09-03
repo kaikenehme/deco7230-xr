@@ -15,6 +15,7 @@ public class MenuSelectRelay : MonoBehaviour
     public ControllerMenu menu;
     public float maxDistance = 6f;
     public Transform ignoreRoot;     // the XR Origin — never select your own body/controllers
+    public SamplePuller puller;      // same controller; when it can pull, trigger means pull, not menu
 
     void OnEnable() { selectAction.action?.Enable(); closeAction.action?.Enable(); }
 
@@ -23,6 +24,7 @@ public class MenuSelectRelay : MonoBehaviour
         if (menu == null) return;
         if (closeAction.action != null && closeAction.action.WasPressedThisFrame()) { menu.Hide(); return; }
         if (selectAction.action == null || !selectAction.action.WasPressedThisFrame()) return;
+        if (puller != null && puller.CanPull) return;
 
         var origin = rayOrigin != null ? rayOrigin : transform;
         if (!RayUtil.TryHit(origin.position, origin.forward, maxDistance, ignoreRoot, out var hit))

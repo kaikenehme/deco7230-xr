@@ -5,6 +5,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
 using UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation;
@@ -60,6 +61,7 @@ public static class SceneBuilder
         MakePart(sofa, "ArmR", new Vector3(0.85f, 0.45f, 0f), new Vector3(0.2f, 0.5f, 0.8f), sofaGrey);
         var sofaSurf = sofa.AddComponent<Surface>();
         sofaSurf.SetState(SurfaceState.Keep);
+        sofa.AddComponent<PullAffordance>();
         var sofaRb = sofa.AddComponent<Rigidbody>(); sofaRb.isKinematic = true; sofaRb.useGravity = false;
         var sofaCol = sofa.AddComponent<BoxCollider>();
         sofaCol.center = new Vector3(0f, 0.5f, -0.1f);
@@ -84,9 +86,22 @@ public static class SceneBuilder
         lamp.name = "Lamp";
         lamp.transform.position = new Vector3(hw - 0.5f, 0.75f, -hd + 0.4f);
         lamp.transform.localScale = Vector3.one * 0.25f;
-        lamp.GetComponent<Collider>().isTrigger = true;
+        var lampCol = (SphereCollider)lamp.GetComponent<Collider>();
+        lampCol.isTrigger = true;
+        lampCol.center = new Vector3(0f, -0.4f, 0f);   // local; reaches down over the pull cord
+        lampCol.radius = 1.1f;                          // 27 cm in the world
         var lampMat = MakeMat("LampShade", new Color(1f, 0.95f, 0.8f));
+        lampMat.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
+        lampMat.EnableKeyword("_EMISSION");
+        lampMat.SetColor("_EmissionColor", LampController.WarmColor * LampController.SteadyEmission);
+        EditorUtility.SetDirty(lampMat);
+        AssetDatabase.SaveAssets();   // keyword must be saved before the scene save (see HighlightCarrier)
         lamp.GetComponent<Renderer>().sharedMaterial = lampMat;
+
+        // Pull cord: the visible "touch me" of the lamp (Evaluation 1 §05). Children of a
+        // 0.25-scaled sphere, so local sizes are world / 0.25.
+        MakePart(lamp, "Cord", new Vector3(0.4f, -0.9f, 0f), new Vector3(0.032f, 0.36f, 0.032f), trimWhite, PrimitiveType.Cylinder);
+        MakePart(lamp, "CordKnob", new Vector3(0.4f, -1.3f, 0f), Vector3.one * 0.08f, tableWood, PrimitiveType.Sphere);
 
         var bulbGo = new GameObject("BulbLight");
         bulbGo.transform.SetParent(lamp.transform, false);
@@ -97,15 +112,28 @@ public static class SceneBuilder
         var sunGo = new GameObject("Sun");
         var sun = sunGo.AddComponent<Light>();
         sun.type = LightType.Directional;
-        sunGo.transform.rotation = Quaternion.Euler(50, -30, 0);
+        sun.shadows = LightShadows.Soft;
+        sun.shadowStrength = 0.8f;
 
         var lampCtrl = lamp.AddComponent<LampController>();
-        lampCtrl.sun = sun;
         lampCtrl.bulb = bulb;
+        lampCtrl.shade = lamp.GetComponent<Renderer>();
+
+        // --- Sky + ambient. TimeOfDayController is the only runtime writer; these are the 10:00 defaults
+        //     so the saved scene and the first frame agree. ---
+        var sky = MakeSkyMat("DaySky");
+        RenderSettings.skybox = sky;
+        RenderSettings.sun = sun;
+        RenderSettings.ambientMode = AmbientMode.Flat;
+        RenderSettings.ambientLight = TimeOfDay.Stops[1].ambient;
+        ProjectConfigurator.TuneRendering();
 
         // --- Managers ---
         var managers = new GameObject("Managers");
         var schemeMgr = managers.AddComponent<SchemeManager>();
+        var tod = managers.AddComponent<TimeOfDayController>();
+        tod.sun = sun;
+        tod.sky = sky;
 
         // --- UI event system for the world-space menu (XRI input module) ---
         var es = new GameObject("EventSystem");
@@ -148,6 +176,7 @@ public static class SceneBuilder
         var grab = temp.AddComponent<XRGrabInteractable>();
         grab.movementType = UnityEngine.XR.Interaction.Toolkit.Interactables.XRBaseInteractable.MovementType.Instantaneous;
         grab.throwOnDetach = false;
+        grab.attachEaseInTime = 0.15f;   // the peel: sample eases from the tab into the hand
         temp.AddComponent<Sample>();
         temp.AddComponent<HarmonyTuner>();
         temp.AddComponent<HoldUpPreviewer>();
@@ -207,6 +236,12 @@ public static class SceneBuilder
             relay.selectAction = ButtonAction("MenuSelect", "<XRController>{RightHand}/triggerPressed");
             relay.closeAction = ButtonAction("MenuClose", "<XRController>{LeftHand}/secondaryButton");
             relay.ignoreRoot = rig.transform;
+            relay.puller = right.GetComponent<SamplePuller>();
+
+            // Facilitator: hold left X for 1 s → floor sample into the right hand (IP2a Task 1 start).
+            var fac = right.AddComponent<FacilitatorSpawn>();
+            fac.puller = right.GetComponent<SamplePuller>();
+            fac.spawnAction = ButtonAction("FacilitatorSpawn", "<XRController>{LeftHand}/primaryButton");
 
             // Ray feedback: reticle + glow. The carrier material keeps the _EMISSION variant in the build.
             var fb = right.AddComponent<RayFeedback>();
@@ -248,6 +283,7 @@ public static class SceneBuilder
         if (puller.interactor == null)
             Debug.LogWarning($"SceneBuilder: no interactor found under '{controllerName}'");
 
+        go.AddComponent<HandGlow>();
         return go;
     }
 
@@ -278,17 +314,31 @@ public static class SceneBuilder
         s.SetState(state);
         s.SetKind(kind);
         go.AddComponent<MenuTarget>();
+        go.AddComponent<PullAffordance>();
         return go;
     }
 
-    static void MakePart(GameObject parent, string name, Vector3 pos, Vector3 scale, Material m)
+    static GameObject MakePart(GameObject parent, string name, Vector3 pos, Vector3 scale, Material m, PrimitiveType type = PrimitiveType.Cube)
     {
-        var p = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        var p = GameObject.CreatePrimitive(type);
         p.name = name;
         p.transform.SetParent(parent.transform, false);
         p.transform.localPosition = pos;
         p.transform.localScale = scale;
         p.GetComponent<Renderer>().sharedMaterial = m;
         Object.DestroyImmediate(p.GetComponent<Collider>());
+        return p;
+    }
+
+    static Material MakeSkyMat(string name)
+    {
+        var path = $"Assets/Materials/{name}.mat";
+        var existing = AssetDatabase.LoadAssetAtPath<Material>(path);
+        if (existing != null) return existing;
+        var m = new Material(Shader.Find("Skybox/Procedural"));
+        m.SetFloat("_SunSize", 0.04f);
+        m.SetFloat("_AtmosphereThickness", 1.0f);
+        AssetDatabase.CreateAsset(m, path);
+        return m;
     }
 }
