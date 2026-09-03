@@ -31,4 +31,25 @@ public class CatalogueTests
         Assert.IsTrue(k.HasFlag(SurfaceKind.Wall));
         Assert.IsFalse(k.HasFlag(SurfaceKind.Floor));
     }
+
+    [Test]
+    public void FurnitureCategory_HasDecorAndLighting()
+    {
+        Assert.IsTrue(System.Enum.IsDefined(typeof(FurnitureCategory), "Decor"));
+        Assert.IsTrue(System.Enum.IsDefined(typeof(FurnitureCategory), "Lighting"));
+    }
+
+    [Test]
+    public void Lookups_FindBySourceIdAndName()
+    {
+        var cat = ScriptableObject.CreateInstance<Catalogue>();
+        cat.furniture.Add(new FurnitureOption { sourceId = "sofa_02", name = "Sofa" });
+        cat.materials.Add(new MaterialOption { sourceId = "Tiles040", name = "Stone tiles" });
+        cat.paints.Add(new PaintOption { name = "Whisper White", color = Color.white });
+        Assert.AreEqual("Sofa", cat.Furniture("sofa_02").name);
+        Assert.AreEqual("Stone tiles", cat.Material("Tiles040").name);
+        Assert.AreEqual(Color.white, cat.Paint("Whisper White").color);
+        Assert.IsNull(cat.Furniture("nope"));
+        Object.DestroyImmediate(cat);
+    }
 }

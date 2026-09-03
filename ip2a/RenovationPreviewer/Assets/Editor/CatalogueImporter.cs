@@ -10,7 +10,7 @@ using UnityEditor;
 using UnityEngine;
 
 /// <summary>
-/// One-shot, idempotent importer. Pulls CC0 furniture (Poly Haven glTF 1k),
+/// One-shot, idempotent importer. Pulls CC0 furniture (Poly Haven FBX 1k),
 /// CC0 PBR materials (ambientCG 1K-JPG) and Dulux colour data, writes them under
 /// Assets/Catalogue, builds URP materials + furniture prefabs, and fills
 /// Catalogue.asset. Re-running skips files already on disk.
@@ -21,16 +21,36 @@ public static class CatalogueImporter
     static readonly HttpClient Http = new() { Timeout = TimeSpan.FromMinutes(5) };
 
     // ---- what we bundle (ids are the sources' own asset ids) ----
+    // Ordered by category on purpose: the menu grid pages at 8, so page 1 = seating,
+    // page 2 = tables, page 3 = storage + decor + lighting, with no menu code.
     static readonly (string id, string label, FurnitureCategory cat)[] Furniture =
     {
         ("Sofa_01", "Sofa (grey)", FurnitureCategory.Seating),
         ("sofa_02", "Sofa (leather)", FurnitureCategory.Seating),
+        ("sofa_03", "Sofa (fabric)", FurnitureCategory.Seating),
         ("ArmChair_01", "Armchair", FurnitureCategory.Seating),
         ("mid_century_lounge_chair", "Lounge chair", FurnitureCategory.Seating),
+        ("GreenChair_01", "Green chair", FurnitureCategory.Seating),
+        ("modern_arm_chair_01", "Modern armchair", FurnitureCategory.Seating),
+        ("painted_wooden_bench", "Painted bench", FurnitureCategory.Seating),
+
         ("modern_coffee_table_01", "Coffee table", FurnitureCategory.Table),
         ("coffee_table_round_01", "Round coffee table", FurnitureCategory.Table),
+        ("CoffeeTable_01", "Low coffee table", FurnitureCategory.Table),
         ("side_table_01", "Side table", FurnitureCategory.Table),
+        ("side_table_tall_01", "Tall side table", FurnitureCategory.Table),
+        ("round_wooden_table_01", "Round table", FurnitureCategory.Table),
+        ("ClassicConsole_01", "Console table", FurnitureCategory.Table),
+        ("ClassicNightstand_01", "Nightstand", FurnitureCategory.Table),
+
         ("painted_wooden_shelves", "Shelves", FurnitureCategory.Storage),
+        ("Shelf_01", "Bookshelf", FurnitureCategory.Storage),
+        ("wooden_display_shelves_01", "Display shelves", FurnitureCategory.Storage),
+        ("painted_wooden_cabinet", "Cabinet", FurnitureCategory.Storage),
+        ("potted_plant_01", "Potted plant", FurnitureCategory.Decor),
+        ("potted_plant_04", "Succulent", FurnitureCategory.Decor),
+        ("ceramic_vase_01", "Ceramic vase", FurnitureCategory.Decor),
+        ("vintage_oil_lamp", "Oil lamp", FurnitureCategory.Lighting),
     };
 
     // tile = metres per texture repeat (ambientCG textures are authored at roughly 1–2 m per repeat)
@@ -154,7 +174,7 @@ public static class CatalogueImporter
             mat.mainTextureScale = new Vector2(1f / tile, 1f / tile);
             EditorUtility.SetDirty(mat);
 
-            cat.materials.Add(new MaterialOption { name = label, sourceId = id, material = mat, targets = targets });
+            cat.materials.Add(new MaterialOption { name = label, sourceId = id, material = mat, targets = targets, sampleColor = AverageColour(colorPath) });
             credits.AppendLine($"- {id} — https://ambientcg.com/view?id={id}");
         }
         credits.AppendLine();
@@ -216,7 +236,8 @@ public static class CatalogueImporter
                     AssetDatabase.DeleteAsset(fbxPath);
                 }
                 var thumb = EnsureThumbnail(id, prefab);
-                cat.furniture.Add(new FurnitureOption { name = label, sourceId = id, prefab = prefab, category = category, thumbnail = thumb });
+                var diff = FindTextureFile(dir, "_diff_");
+                cat.furniture.Add(new FurnitureOption { name = label, sourceId = id, prefab = prefab, category = category, thumbnail = thumb, sampleColor = diff != null ? AverageColour(diff) : Color.grey });
                 credits.AppendLine($"- {id} — https://polyhaven.com/a/{id}");
             }
             catch (Exception ex)
@@ -228,9 +249,9 @@ public static class CatalogueImporter
     }
 
     /// <summary>
-    /// Copy meshes + materials out of the glTFast-imported model into standalone assets
+    /// Copy meshes + materials out of the FBX-imported model into standalone assets
     /// (Mesh .asset, URP/Lit .mat reusing the downloaded jpgs) and save a prefab whose
-    /// pivot sits at the floor. Nothing in the prefab references the .gltf afterwards.
+    /// pivot sits at the floor. Nothing in the prefab references the .fbx afterwards.
     /// </summary>
     static GameObject BakePrefab(string id, GameObject model, string dir, string prefabPath)
     {
@@ -286,6 +307,7 @@ public static class CatalogueImporter
             mi++;
         }
         UnityEngine.Object.DestroyImmediate(src);
+        if (mi == 0) { UnityEngine.Object.DestroyImmediate(wrapper); throw new Exception("no static meshes (rigged/skinned model?)"); }
 
         // Pivot at the floor, centred in XZ.
         var rends = wrapper.GetComponentsInChildren<Renderer>();
@@ -298,6 +320,30 @@ public static class CatalogueImporter
         var prefab = PrefabUtility.SaveAsPrefabAsset(wrapper, prefabPath);
         UnityEngine.Object.DestroyImmediate(wrapper);
         return prefab;
+    }
+
+    static string FindTextureFile(string dir, string tag)
+    {
+        var texDir = Path.Combine(dir, "textures");
+        if (!Directory.Exists(texDir)) return null;
+        foreach (var f in Directory.GetFiles(texDir, "*.jpg"))
+            if (f.Contains(tag)) return f.Replace('\\', '/');
+        return null;
+    }
+
+    /// <summary>Mean colour of a jpg (every 8th pixel), read from bytes so import settings don't matter.
+    /// Used as the colour a sample pulled from a textured surface starts from.</summary>
+    public static Color AverageColour(string jpgPath)
+    {
+        if (jpgPath == null || !File.Exists(jpgPath)) return Color.grey;
+        var tex = new Texture2D(2, 2, TextureFormat.RGB24, false);
+        if (!tex.LoadImage(File.ReadAllBytes(jpgPath))) { UnityEngine.Object.DestroyImmediate(tex); return Color.grey; }
+        var px = tex.GetPixels32();
+        double r = 0, g = 0, b = 0; int n = 0;
+        for (int i = 0; i < px.Length; i += 8) { r += px[i].r; g += px[i].g; b += px[i].b; n++; }
+        UnityEngine.Object.DestroyImmediate(tex);
+        if (n == 0) return Color.grey;
+        return new Color((float)(r / n / 255.0), (float)(g / n / 255.0), (float)(b / n / 255.0));
     }
 
     static Texture2D FindTexture(string dir, string tag)

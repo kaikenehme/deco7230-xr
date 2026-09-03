@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public enum FurnitureCategory { Seating, Table, Storage }
+public enum FurnitureCategory { Seating, Table, Storage, Decor, Lighting }
 
 [Serializable]
 public class PaintOption
@@ -20,6 +20,7 @@ public class MaterialOption
     public string sourceId;  // ambientCG asset id
     public Material material;
     public SurfaceKind targets;
+    public Color sampleColor = Color.white;   // average of the albedo; what a pulled sample starts from
 }
 
 [Serializable]
@@ -30,6 +31,7 @@ public class FurnitureOption
     public GameObject prefab;
     public FurnitureCategory category;
     public Texture2D thumbnail;   // rendered at import; shown on the menu chip
+    public Color sampleColor = Color.white;   // average of the diffuse texture; what a pulled sample starts from
 }
 
 /// <summary>
@@ -42,6 +44,10 @@ public class Catalogue : ScriptableObject
     public List<PaintOption> paints = new();
     public List<MaterialOption> materials = new();
     public List<FurnitureOption> furniture = new();
+
+    public FurnitureOption Furniture(string sourceId) => furniture.Find(f => f.sourceId == sourceId);
+    public MaterialOption Material(string sourceId) => materials.Find(m => m.sourceId == sourceId);
+    public PaintOption Paint(string name) => paints.Find(p => p.name == name);
 
     public IEnumerable<MaterialOption> MaterialsFor(SurfaceKind kind) =>
         materials.Where(m => m.material != null && (m.targets & kind) != 0);

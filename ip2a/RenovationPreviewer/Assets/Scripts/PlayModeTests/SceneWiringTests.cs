@@ -19,12 +19,43 @@ public class SceneWiringTests
     }
 
     [UnityTest]
-    public IEnumerator Room_HasNineSurfaces_TwoKept()
+    public IEnumerator Room_HasTenSurfaces_TwoKept()
     {
         yield return null;
         var surfaces = Surface.All.Where(s => s != null).ToList();
-        Assert.AreEqual(9, surfaces.Count, "Floor, 4 walls, Ceiling, Door, Trim, Sofa");
+        Assert.AreEqual(10, surfaces.Count, "Floor, 4 walls, Ceiling, Door, Trim, WindowFrame, Sofa");
         Assert.AreEqual(2, surfaces.Count(s => s.State == SurfaceState.Keep), "Floor + Sofa kept");
+    }
+
+    [UnityTest]
+    public IEnumerator WindowWall_IsOneSurface_WithFourPaintableParts()
+    {
+        yield return null;
+        var wall = Surface.All.Single(s => s != null && s.name == "Wall_S");
+        Assert.AreEqual(4, wall.Renderers.Count, "lintel, sill, two jambs");
+        Assert.AreEqual(4, wall.Colliders.Count);
+        Assert.IsNull(wall.GetComponent<Renderer>(), "root is logical only");
+        wall.Commit(Color.red);
+        yield return null;
+        foreach (var r in wall.Renderers) Assert.AreEqual(Color.red, r.material.color, $"{r.name} painted");
+        Assert.IsNotNull(Surface.All.Single(s => s != null && s.name == "WindowFrame"));
+        Assert.IsNotNull(GameObject.Find("Glass"));
+        Assert.IsNotNull(GameObject.Find("Ground"));
+    }
+
+    [UnityTest]
+    public IEnumerator Clock_IsWiredToTimeOfDay_AndAdvancesIt()
+    {
+        yield return null;
+        var clock = Object.FindObjectsByType<WallClock>(FindObjectsSortMode.None).Single();
+        var tod = Object.FindObjectsByType<TimeOfDayController>(FindObjectsSortMode.None).Single();
+        Assert.AreSame(tod, clock.controller);
+        Assert.IsNotNull(clock.hourHand); Assert.IsNotNull(clock.face);
+        Assert.IsTrue(clock.GetComponent<SphereCollider>().isTrigger, "touch target");
+        int before = tod.Index;
+        tod.Next();
+        Assert.AreEqual(TimeOfDay.Next(before), tod.Index);
+        Assert.Less(Quaternion.Angle(WallClock.HandRotation(tod.Current.hour), clock.hourHand.localRotation), 0.01f, "hand follows the stop");
     }
 
     // Controller GOs are deactivated by XRI's Input Modality Manager when no

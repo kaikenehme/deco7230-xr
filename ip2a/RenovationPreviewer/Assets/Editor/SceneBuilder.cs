@@ -22,6 +22,8 @@ public static class SceneBuilder
     const float RoomW = RoomSpec.W, RoomD = RoomSpec.D, RoomH = RoomSpec.H;
     const float T = 0.1f;   // wall/slab thickness
     const int TeleportLayer = RoomSpec.TeleportLayer;
+    // Window in Wall_S: centre offset along the wall, sill height, width, height (metres).
+    public const float WindowX = 0.8f, WindowSill = 1.0f, WindowW = 2.0f, WindowH = 1.2f;
 
     public static void Build()
     {
@@ -40,7 +42,21 @@ public static class SceneBuilder
         float hw = RoomW / 2f, hd = RoomD / 2f, hh = RoomH / 2f;
         var floor = MakeSurface("Floor", new Vector3(0, -T / 2f, 0), new Vector3(RoomW, T, RoomD), timber, SurfaceState.Keep, SurfaceKind.Floor);
         MakeSurface("Wall_N", new Vector3(0, hh, hd + T / 2f), new Vector3(RoomW, RoomH, T), offwhite, SurfaceState.Change, SurfaceKind.Wall);
-        MakeSurface("Wall_S", new Vector3(0, hh, -(hd + T / 2f)), new Vector3(RoomW, RoomH, T), offwhite, SurfaceState.Change, SurfaceKind.Wall);
+        // Wall_S carries the window: one logical Surface made of four cubes around the opening.
+        var window = new Rect(WindowX, WindowSill, WindowW, WindowH);   // x = centre offset, y = sill height
+        MakeWindowWall("Wall_S", new Vector3(0, hh, -(hd + T / 2f)), RoomW, RoomH, T, window, offwhite);
+        MakeWindowFrame("WindowFrame", new Vector3(0, 0, -hd + 0.03f), window, 0.06f, 0.06f, trimWhite);
+        var glass = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        glass.name = "Glass";
+        glass.transform.position = new Vector3(WindowX, WindowSill + WindowH / 2f, -(hd + T / 2f));
+        glass.transform.localScale = new Vector3(WindowW, WindowH, 0.02f);
+        glass.GetComponent<Renderer>().sharedMaterial = MakeGlassMat("Glass");
+        Object.DestroyImmediate(glass.GetComponent<Collider>());   // the ray sees through it
+        var ground = GameObject.CreatePrimitive(PrimitiveType.Plane);
+        ground.name = "Ground";
+        ground.transform.position = new Vector3(0f, -0.02f, 0f);
+        ground.transform.localScale = new Vector3(6f, 1f, 6f);      // 60 x 60 m, so the view out of the window has a horizon
+        ground.GetComponent<Renderer>().sharedMaterial = MakeMat("Ground", new Color(0.30f, 0.36f, 0.26f));
         MakeSurface("Wall_E", new Vector3(hw + T / 2f, hh, 0), new Vector3(T, RoomH, RoomD + 2 * T), offwhite, SurfaceState.Change, SurfaceKind.Wall);
         MakeSurface("Wall_W", new Vector3(-(hw + T / 2f), hh, 0), new Vector3(T, RoomH, RoomD + 2 * T), offwhite, SurfaceState.Change, SurfaceKind.Wall);
         MakeSurface("Ceiling", new Vector3(0, RoomH + T / 2f, 0), new Vector3(RoomW, T, RoomD), offwhite, SurfaceState.Change, SurfaceKind.Ceiling);
@@ -119,6 +135,9 @@ public static class SceneBuilder
         lampCtrl.bulb = bulb;
         lampCtrl.shade = lamp.GetComponent<Renderer>();
 
+        // --- Wall clock beside the window: touch = next time of day (T7) ---
+        var clock = MakeClock(new Vector3(-1.4f, 1.9f, -hd + 0.04f), trimWhite, tableWood);
+
         // --- Sky + ambient. TimeOfDayController is the only runtime writer; these are the 10:00 defaults
         //     so the saved scene and the first frame agree. ---
         var sky = MakeSkyMat("DaySky");
@@ -134,6 +153,7 @@ public static class SceneBuilder
         var tod = managers.AddComponent<TimeOfDayController>();
         tod.sun = sun;
         tod.sky = sky;
+        clock.controller = tod;
 
         // --- UI event system for the world-space menu (XRI input module) ---
         var es = new GameObject("EventSystem");
@@ -318,7 +338,89 @@ public static class SceneBuilder
         return go;
     }
 
-    static GameObject MakePart(GameObject parent, string name, Vector3 pos, Vector3 scale, Material m, PrimitiveType type = PrimitiveType.Cube)
+    /// <summary>One logical wall (Surface on the root) built from four cubes around an opening.
+    /// opening.x = centre offset along the wall, opening.y = sill height above the floor.</summary>
+    static GameObject MakeWindowWall(string name, Vector3 centre, float width, float height, float thickness, Rect opening, Material m)
+    {
+        var root = new GameObject(name);
+        root.transform.position = centre;
+        float hw = width / 2f, yBase = -height / 2f;
+        float leftW = opening.x - opening.width / 2f + hw;
+        float rightW = hw - (opening.x + opening.width / 2f);
+        float headH = height - (opening.y + opening.height);
+        MakePart(root, "JambL", new Vector3(-hw + leftW / 2f, 0f, 0f), new Vector3(leftW, height, thickness), m, keepCollider: true);
+        MakePart(root, "JambR", new Vector3(hw - rightW / 2f, 0f, 0f), new Vector3(rightW, height, thickness), m, keepCollider: true);
+        MakePart(root, "Sill", new Vector3(opening.x, yBase + opening.y / 2f, 0f), new Vector3(opening.width, opening.y, thickness), m, keepCollider: true);
+        MakePart(root, "Lintel", new Vector3(opening.x, height / 2f - headH / 2f, 0f), new Vector3(opening.width, headH, thickness), m, keepCollider: true);
+        var s = root.AddComponent<Surface>();
+        s.SetState(SurfaceState.Change);
+        s.SetKind(SurfaceKind.Wall);
+        root.AddComponent<MenuTarget>();
+        root.AddComponent<PullAffordance>();
+        return root;
+    }
+
+    /// <summary>Four bars around the opening on the room side of the wall; a paintable Trim surface.</summary>
+    static GameObject MakeWindowFrame(string name, Vector3 wallInside, Rect opening, float bar, float depth, Material m)
+    {
+        var root = new GameObject(name);
+        root.transform.position = wallInside;
+        float cx = opening.x, cy = opening.y + opening.height / 2f, w = opening.width + bar, h = opening.height + bar;
+        MakePart(root, "Top", new Vector3(cx, cy + h / 2f, 0f), new Vector3(w + bar, bar, depth), m, keepCollider: true);
+        MakePart(root, "Bottom", new Vector3(cx, cy - h / 2f, 0f), new Vector3(w + bar, bar, depth), m, keepCollider: true);
+        MakePart(root, "Left", new Vector3(cx - w / 2f, cy, 0f), new Vector3(bar, h, depth), m, keepCollider: true);
+        MakePart(root, "Right", new Vector3(cx + w / 2f, cy, 0f), new Vector3(bar, h, depth), m, keepCollider: true);
+        var s = root.AddComponent<Surface>();
+        s.SetState(SurfaceState.Change);
+        s.SetKind(SurfaceKind.Trim);
+        root.AddComponent<MenuTarget>();
+        root.AddComponent<PullAffordance>();
+        return root;
+    }
+
+    /// <summary>Primitive wall clock facing +Z: face disc, rim, two hands on pivots, trigger sphere.</summary>
+    static WallClock MakeClock(Vector3 pos, Material faceMat, Material darkMat)
+    {
+        var root = new GameObject("WallClock");
+        root.transform.position = pos;
+        var rim = MakePart(root, "Rim", new Vector3(0f, 0f, -0.005f), new Vector3(0.40f, 0.012f, 0.40f), darkMat, PrimitiveType.Cylinder);
+        rim.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+        var face = MakePart(root, "Face", new Vector3(0f, 0f, 0.008f), new Vector3(0.36f, 0.006f, 0.36f), faceMat, PrimitiveType.Cylinder);
+        face.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+        var hourPivot = new GameObject("HourHand").transform; hourPivot.SetParent(root.transform, false); hourPivot.localPosition = new Vector3(0f, 0f, 0.022f);
+        MakePart(hourPivot.gameObject, "Hand", new Vector3(0f, 0.045f, 0f), new Vector3(0.014f, 0.10f, 0.006f), darkMat);
+        var minutePivot = new GameObject("MinuteHand").transform; minutePivot.SetParent(root.transform, false); minutePivot.localPosition = new Vector3(0f, 0f, 0.030f);
+        MakePart(minutePivot.gameObject, "Hand", new Vector3(0f, 0.065f, 0f), new Vector3(0.008f, 0.14f, 0.006f), darkMat);
+        var col = root.AddComponent<SphereCollider>();
+        col.isTrigger = true;
+        col.radius = 0.22f;
+        var clock = root.AddComponent<WallClock>();
+        clock.hourHand = hourPivot;
+        clock.minuteHand = minutePivot;
+        clock.face = face.GetComponent<Renderer>();
+        return clock;
+    }
+
+    static Material MakeGlassMat(string name)
+    {
+        var path = $"Assets/Materials/{name}.mat";
+        var m = AssetDatabase.LoadAssetAtPath<Material>(path);
+        if (m == null) { m = new Material(Shader.Find("Universal Render Pipeline/Lit")); AssetDatabase.CreateAsset(m, path); }
+        m.SetFloat("_Surface", 1f);   // transparent
+        m.SetFloat("_Blend", 0f);     // alpha
+        m.SetFloat("_ZWrite", 0f);
+        m.SetFloat("_SrcBlend", (float)BlendMode.SrcAlpha);
+        m.SetFloat("_DstBlend", (float)BlendMode.OneMinusSrcAlpha);
+        m.SetOverrideTag("RenderType", "Transparent");
+        m.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
+        m.renderQueue = (int)RenderQueue.Transparent;
+        m.color = new Color(0.80f, 0.90f, 1f, 0.15f);
+        m.SetFloat("_Smoothness", 0.9f);
+        EditorUtility.SetDirty(m);
+        return m;
+    }
+
+    static GameObject MakePart(GameObject parent, string name, Vector3 pos, Vector3 scale, Material m, PrimitiveType type = PrimitiveType.Cube, bool keepCollider = false)
     {
         var p = GameObject.CreatePrimitive(type);
         p.name = name;
@@ -326,7 +428,7 @@ public static class SceneBuilder
         p.transform.localPosition = pos;
         p.transform.localScale = scale;
         p.GetComponent<Renderer>().sharedMaterial = m;
-        Object.DestroyImmediate(p.GetComponent<Collider>());
+        if (!keepCollider) Object.DestroyImmediate(p.GetComponent<Collider>());
         return p;
     }
 
