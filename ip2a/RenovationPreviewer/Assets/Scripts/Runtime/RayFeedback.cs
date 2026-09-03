@@ -73,6 +73,7 @@ public class RayFeedback : MonoBehaviour
 
     SpriteRenderer reticle;
     Transform head;
+    SelectionOutline hoverOutlined;
 
     void Awake()
     {
@@ -93,7 +94,16 @@ public class RayFeedback : MonoBehaviour
         return Quaternion.LookRotation(n, up);
     }
 
-    void OnDisable() { glow.ClearAll(); if (reticle != null) reticle.enabled = false; Hovered = null; }
+    void OnDisable()
+    {
+        glow.ClearAll();
+        if (reticle != null) reticle.enabled = false;
+        Hovered = null;
+        if (hoverOutlined != null && !IsHeld(hoverOutlined)) hoverOutlined.Hide();
+        hoverOutlined = null;
+    }
+
+    static bool IsHeld(SelectionOutline o) { var slot = o != null ? o.GetComponent<FurnitureSlot>() : null; return slot != null && slot.IsHeld; }
 
     void Update()
     {
@@ -114,8 +124,14 @@ public class RayFeedback : MonoBehaviour
         else reticle.enabled = false;
         Hovered = hit;
 
+        // Furniture gets an outline (P1/P3 asked for a frame, not a tint); surfaces keep the glow.
+        var slotOutline = hit != null && hit.Slot != null ? hit.Slot.GetComponent<SelectionOutline>() : null;
+        if (hoverOutlined != null && hoverOutlined != slotOutline && !IsHeld(hoverOutlined)) hoverOutlined.Hide();
+        hoverOutlined = slotOutline;
+        if (slotOutline != null) slotOutline.Show();
+
         var targets = new List<(Renderer, Color)>();
-        if (hit != null) foreach (var r in hit.GetComponentsInChildren<Renderer>()) targets.Add((r, HoverGlowColor));
+        if (hit != null && slotOutline == null) foreach (var r in hit.GetComponentsInChildren<Renderer>()) targets.Add((r, HoverGlowColor));
         var cur = menu != null && menu.IsOpen ? menu.Current : null;
         if (cur != null && cur != hit) foreach (var r in cur.GetComponentsInChildren<Renderer>()) targets.Add((r, CurrentGlowColor));
         glow.Set(targets);

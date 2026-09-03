@@ -1,0 +1,104 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 401a185d182cf4d1aafd3032c7ba135e, type: 3}
+  m_Name: MidCentury
+  m_EditorClassIdentifier: 
+  displayName: Mid-century
+  floorSwatch: {r: 0.40049726, g: 0.27556327, b: 0.1454387, a: 1}
+  wallSwatch: {r: 0.9372549, g: 0.91764706, b: 0.8784314, a: 1}
+  accentSwatch: {r: 0.78, g: 0.45, b: 0.32, a: 1}
+  looks:
+  - surfaceName: Floor
+    state: 0
+    material: {fileID: 2100000, guid: 8c18149a0b1dd4600bb55f3ddaefc6bc, type: 2}
+    color: {r: 1, g: 1, b: 1, a: 1}
+    userColour: 0
+    sampleColor: {r: 0.40049726, g: 0.27556327, b: 0.1454387, a: 1}
+  - surfaceName: Wall_N
+    state: 1
+    material: {fileID: 0}
+    color: {r: 0.9372549, g: 0.91764706, b: 0.8784314, a: 1}
+    userColour: 0
+    sampleColor: {r: 0.9372549, g: 0.91764706, b: 0.8784314, a: 1}
+  - surfaceName: Wall_E
+    state: 1
+    material: {fileID: 0}
+    color: {r: 0.9372549, g: 0.91764706, b: 0.8784314, a: 1}
+    userColour: 0
+    sampleColor: {r: 0.9372549, g: 0.91764706, b: 0.8784314, a: 1}
+  - surfaceName: Wall_W
+    state: 1
+    material: {fileID: 0}
+    color: {r: 0.9372549, g: 0.91764706, b: 0.8784314, a: 1}
+    userColour: 0
+    sampleColor: {r: 0.9372549, g: 0.91764706, b: 0.8784314, a: 1}
+  - surfaceName: Wall_S
+    state: 1
+    material: {fileID: 0}
+    color: {r: 0.78, g: 0.45, b: 0.32, a: 1}
+    userColour: 1
+    sampleColor: {r: 0.78, g: 0.45, b: 0.32, a: 1}
+  - surfaceName: Ceiling
+    state: 1
+    material: {fileID: 0}
+    color: {r: 0.9372549, g: 0.91764706, b: 0.8784314, a: 1}
+    userColour: 0
+    sampleColor: {r: 0.9372549, g: 0.91764706, b: 0.8784314, a: 1}
+  - surfaceName: Door
+    state: 1
+    material: {fileID: 0}
+    color: {r: 0.95, g: 0.94, b: 0.91, a: 1}
+    userColour: 0
+    sampleColor: {r: 0.95, g: 0.94, b: 0.91, a: 1}
+  - surfaceName: Trim
+    state: 1
+    material: {fileID: 0}
+    color: {r: 0.95, g: 0.94, b: 0.91, a: 1}
+    userColour: 0
+    sampleColor: {r: 0.95, g: 0.94, b: 0.91, a: 1}
+  - surfaceName: WindowFrame
+    state: 1
+    material: {fileID: 0}
+    color: {r: 0.95, g: 0.94, b: 0.91, a: 1}
+    userColour: 0
+    sampleColor: {r: 0.95, g: 0.94, b: 0.91, a: 1}
+  furniture:
+  - sourceId: sofa_02
+    position: {x: -2.4, y: 0, z: -2.9}
+    yaw: 0
+    keep: 1
+    sampleColor: {r: 0.09000672, g: 0.05782471, b: 0.0305653, a: 1}
+  - sourceId: modern_coffee_table_01
+    position: {x: -2.4, y: 0, z: -1.4}
+    yaw: 0
+    keep: 0
+    sampleColor: {r: 0.53829896, g: 0.41749683, b: 0.29557148, a: 1}
+  - sourceId: mid_century_lounge_chair
+    position: {x: 0.8, y: 0, z: -1.2}
+    yaw: 200
+    keep: 0
+    sampleColor: {r: 0.41113222, g: 0.3155241, b: 0.23260581, a: 1}
+  - sourceId: ClassicConsole_01
+    position: {x: 4.1, y: 0, z: 1.5}
+    yaw: -90
+    keep: 0
+    sampleColor: {r: 0.087261215, g: 0.065531865, b: 0.052737847, a: 1}
+  - sourceId: wooden_display_shelves_01
+    position: {x: -4.1, y: 0, z: 1}
+    yaw: 90
+    keep: 0
+    sampleColor: {r: 0.753359, g: 0.5911106, b: 0.44767523, a: 1}
+  - sourceId: potted_plant_04
+    position: {x: 1.9, y: 0, z: -3}
+    yaw: 0
+    keep: 0
+    sampleColor: {r: 0.4958776, g: 0.47514814, b: 0.38634297, a: 1}

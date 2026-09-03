@@ -1,0 +1,99 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 401a185d182cf4d1aafd3032c7ba135e, type: 3}
+  m_Name: Coastal
+  m_EditorClassIdentifier: 
+  displayName: Coastal
+  floorSwatch: {r: 0.83939123, g: 0.8318203, b: 0.83804816, a: 1}
+  wallSwatch: {r: 0.7647059, g: 0.76862746, b: 0.7607843, a: 1}
+  accentSwatch: {r: 0.69803923, g: 0.8039216, b: 0.92156863, a: 1}
+  looks:
+  - surfaceName: Floor
+    state: 0
+    material: {fileID: 2100000, guid: d7b0f342d234043a49b9a087110e6f81, type: 2}
+    color: {r: 1, g: 1, b: 1, a: 1}
+    userColour: 0
+    sampleColor: {r: 0.83939123, g: 0.8318203, b: 0.83804816, a: 1}
+  - surfaceName: Wall_S
+    state: 1
+    material: {fileID: 0}
+    color: {r: 0.7647059, g: 0.76862746, b: 0.7607843, a: 1}
+    userColour: 0
+    sampleColor: {r: 0.7647059, g: 0.76862746, b: 0.7607843, a: 1}
+  - surfaceName: Wall_E
+    state: 1
+    material: {fileID: 0}
+    color: {r: 0.7647059, g: 0.76862746, b: 0.7607843, a: 1}
+    userColour: 0
+    sampleColor: {r: 0.7647059, g: 0.76862746, b: 0.7607843, a: 1}
+  - surfaceName: Wall_W
+    state: 1
+    material: {fileID: 0}
+    color: {r: 0.7647059, g: 0.76862746, b: 0.7607843, a: 1}
+    userColour: 0
+    sampleColor: {r: 0.7647059, g: 0.76862746, b: 0.7607843, a: 1}
+  - surfaceName: Wall_N
+    state: 1
+    material: {fileID: 0}
+    color: {r: 0.69803923, g: 0.8039216, b: 0.92156863, a: 1}
+    userColour: 1
+    sampleColor: {r: 0.69803923, g: 0.8039216, b: 0.92156863, a: 1}
+  - surfaceName: Ceiling
+    state: 1
+    material: {fileID: 0}
+    color: {r: 0.95, g: 0.94, b: 0.91, a: 1}
+    userColour: 0
+    sampleColor: {r: 0.95, g: 0.94, b: 0.91, a: 1}
+  - surfaceName: Door
+    state: 1
+    material: {fileID: 0}
+    color: {r: 0.95, g: 0.94, b: 0.91, a: 1}
+    userColour: 0
+    sampleColor: {r: 0.95, g: 0.94, b: 0.91, a: 1}
+  - surfaceName: Trim
+    state: 1
+    material: {fileID: 0}
+    color: {r: 0.95, g: 0.94, b: 0.91, a: 1}
+    userColour: 0
+    sampleColor: {r: 0.95, g: 0.94, b: 0.91, a: 1}
+  - surfaceName: WindowFrame
+    state: 1
+    material: {fileID: 0}
+    color: {r: 0.95, g: 0.94, b: 0.91, a: 1}
+    userColour: 0
+    sampleColor: {r: 0.95, g: 0.94, b: 0.91, a: 1}
+  furniture:
+  - sourceId: painted_wooden_bench
+    position: {x: -2.4, y: 0, z: -2.9}
+    yaw: 0
+    keep: 1
+    sampleColor: {r: 0.33548558, g: 0.20489939, b: 0.16312791, a: 1}
+  - sourceId: CoffeeTable_01
+    position: {x: -2.4, y: 0, z: -1.4}
+    yaw: 0
+    keep: 0
+    sampleColor: {r: 0.38890922, g: 0.4670231, b: 0.40432343, a: 1}
+  - sourceId: GreenChair_01
+    position: {x: 0.6, y: 0, z: -1.3}
+    yaw: 200
+    keep: 0
+    sampleColor: {r: 0.18638884, g: 0.16439258, b: 0.13029379, a: 1}
+  - sourceId: painted_wooden_cabinet
+    position: {x: -4.1, y: 0, z: 1}
+    yaw: 90
+    keep: 0
+    sampleColor: {r: 0.41381916, g: 0.37146515, b: 0.32593435, a: 1}
+  - sourceId: potted_plant_01
+    position: {x: 2, y: 0, z: -3}
+    yaw: 0
+    keep: 0
+    sampleColor: {r: 0.24702513, g: 0.28390786, b: 0.14881383, a: 1}

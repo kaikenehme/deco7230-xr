@@ -12,9 +12,9 @@ using UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation;
 using UnityEngine.XR.Interaction.Toolkit.UI;
 
 /// <summary>
-/// Deterministic scene construction for IP1 (spec §7: one room; keeping timber
-/// floor + sofa; changing 4 walls, ceiling, trim, door). Re-runnable: rebuilds
-/// Room.unity from scratch each time.
+/// Deterministic scene construction (IP1 → IP2a). One 9 x 7 m room with a window in
+/// Wall_S, a lamp, a wall clock, three preset frames on Wall_W; furniture comes from
+/// the presets at Start. Re-runnable: rebuilds Room.unity from scratch each time.
 /// </summary>
 public static class SceneBuilder
 {
@@ -68,28 +68,7 @@ public static class SceneBuilder
         var tele = floor.AddComponent<TeleportationArea>();
         tele.interactionLayers = (UnityEngine.XR.Interaction.Toolkit.InteractionLayerMask)(1 << TeleportLayer);
 
-        // --- Sofa: kept prop (sample source) AND a furniture slot (swap/move) ---
-        var sofa = new GameObject("Sofa");
-        sofa.transform.position = new Vector3(-hw + 1.3f, 0f, -hd + 0.6f);
-        MakePart(sofa, "Seat", new Vector3(0f, 0.25f, 0f), new Vector3(1.8f, 0.5f, 0.8f), sofaGrey);
-        MakePart(sofa, "Back", new Vector3(0f, 0.65f, -0.35f), new Vector3(1.8f, 0.8f, 0.2f), sofaGrey);
-        MakePart(sofa, "ArmL", new Vector3(-0.85f, 0.45f, 0f), new Vector3(0.2f, 0.5f, 0.8f), sofaGrey);
-        MakePart(sofa, "ArmR", new Vector3(0.85f, 0.45f, 0f), new Vector3(0.2f, 0.5f, 0.8f), sofaGrey);
-        var sofaSurf = sofa.AddComponent<Surface>();
-        sofaSurf.SetState(SurfaceState.Keep);
-        sofa.AddComponent<PullAffordance>();
-        var sofaRb = sofa.AddComponent<Rigidbody>(); sofaRb.isKinematic = true; sofaRb.useGravity = false;
-        var sofaCol = sofa.AddComponent<BoxCollider>();
-        sofaCol.center = new Vector3(0f, 0.5f, -0.1f);
-        sofaCol.size = new Vector3(1.95f, 1.1f, 1.1f);
-        var sofaGrab = sofa.AddComponent<XRGrabInteractable>();
-        sofaGrab.movementType = XRBaseInteractable.MovementType.Kinematic;
-        sofaGrab.throwOnDetach = false;
-        sofaGrab.useDynamicAttach = true;
         var floorBounds = new Bounds(Vector3.zero, new Vector3(RoomW, T, RoomD));
-        var sofaSlot = sofa.AddComponent<FurnitureSlot>();
-        sofaSlot.BindGrab(floorBounds);
-        sofa.AddComponent<MenuTarget>();
 
         // --- Lamp on side table (diegetic light control, spec §7) ---
         var table = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -150,6 +129,19 @@ public static class SceneBuilder
         // --- Managers ---
         var managers = new GameObject("Managers");
         var schemeMgr = managers.AddComponent<SchemeManager>();
+        var config = managers.AddComponent<RenovationConfig>();
+        config.outlineShell = MakeOutlineMat("OutlineShell");
+
+        // Presets: three pre-furnished rooms (Evaluation 1 §05), preset 0 applied at Start.
+        var catalogueAsset = AssetDatabase.LoadAssetAtPath<Catalogue>("Assets/Catalogue/Catalogue.asset");
+        var applier = managers.AddComponent<PresetApplier>();
+        applier.catalogue = catalogueAsset;
+        applier.floorBounds = floorBounds;
+        applier.presets = PresetAuthoring.Names
+            .Select(n => AssetDatabase.LoadAssetAtPath<RoomPreset>(PresetAuthoring.AssetPath(n)))
+            .Where(x => x != null).ToArray();
+        if (applier.presets.Length == 0) Debug.LogWarning("SceneBuilder: no presets — run Renovation → Build Presets first");
+        MakePresetFrames(applier, new Vector3(-hw + 0.03f, 1.5f, 0f), trimWhite);
         var tod = managers.AddComponent<TimeOfDayController>();
         tod.sun = sun;
         tod.sky = sky;
@@ -218,6 +210,10 @@ public static class SceneBuilder
             modality.leftHand = null;
             modality.rightHand = null;
         }
+
+        var fi = rig.AddComponent<FurnitureInput>();
+        fi.leftStick = Vector2Action("LeftStick", "<XRController>{LeftHand}/primary2DAxis");
+        fi.rightStick = Vector2Action("RightStick", "<XRController>{RightHand}/primary2DAxis");
 
         WireHand(rig, "Left Controller", "LeftHand", samplePrefab);
         var right = WireHand(rig, "Right Controller", "RightHand", samplePrefab);
@@ -313,6 +309,9 @@ public static class SceneBuilder
     static InputActionProperty ButtonAction(string name, string path) =>
         new(new InputAction(name, InputActionType.Button, path));
 
+    static InputActionProperty Vector2Action(string name, string path) =>
+        new(new InputAction(name, InputActionType.Value, path, expectedControlType: "Vector2"));
+
     static Material MakeMat(string name, Color c)
     {
         var path = $"Assets/Materials/{name}.mat";
@@ -340,6 +339,53 @@ public static class SceneBuilder
 
     /// <summary>One logical wall (Surface on the root) built from four cubes around an opening.
     /// opening.x = centre offset along the wall, opening.y = sill height above the floor.</summary>
+    /// <summary>Three framed pictures on Wall_W (a left head-turn from the start pose); touch one to dress the room.</summary>
+    static void MakePresetFrames(PresetApplier applier, Vector3 wallInside, Material frameMat)
+    {
+        for (int i = 0; i < applier.presets.Length; i++)
+        {
+            var preset = applier.presets[i];
+            var root = new GameObject($"PresetFrame_{i}");
+            root.transform.position = wallInside + new Vector3(0f, 0f, (i - (applier.presets.Length - 1) / 2f) * 1.5f);
+            var backing = MakePart(root, "Frame", new Vector3(0f, 0f, 0f), new Vector3(0.05f, 0.50f, 0.60f), frameMat, keepCollider: true);
+            var picture = MakePart(root, "Picture", new Vector3(0.03f, 0f, 0f), new Vector3(0.01f, 0.40f, 0.50f), frameMat);
+            var cardName = System.IO.Path.GetFileNameWithoutExtension(AssetDatabase.GetAssetPath(preset));
+            var cardMat = AssetDatabase.LoadAssetAtPath<Material>(PresetAuthoring.CardMaterialPath(cardName));
+            if (cardMat != null) picture.GetComponent<Renderer>().sharedMaterial = cardMat;
+
+            var labelGo = new GameObject("Label");
+            labelGo.transform.SetParent(root.transform, false);
+            labelGo.transform.localPosition = new Vector3(0.04f, -0.34f, 0f);
+            labelGo.transform.localRotation = Quaternion.Euler(0f, -90f, 0f);   // readable from inside the room (+X side)
+            var tm = labelGo.AddComponent<TextMesh>();
+            tm.text = preset.displayName;
+            tm.font = UiKit.Font;
+            tm.fontSize = 64;
+            tm.characterSize = 0.05f;
+            tm.anchor = TextAnchor.MiddleCenter;
+            tm.color = new Color(0.15f, 0.15f, 0.15f);
+            labelGo.GetComponent<MeshRenderer>().sharedMaterial = UiKit.Font.material;
+
+            var col = root.AddComponent<SphereCollider>();
+            col.isTrigger = true;
+            col.radius = 0.3f;
+            var pf = root.AddComponent<PresetFrame>();
+            pf.applier = applier;
+            pf.index = i;
+            pf.frame = backing.GetComponent<Renderer>();
+        }
+    }
+
+    static Material MakeOutlineMat(string name)
+    {
+        var path = $"Assets/Materials/{name}.mat";
+        var m = AssetDatabase.LoadAssetAtPath<Material>(path);
+        if (m == null) { m = new Material(Shader.Find("Universal Render Pipeline/Unlit")); AssetDatabase.CreateAsset(m, path); }
+        SelectionOutline.ConfigureShellMaterial(m);
+        EditorUtility.SetDirty(m);
+        return m;
+    }
+
     static GameObject MakeWindowWall(string name, Vector3 centre, float width, float height, float thickness, Rect opening, Material m)
     {
         var root = new GameObject(name);

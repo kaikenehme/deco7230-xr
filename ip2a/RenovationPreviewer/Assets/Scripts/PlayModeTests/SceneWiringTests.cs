@@ -18,13 +18,68 @@ public class SceneWiringTests
         yield return null; // let Awake/OnEnable run
     }
 
+    static readonly string[] Shell = { "Floor", "Wall_N", "Wall_S", "Wall_E", "Wall_W", "Ceiling", "Door", "Trim", "WindowFrame" };
+
     [UnityTest]
-    public IEnumerator Room_HasTenSurfaces_TwoKept()
+    public IEnumerator Room_StartsInPreset0_ShellNineSurfaces_PlusPresetKeeps()
+    {
+        yield return null; yield return null;   // PresetApplier.Start ran
+        var applier = Object.FindObjectsByType<PresetApplier>(FindObjectsSortMode.None).Single();
+        Assert.AreEqual(3, applier.presets.Length, "three presets wired");
+        Assert.AreEqual(0, applier.Current, "preset 0 applied at Start");
+        var surfaces = Surface.All.Where(s => s != null).ToList();
+        var shell = surfaces.Where(s => s.GetComponent<FurnitureSlot>() == null).Select(s => s.name).OrderBy(n => n).ToList();
+        CollectionAssert.AreEquivalent(Shell, shell);
+        int keptSlots = surfaces.Count(s => s.GetComponent<FurnitureSlot>() != null && s.State == SurfaceState.Keep);
+        Assert.AreEqual(applier.presets[0].furniture.Count(f => f.keep), keptSlots, "kept furniture from the preset");
+        Assert.AreEqual(SurfaceState.Keep, surfaces.Single(s => s.name == "Floor").State);
+        Assert.AreEqual(applier.presets[0].furniture.Count, Object.FindObjectsByType<FurnitureSlot>(FindObjectsSortMode.None).Length, "every placement spawned");
+    }
+
+    [UnityTest]
+    public IEnumerator PresetFrames_ThreeOnWallW_Wired()
+    {
+        yield return null; yield return null;
+        var frames = Object.FindObjectsByType<PresetFrame>(FindObjectsSortMode.None).OrderBy(f => f.index).ToList();
+        Assert.AreEqual(3, frames.Count);
+        var applier = Object.FindObjectsByType<PresetApplier>(FindObjectsSortMode.None).Single();
+        for (int i = 0; i < 3; i++)
+        {
+            Assert.AreSame(applier, frames[i].applier);
+            Assert.AreEqual(i, frames[i].index);
+            Assert.IsNotNull(frames[i].frame);
+            Assert.Less(frames[i].transform.position.x, -RoomSpec.W / 2f + 0.1f, "on Wall_W");
+            Assert.IsTrue(frames[i].GetComponent<SphereCollider>().isTrigger);
+        }
+        Assert.IsTrue(frames[0].IsCurrent);
+        applier.Apply(2);
+        yield return null;
+        Assert.IsTrue(frames[2].IsCurrent);
+        Assert.AreEqual(applier.presets[2].furniture.Count, Object.FindObjectsByType<FurnitureSlot>(FindObjectsSortMode.None).Length, "old pieces gone, new ones in");
+    }
+
+    [UnityTest]
+    public IEnumerator Presets_AllSourceIdsResolveInCatalogue_AndLooksNameShellSurfaces()
     {
         yield return null;
-        var surfaces = Surface.All.Where(s => s != null).ToList();
-        Assert.AreEqual(10, surfaces.Count, "Floor, 4 walls, Ceiling, Door, Trim, WindowFrame, Sofa");
-        Assert.AreEqual(2, surfaces.Count(s => s.State == SurfaceState.Keep), "Floor + Sofa kept");
+        var applier = Object.FindObjectsByType<PresetApplier>(FindObjectsSortMode.None).Single();
+        foreach (var p in applier.presets)
+        {
+            foreach (var f in p.furniture) Assert.IsNotNull(applier.catalogue.Furniture(f.sourceId)?.prefab, $"{p.displayName}: {f.sourceId}");
+            foreach (var l in p.looks) CollectionAssert.Contains(Shell, l.surfaceName, $"{p.displayName}: look {l.surfaceName}");
+            Assert.IsTrue(p.furniture.Any(f => f.keep), $"{p.displayName}: has a kept piece to pull from");
+            Assert.IsTrue(p.looks.Any(l => l.surfaceName == "Floor" && l.state == SurfaceState.Keep), $"{p.displayName}: floor kept");
+        }
+    }
+
+    [UnityTest]
+    public IEnumerator Managers_HaveOutlineMaterial_WithFrontCull()
+    {
+        yield return null;
+        var cfg = Object.FindObjectsByType<RenovationConfig>(FindObjectsSortMode.None).Single();
+        Assert.IsNotNull(cfg.outlineShell);
+        Assert.AreEqual(1f, cfg.outlineShell.GetFloat("_Cull"));
+        Assert.AreSame(cfg.outlineShell, SelectionOutline.ShellMaterial);
     }
 
     [UnityTest]
@@ -130,6 +185,7 @@ public class SceneWiringTests
         wall.Commit(sample.CurrentColor);
         Assert.IsFalse(wall.IsPreviewing);
         Assert.AreEqual(sample.CurrentColor, wall.CommittedColor);
+        Assert.AreEqual(floor.SampleColor, sample.BaseColor, "sample starts from the floor's sample colour");
 
         Object.Destroy(go);
         yield return null;
@@ -153,17 +209,19 @@ public class SceneWiringTests
     }
 
     [UnityTest]
-    public IEnumerator EverySurface_HasMenuTargetAndKind()
+    public IEnumerator EverySurface_HasMenuTargetAndKind_KeptFurnitureIsGrabbableSource()
     {
-        yield return null;
+        yield return null; yield return null;
         foreach (var s in Surface.All.Where(s => s != null))
         {
             Assert.IsNotNull(s.GetComponent<MenuTarget>(), $"{s.name}: MenuTarget");
-            if (s.name != "Sofa") Assert.AreNotEqual(SurfaceKind.None, s.Kind, $"{s.name}: kind set");
+            if (s.GetComponent<FurnitureSlot>() == null) Assert.AreNotEqual(SurfaceKind.None, s.Kind, $"{s.name}: kind set");
         }
-        var sofa = Surface.All.Single(s => s != null && s.name == "Sofa");
-        Assert.IsNotNull(sofa.GetComponent<FurnitureSlot>(), "sofa is a furniture slot");
-        Assert.IsNotNull(sofa.GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>(), "sofa grabbable");
+        var kept = Surface.All.First(s => s != null && s.GetComponent<FurnitureSlot>() != null && s.State == SurfaceState.Keep);
+        Assert.IsNotNull(kept.GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>(), "kept furniture grabbable");
+        Assert.IsNotNull(kept.GetComponent<PullAffordance>(), "kept furniture has the pull tab");
+        Assert.IsNotNull(kept.GetComponent<SelectionOutline>(), "kept furniture outlines on hover");
+        Assert.AreNotEqual(Color.white, kept.SampleColor, "textured furniture pulls an authored colour");
     }
 
     [UnityTest]
@@ -220,5 +278,18 @@ public class SceneWiringTests
         Assert.IsNotNull(fac.spawnAction.action, "left X bound");
         var relay = Object.FindObjectsByType<MenuSelectRelay>(FindObjectsInactive.Include, FindObjectsSortMode.None).Single();
         Assert.AreSame(fac.puller, relay.puller, "menu relay yields to the puller");
+    }
+    [UnityTest]
+    public IEnumerator Rig_HasFurnitureInput_AndSlotsDoNotTrackPose()
+    {
+        yield return null;
+        var fi = Object.FindObjectsByType<FurnitureInput>(FindObjectsInactive.Include, FindObjectsSortMode.None).Single();
+        Assert.IsNotNull(fi.leftStick.action); Assert.IsNotNull(fi.rightStick.action);
+        foreach (var slot in Object.FindObjectsByType<FurnitureSlot>(FindObjectsSortMode.None))
+        {
+            var grab = slot.GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>();
+            Assert.IsFalse(grab.trackPosition, $"{slot.name}: placed by the ray, not floated by XRI");
+            Assert.IsFalse(grab.trackRotation, $"{slot.name}: yawed by the stick");
+        }
     }
 }

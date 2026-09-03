@@ -102,4 +102,49 @@ public class FurnitureSlotTests
         slot.Remove();
         Assert.AreEqual(0, root.transform.childCount);
     }
+
+    [Test]
+    public void FloorPointOnRay_HitsPlaneY0()
+    {
+        var p = FurnitureSlot.FloorPointOnRay(new Vector3(0f, 1f, 0f), new Vector3(0f, -1f, 1f).normalized);
+        Assert.AreEqual(0f, p.y, 1e-4f);
+        Assert.AreEqual(1f, p.z, 1e-3f, "45° down from 1 m lands 1 m ahead");
+    }
+
+    [Test]
+    public void FloorPointOnRay_UpwardRay_UsesFallback()
+    {
+        var p = FurnitureSlot.FloorPointOnRay(new Vector3(0f, 1f, 0f), new Vector3(0f, 0.5f, 1f).normalized, 2f);
+        Assert.AreEqual(0f, p.y, 1e-4f);
+        Assert.Greater(p.z, 0f);
+        Assert.Less(p.z, 2.01f);
+    }
+
+    [Test] public void YawStep_BelowDeadzone_IsZero() => Assert.AreEqual(0f, FurnitureSlot.YawStep(new Vector2(0.2f, 0.9f), 1f));
+    [Test] public void YawStep_FullDeflection_Is90DegPerSec() => Assert.AreEqual(FurnitureSlot.RotateDegPerSec, FurnitureSlot.YawStep(Vector2.right, 1f), 1e-4f);
+
+    [Test]
+    public void Spawn_WithYawAndKeep_AddsKeepSurfaceAndSampleColor()
+    {
+        var bounds = new Bounds(Vector3.zero, new Vector3(9, 0.1f, 7));
+        var slot = FurnitureSlot.Spawn(Option("Sofa"), new Vector3(-2f, 0f, -2f), 90f, bounds, true, Color.cyan, SlotOrigin.Preset);
+        Assert.AreEqual(90f, slot.transform.eulerAngles.y, 0.01f);
+        var surf = slot.GetComponent<Surface>();
+        Assert.IsNotNull(surf, "kept furniture is a sample source");
+        Assert.AreEqual(SurfaceState.Keep, surf.State);
+        Assert.AreEqual(Color.cyan, surf.SampleColor);
+        Assert.IsNotNull(slot.GetComponent<PullAffordance>());
+        Assert.AreEqual(SlotOrigin.Preset, slot.Origin);
+    }
+
+    [Test]
+    public void Spawn_DisablesXriPoseTracking_AndDefaultsToUser()
+    {
+        var slot = FurnitureSlot.Spawn(Option("A"), Vector3.zero, new Bounds(Vector3.zero, new Vector3(4, 0.1f, 3)));
+        var grab = slot.GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>();
+        Assert.IsFalse(grab.trackPosition, "we place it at the ray, XRI must not float it");
+        Assert.IsFalse(grab.trackRotation, "we yaw it from the stick, XRI must not pitch it");
+        Assert.AreEqual(SlotOrigin.User, slot.Origin);
+        Assert.IsFalse(slot.IsHeld);
+    }
 }
