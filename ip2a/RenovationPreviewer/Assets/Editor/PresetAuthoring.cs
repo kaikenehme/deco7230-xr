@@ -30,7 +30,7 @@ public static class PresetAuthoring
         Paint(cat, scandi, Trims, "Vivid White");
         Place(cat, scandi, "Sofa_01", -2.4f, -2.9f, 0f, keep: true);
         Place(cat, scandi, "coffee_table_round_01", -2.4f, -1.4f, 0f);
-        Place(cat, scandi, "ArmChair_01", 0.6f, -1.3f, 200f);
+        Place(cat, scandi, "ArmChair_01", 0.6f, -1.3f, -100f);
         Place(cat, scandi, "potted_plant_01", -4.0f, -2.9f, 0f);
         Place(cat, scandi, "Shelf_01", 4.1f, 0.6f, -90f);
         Swatches(cat, scandi, "WoodFloor051", "Whisper White", "Sofa_01");
@@ -44,9 +44,9 @@ public static class PresetAuthoring
         Paint(cat, mid, Trims, "Natural White");
         Place(cat, mid, "sofa_02", -2.4f, -2.9f, 0f, keep: true);
         Place(cat, mid, "modern_coffee_table_01", -2.4f, -1.4f, 0f);
-        Place(cat, mid, "mid_century_lounge_chair", 0.8f, -1.2f, 200f);
+        Place(cat, mid, "mid_century_lounge_chair", 0.8f, -1.2f, -100f);
         Place(cat, mid, "ClassicConsole_01", 4.1f, 1.5f, -90f);
-        Place(cat, mid, "wooden_display_shelves_01", -4.1f, 1.0f, 90f);
+        Place(cat, mid, "wooden_display_shelves_01", -1.5f, 3.15f, 180f);
         Place(cat, mid, "potted_plant_04", 1.9f, -3.0f, 0f);
         Swatches(cat, mid, "WoodFloor043", "Antique White U.S.A.", "Terracotta");
 
@@ -59,8 +59,8 @@ public static class PresetAuthoring
         Paint(cat, coastal, Trims, "Vivid White");
         Place(cat, coastal, "painted_wooden_bench", -2.4f, -2.9f, 0f, keep: true);
         Place(cat, coastal, "CoffeeTable_01", -2.4f, -1.4f, 0f);
-        Place(cat, coastal, "GreenChair_01", 0.6f, -1.3f, 200f);
-        Place(cat, coastal, "painted_wooden_cabinet", -4.1f, 1.0f, 90f);
+        Place(cat, coastal, "GreenChair_01", 0.6f, -1.3f, -100f);
+        Place(cat, coastal, "painted_wooden_cabinet", -1.5f, 3.15f, 180f);
         Place(cat, coastal, "potted_plant_01", 2.0f, -3.0f, 0f);
         Swatches(cat, coastal, "Tiles040", "Tranquil Retreat", "Powder Blue");
 

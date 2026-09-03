@@ -13,16 +13,16 @@ MonoBehaviour:
   m_Name: Scandi
   m_EditorClassIdentifier: 
   displayName: Scandi
-  floorSwatch: {r: 0.60682154, g: 0.48067155, b: 0.36665887, a: 1}
+  floorSwatch: {r: 0.59295726, g: 0.46466073, b: 0.34829125, a: 1}
   wallSwatch: {r: 0.92156863, g: 0.9137255, b: 0.8784314, a: 1}
-  accentSwatch: {r: 0.4498082, g: 0.40532959, b: 0.3702522, a: 1}
+  accentSwatch: {r: 0.5901743, g: 0.55087054, b: 0.51169074, a: 1}
   looks:
   - surfaceName: Floor
     state: 0
     material: {fileID: 2100000, guid: 0fd9ca2da3791455ea176ba2d5735d93, type: 2}
     color: {r: 1, g: 1, b: 1, a: 1}
     userColour: 0
-    sampleColor: {r: 0.60682154, g: 0.48067155, b: 0.36665887, a: 1}
+    sampleColor: {r: 0.59295726, g: 0.46466073, b: 0.34829125, a: 1}
   - surfaceName: Wall_N
     state: 1
     material: {fileID: 0}
@@ -76,24 +76,24 @@ MonoBehaviour:
     position: {x: -2.4, y: 0, z: -2.9}
     yaw: 0
     keep: 1
-    sampleColor: {r: 0.4498082, g: 0.40532959, b: 0.3702522, a: 1}
+    sampleColor: {r: 0.5901743, g: 0.55087054, b: 0.51169074, a: 1}
   - sourceId: coffee_table_round_01
     position: {x: -2.4, y: 0, z: -1.4}
     yaw: 0
     keep: 0
-    sampleColor: {r: 0.41477925, g: 0.4250901, b: 0.4531502, a: 1}
+    sampleColor: {r: 0.107597925, g: 0.10752233, b: 0.10693469, a: 1}
   - sourceId: ArmChair_01
     position: {x: 0.6, y: 0, z: -1.3}
-    yaw: 200
+    yaw: -100
     keep: 0
-    sampleColor: {r: 0.44834095, g: 0.43336332, b: 0.4153499, a: 1}
+    sampleColor: {r: 0.6031483, g: 0.59726745, b: 0.5887242, a: 1}
   - sourceId: potted_plant_01
     position: {x: -4, y: 0, z: -2.9}
     yaw: 0
     keep: 0
-    sampleColor: {r: 0.24702513, g: 0.28390786, b: 0.14881383, a: 1}
+    sampleColor: {r: 0.0014024195, g: 0.0015176047, b: 0.0019358046, a: 1}
   - sourceId: Shelf_01
     position: {x: 4.1, y: 0, z: 0.6}
     yaw: -90
     keep: 0
-    sampleColor: {r: 0.59665763, g: 0.587357, b: 0.578576, a: 1}
+    sampleColor: {r: 0.6657058, g: 0.66441524, b: 0.65996224, a: 1}

@@ -70,6 +70,15 @@ public class SceneWiringTests
             Assert.IsTrue(p.furniture.Any(f => f.keep), $"{p.displayName}: has a kept piece to pull from");
             Assert.IsTrue(p.looks.Any(l => l.surfaceName == "Floor" && l.state == SurfaceState.Keep), $"{p.displayName}: floor kept");
         }
+        // The kept floor really wears each preset's material at runtime.
+        var floor = Surface.All.Single(x => x != null && x.name == "Floor");
+        for (int i = 0; i < applier.presets.Length; i++)
+        {
+            applier.Apply(i); yield return null;
+            var want = applier.presets[i].looks.Single(l => l.surfaceName == "Floor").material;
+            Assert.IsNotNull(want, $"preset {i} floor material");
+            Assert.AreEqual(want.mainTexture, floor.Renderers[0].sharedMaterial.mainTexture, $"preset {i}: floor texture applied");
+        }
     }
 
     [UnityTest]
@@ -291,5 +300,26 @@ public class SceneWiringTests
             Assert.IsFalse(grab.trackPosition, $"{slot.name}: placed by the ray, not floated by XRI");
             Assert.IsFalse(grab.trackRotation, $"{slot.name}: yawed by the stick");
         }
+    }
+    [UnityTest]
+    public IEnumerator Managers_HaveOnboarding_AndSampleHasThread()
+    {
+        yield return null; yield return null;
+        var ob = Object.FindObjectsByType<OnboardingSequence>(FindObjectsSortMode.None).Single();
+        Assert.IsNotNull(ob.presets); Assert.IsNotNull(ob.lamp); Assert.IsNotNull(ob.head);
+        Assert.IsTrue(ob.Running || ob.Done, "onboarding started once preset 0 applied");
+        var prefab = Object.FindObjectsByType<SamplePuller>(FindObjectsInactive.Include, FindObjectsSortMode.None)[0].samplePrefab;
+        Assert.IsNotNull(prefab.GetComponent<HarmonyThread>(), "thread back to the source");
+    }
+
+    [UnityTest]
+    public IEnumerator Wall_PreviewMaterialTenTimes_OneInstance()
+    {
+        yield return null;
+        var wall = Surface.All.Single(s => s != null && s.name == "Wall_N");
+        var menu = Object.FindObjectsByType<ControllerMenu>(FindObjectsInactive.Include, FindObjectsSortMode.None).Single();
+        var tiles = menu.catalogue.materials[0].material;
+        for (int i = 0; i < 10; i++) { wall.PreviewMaterial(tiles); wall.Revert(); }
+        Assert.LessOrEqual(wall.InstanceCount, 2, "one instance per source material, not per hover");
     }
 }

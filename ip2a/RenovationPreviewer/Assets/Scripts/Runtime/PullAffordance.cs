@@ -12,7 +12,7 @@ using UnityEngine;
 [RequireComponent(typeof(Surface))]
 public class PullAffordance : MonoBehaviour
 {
-    public const float ShowRadius = 0.35f, TouchRadius = 0.10f, TabSize = 0.06f;
+    public const float ShowRadius = 0.35f, TouchRadius = 0.10f, TabSize = 0.08f;
     public const float SurfaceOffset = 0.01f, LiftOffset = 0.03f, PeelHide = 0.5f;
 
     Surface surface;

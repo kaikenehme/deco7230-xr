@@ -90,194 +90,194 @@ MonoBehaviour:
     sourceId: Tiles040
     material: {fileID: 2100000, guid: d7b0f342d234043a49b9a087110e6f81, type: 2}
     targets: 1
-    sampleColor: {r: 0.83939123, g: 0.8318203, b: 0.83804816, a: 1}
+    sampleColor: {r: 0.9112367, g: 0.90622663, b: 0.9076338, a: 1}
   - name: Hex tiles
     sourceId: Tiles107
     material: {fileID: 2100000, guid: 69bcb2c6fd650413489fd7df0df46ed7, type: 2}
     targets: 3
-    sampleColor: {r: 0.9579227, g: 0.9566846, b: 0.95455414, a: 1}
+    sampleColor: {r: 0.9845245, g: 0.984531, b: 0.9845072, a: 1}
   - name: Terrazzo tiles
     sourceId: Tiles133A
     material: {fileID: 2100000, guid: 2c3f876fc518f4846b7b39a59dc6ca1e, type: 2}
     targets: 1
-    sampleColor: {r: 0.82054275, g: 0.8678899, b: 0.87780267, a: 1}
+    sampleColor: {r: 0.84386957, g: 0.89918184, b: 0.9102171, a: 1}
   - name: Marble
     sourceId: Marble012
     material: {fileID: 2100000, guid: 40c31fd310d4b4d59a5845217f5a89c1, type: 2}
     targets: 3
-    sampleColor: {r: 0.6759028, g: 0.67967373, b: 0.71378636, a: 1}
+    sampleColor: {r: 0.7225872, g: 0.7261435, b: 0.7633753, a: 1}
   - name: Oak boards
     sourceId: WoodFloor051
     material: {fileID: 2100000, guid: 0fd9ca2da3791455ea176ba2d5735d93, type: 2}
     targets: 1
-    sampleColor: {r: 0.60682154, g: 0.48067155, b: 0.36665887, a: 1}
+    sampleColor: {r: 0.59295726, g: 0.46466073, b: 0.34829125, a: 1}
   - name: Dark timber
     sourceId: WoodFloor043
     material: {fileID: 2100000, guid: 8c18149a0b1dd4600bb55f3ddaefc6bc, type: 2}
     targets: 1
-    sampleColor: {r: 0.40049726, g: 0.27556327, b: 0.1454387, a: 1}
+    sampleColor: {r: 0.40905273, g: 0.2802429, b: 0.1456637, a: 1}
   - name: Carpet
     sourceId: Carpet016
     material: {fileID: 2100000, guid: ace3c9e2305cf4ee8a0ef314ad3e2857, type: 2}
     targets: 1
-    sampleColor: {r: 0.7356952, g: 0.6906445, b: 0.5778103, a: 1}
+    sampleColor: {r: 0.7413165, g: 0.7013535, b: 0.591242, a: 1}
   - name: Plaster
     sourceId: Plaster001
     material: {fileID: 2100000, guid: e8b25e5019ff744b784fd426176d20f8, type: 2}
     targets: 6
-    sampleColor: {r: 0.84329516, g: 0.82848, b: 0.81530905, a: 1}
+    sampleColor: {r: 0.85422534, g: 0.84151614, b: 0.82839525, a: 1}
   - name: Painted plaster
     sourceId: PaintedPlaster017
     material: {fileID: 2100000, guid: ae885b53e1bbf4aa48608b8ecd11e206, type: 2}
     targets: 6
-    sampleColor: {r: 0.7449886, g: 0.747818, b: 0.73255295, a: 1}
+    sampleColor: {r: 0.7372656, g: 0.7397312, b: 0.72534263, a: 1}
   - name: Concrete
     sourceId: Concrete034
     material: {fileID: 2100000, guid: 39f81c08d6aa6434489f405a827ed53c, type: 2}
     targets: 3
-    sampleColor: {r: 0.7228441, g: 0.7228441, b: 0.7228441, a: 1}
+    sampleColor: {r: 0.7226501, g: 0.7226501, b: 0.7226501, a: 1}
   furniture:
   - name: Sofa (grey)
     sourceId: Sofa_01
     prefab: {fileID: 2817075060120719113, guid: 3baa9cfc68a9a451da6c9965e09e19be, type: 3}
     category: 0
     thumbnail: {fileID: 2800000, guid: 27a5c71f8e2024241b57aa7131b21a44, type: 3}
-    sampleColor: {r: 0.4498082, g: 0.40532959, b: 0.3702522, a: 1}
+    sampleColor: {r: 0.5901743, g: 0.55087054, b: 0.51169074, a: 1}
   - name: Sofa (leather)
     sourceId: sofa_02
     prefab: {fileID: 4856406272613619818, guid: 3dc84ecf5540440abbd771e9b099ea9d, type: 3}
     category: 0
     thumbnail: {fileID: 2800000, guid: 4ffd4c1b11efd49e1acf337b8a9e5433, type: 3}
-    sampleColor: {r: 0.09000672, g: 0.05782471, b: 0.0305653, a: 1}
+    sampleColor: {r: 0.027001102, g: 0.024937512, b: 0.013676283, a: 1}
   - name: Sofa (fabric)
     sourceId: sofa_03
     prefab: {fileID: 7719973271946483454, guid: 0a89062b00bfd4048a9569479ee83d1a, type: 3}
     category: 0
     thumbnail: {fileID: 2800000, guid: 637c5677a655b4cbf877baa72e0d684a, type: 3}
-    sampleColor: {r: 0.32257205, g: 0.24223986, b: 0.1767319, a: 1}
+    sampleColor: {r: 0.33296177, g: 0.23653027, b: 0.15661967, a: 1}
   - name: Armchair
     sourceId: ArmChair_01
     prefab: {fileID: 5745618726594557402, guid: adfbffb32fe914303a821797e908d54a, type: 3}
     category: 0
     thumbnail: {fileID: 2800000, guid: 5e6316829bc104ca3aa7d421b3cabd87, type: 3}
-    sampleColor: {r: 0.44834095, g: 0.43336332, b: 0.4153499, a: 1}
+    sampleColor: {r: 0.6031483, g: 0.59726745, b: 0.5887242, a: 1}
   - name: Lounge chair
     sourceId: mid_century_lounge_chair
     prefab: {fileID: 8481773726226837597, guid: b815216ad6ead4925b498982a02f0bef, type: 3}
     category: 0
     thumbnail: {fileID: 2800000, guid: b71dc64f02e7d40c397eb977a29d4af0, type: 3}
-    sampleColor: {r: 0.41113222, g: 0.3155241, b: 0.23260581, a: 1}
+    sampleColor: {r: 0.53047323, g: 0.35794488, b: 0.20465949, a: 1}
   - name: Green chair
     sourceId: GreenChair_01
     prefab: {fileID: 5840628738691341876, guid: d10ed8729550a42efb84b31ca69e9763, type: 3}
     category: 0
     thumbnail: {fileID: 2800000, guid: 8da385c796e8d4647a4af57c3fc977d4, type: 3}
-    sampleColor: {r: 0.18638884, g: 0.16439258, b: 0.13029379, a: 1}
+    sampleColor: {r: 0.15079851, g: 0.107812494, b: 0.07601115, a: 1}
   - name: Modern armchair
     sourceId: modern_arm_chair_01
     prefab: {fileID: 6773536609820180767, guid: 14e2b3f6dbbb1449c82814208a672bcf, type: 3}
     category: 0
     thumbnail: {fileID: 2800000, guid: 51fca6299380d4201ba75478a798090b, type: 3}
-    sampleColor: {r: 0.49166512, g: 0.35007346, b: 0.2319093, a: 1}
+    sampleColor: {r: 0.53748494, g: 0.39489737, b: 0.26844186, a: 1}
   - name: Painted bench
     sourceId: painted_wooden_bench
     prefab: {fileID: 8078241470080349889, guid: 6188ff7b5411943fb8cfc91ad7a7beec, type: 3}
     category: 0
     thumbnail: {fileID: 2800000, guid: a72d753bf3b2641b28a805aebaf6044a, type: 3}
-    sampleColor: {r: 0.33548558, g: 0.20489939, b: 0.16312791, a: 1}
+    sampleColor: {r: 0.2185694, g: 0.13670099, b: 0.11167831, a: 1}
   - name: Coffee table
     sourceId: modern_coffee_table_01
     prefab: {fileID: 6929100118333320373, guid: 7e769376c52aa4c6589b8b52821d287a, type: 3}
     category: 1
     thumbnail: {fileID: 2800000, guid: cebaba2ecea7641acbefe9245ba9b521, type: 3}
-    sampleColor: {r: 0.53829896, g: 0.41749683, b: 0.29557148, a: 1}
+    sampleColor: {r: 0.5367708, g: 0.40876245, b: 0.2834135, a: 1}
   - name: Round coffee table
     sourceId: coffee_table_round_01
     prefab: {fileID: 1755855577972015388, guid: 9d841b01b4ce646cdabc64597c42ba1e, type: 3}
     category: 1
     thumbnail: {fileID: 2800000, guid: 106c2f7f25a9b452ca7606d80baa00a1, type: 3}
-    sampleColor: {r: 0.41477925, g: 0.4250901, b: 0.4531502, a: 1}
+    sampleColor: {r: 0.107597925, g: 0.10752233, b: 0.10693469, a: 1}
   - name: Low coffee table
     sourceId: CoffeeTable_01
     prefab: {fileID: 1138835359015223838, guid: c8bbc74bdaed84fcd894c63b0add9acb, type: 3}
     category: 1
     thumbnail: {fileID: 2800000, guid: 906c2b2fad4d2434f98d553775968fac, type: 3}
-    sampleColor: {r: 0.38890922, g: 0.4670231, b: 0.40432343, a: 1}
+    sampleColor: {r: 0.36321443, g: 0.7559293, b: 0.7240811, a: 1}
   - name: Side table
     sourceId: side_table_01
     prefab: {fileID: 7634158258502642757, guid: f7eb335539eae4031b6fa4add22e86d2, type: 3}
     category: 1
     thumbnail: {fileID: 2800000, guid: cf07510e71ef74bb6b211a088ce3b2fd, type: 3}
-    sampleColor: {r: 0.52958643, g: 0.36529097, b: 0.22414069, a: 1}
+    sampleColor: {r: 0.59089977, g: 0.39619213, b: 0.23058146, a: 1}
   - name: Tall side table
     sourceId: side_table_tall_01
     prefab: {fileID: 4547121018770570759, guid: 38bc2527d599e4c03a60abef12be910a, type: 3}
     category: 1
     thumbnail: {fileID: 2800000, guid: db5724e7dce4345cfb5bc6901e59cc93, type: 3}
-    sampleColor: {r: 0.20601833, g: 0.096868716, b: 0.044312272, a: 1}
+    sampleColor: {r: 0.2058761, g: 0.09038751, b: 0.037638362, a: 1}
   - name: Round table
     sourceId: round_wooden_table_01
     prefab: {fileID: 5395549812728777178, guid: 2ec8e401a87164ee7aa12697105ba506, type: 3}
     category: 1
     thumbnail: {fileID: 2800000, guid: 3dba955a80cd840199bf515bbb93195a, type: 3}
-    sampleColor: {r: 0.24324754, g: 0.1251718, b: 0.07090439, a: 1}
+    sampleColor: {r: 0.21470493, g: 0.08709906, b: 0.040078152, a: 1}
   - name: Console table
     sourceId: ClassicConsole_01
     prefab: {fileID: 1549417810918574491, guid: c586c9ff096be4c98b5534f2cbe29745, type: 3}
     category: 1
     thumbnail: {fileID: 2800000, guid: c3142e858f5504946bb9d666210e4c50, type: 3}
-    sampleColor: {r: 0.087261215, g: 0.065531865, b: 0.052737847, a: 1}
+    sampleColor: {r: 0.0333415, g: 0.020253835, b: 0.012652527, a: 1}
   - name: Nightstand
     sourceId: ClassicNightstand_01
     prefab: {fileID: 4078757818114832579, guid: 9f38f30bc9a794e349eb301a52b644f0, type: 3}
     category: 1
     thumbnail: {fileID: 2800000, guid: 9cc20be523f384489b2212b6fad1f151, type: 3}
-    sampleColor: {r: 0.13171072, g: 0.0840508, b: 0.04451354, a: 1}
+    sampleColor: {r: 0.085036576, g: 0.04494813, b: 0.014473879, a: 1}
   - name: Shelves
     sourceId: painted_wooden_shelves
     prefab: {fileID: 7837290744674949193, guid: f51c9aabeec894276854206d4d11ae61, type: 3}
     category: 2
     thumbnail: {fileID: 2800000, guid: 567c3df27807049be9e6319ed0794c17, type: 3}
-    sampleColor: {r: 0.27944872, g: 0.18808645, b: 0.15642643, a: 1}
+    sampleColor: {r: 0.14984551, g: 0.107899114, b: 0.092122875, a: 1}
   - name: Bookshelf
     sourceId: Shelf_01
     prefab: {fileID: 2553288388586703235, guid: bd500fd8a65e54da0a7a6f97bb0b0387, type: 3}
     category: 2
     thumbnail: {fileID: 2800000, guid: f3ba9c827259343e0afdaa3b840598a8, type: 3}
-    sampleColor: {r: 0.59665763, g: 0.587357, b: 0.578576, a: 1}
+    sampleColor: {r: 0.6657058, g: 0.66441524, b: 0.65996224, a: 1}
   - name: Display shelves
     sourceId: wooden_display_shelves_01
     prefab: {fileID: 6109961988364319670, guid: 671df6d5c73ce4c27bd7c5a3920b33b1, type: 3}
     category: 2
     thumbnail: {fileID: 2800000, guid: 35df12f4d4d554fde80a99e67d5f2895, type: 3}
-    sampleColor: {r: 0.753359, g: 0.5911106, b: 0.44767523, a: 1}
+    sampleColor: {r: 0.7728686, g: 0.7723541, b: 0.77258193, a: 1}
   - name: Cabinet
     sourceId: painted_wooden_cabinet
     prefab: {fileID: 5767146876136175017, guid: 5cd6d3b1f45534c5bae25225e8a4b75f, type: 3}
     category: 2
     thumbnail: {fileID: 2800000, guid: c7b9d9b18162e4bb1a0a84cf56b05c3f, type: 3}
-    sampleColor: {r: 0.41381916, g: 0.37146515, b: 0.32593435, a: 1}
+    sampleColor: {r: 0.21043701, g: 0.15134843, b: 0.105588, a: 1}
   - name: Potted plant
     sourceId: potted_plant_01
     prefab: {fileID: 8883477556394894290, guid: a4364de4e1a10425c9b4ba4c33547277, type: 3}
     category: 3
     thumbnail: {fileID: 2800000, guid: f9458784cbe3646ccbc51458af29475b, type: 3}
-    sampleColor: {r: 0.24702513, g: 0.28390786, b: 0.14881383, a: 1}
+    sampleColor: {r: 0.0014024195, g: 0.0015176047, b: 0.0019358046, a: 1}
   - name: Succulent
     sourceId: potted_plant_04
     prefab: {fileID: 6531788725835270094, guid: c105120b00e9d4bb5a3e7f438eab8a27, type: 3}
     category: 3
     thumbnail: {fileID: 2800000, guid: 91846a76785794cb885e374e49823a9d, type: 3}
-    sampleColor: {r: 0.4958776, g: 0.47514814, b: 0.38634297, a: 1}
+    sampleColor: {r: 0.8060789, g: 0.79143906, b: 0.77143025, a: 1}
   - name: Ceramic vase
     sourceId: ceramic_vase_01
     prefab: {fileID: 8946548178834934613, guid: 0978a27b3efc74ddd8e5ccc90f36f997, type: 3}
     category: 3
     thumbnail: {fileID: 2800000, guid: 8d7c4c5073ef3491a901662e863a2774, type: 3}
-    sampleColor: {r: 0.83577794, g: 0.82328683, b: 0.80520236, a: 1}
+    sampleColor: {r: 0.83580416, g: 0.82331026, b: 0.8051592, a: 1}
   - name: Oil lamp
     sourceId: vintage_oil_lamp
     prefab: {fileID: 4673678889979810772, guid: 433046e975e534382bc893134bdd7205, type: 3}
     category: 4
     thumbnail: {fileID: 2800000, guid: 239c847ecdb254d27af3c303eaf3a428, type: 3}
-    sampleColor: {r: 0.4459189, g: 0.3664358, b: 0.27069455, a: 1}
+    sampleColor: {r: 0.47656533, g: 0.40022632, b: 0.28049785, a: 1}

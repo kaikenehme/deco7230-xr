@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: MidCentury
   m_EditorClassIdentifier: 
   displayName: Mid-century
-  floorSwatch: {r: 0.40049726, g: 0.27556327, b: 0.1454387, a: 1}
+  floorSwatch: {r: 0.40905273, g: 0.2802429, b: 0.1456637, a: 1}
   wallSwatch: {r: 0.9372549, g: 0.91764706, b: 0.8784314, a: 1}
   accentSwatch: {r: 0.78, g: 0.45, b: 0.32, a: 1}
   looks:
@@ -22,7 +22,7 @@ MonoBehaviour:
     material: {fileID: 2100000, guid: 8c18149a0b1dd4600bb55f3ddaefc6bc, type: 2}
     color: {r: 1, g: 1, b: 1, a: 1}
     userColour: 0
-    sampleColor: {r: 0.40049726, g: 0.27556327, b: 0.1454387, a: 1}
+    sampleColor: {r: 0.40905273, g: 0.2802429, b: 0.1456637, a: 1}
   - surfaceName: Wall_N
     state: 1
     material: {fileID: 0}
@@ -76,29 +76,29 @@ MonoBehaviour:
     position: {x: -2.4, y: 0, z: -2.9}
     yaw: 0
     keep: 1
-    sampleColor: {r: 0.09000672, g: 0.05782471, b: 0.0305653, a: 1}
+    sampleColor: {r: 0.027001102, g: 0.024937512, b: 0.013676283, a: 1}
   - sourceId: modern_coffee_table_01
     position: {x: -2.4, y: 0, z: -1.4}
     yaw: 0
     keep: 0
-    sampleColor: {r: 0.53829896, g: 0.41749683, b: 0.29557148, a: 1}
+    sampleColor: {r: 0.5367708, g: 0.40876245, b: 0.2834135, a: 1}
   - sourceId: mid_century_lounge_chair
     position: {x: 0.8, y: 0, z: -1.2}
-    yaw: 200
+    yaw: -100
     keep: 0
-    sampleColor: {r: 0.41113222, g: 0.3155241, b: 0.23260581, a: 1}
+    sampleColor: {r: 0.53047323, g: 0.35794488, b: 0.20465949, a: 1}
   - sourceId: ClassicConsole_01
     position: {x: 4.1, y: 0, z: 1.5}
     yaw: -90
     keep: 0
-    sampleColor: {r: 0.087261215, g: 0.065531865, b: 0.052737847, a: 1}
+    sampleColor: {r: 0.0333415, g: 0.020253835, b: 0.012652527, a: 1}
   - sourceId: wooden_display_shelves_01
-    position: {x: -4.1, y: 0, z: 1}
-    yaw: 90
+    position: {x: -1.5, y: 0, z: 3.15}
+    yaw: 180
     keep: 0
-    sampleColor: {r: 0.753359, g: 0.5911106, b: 0.44767523, a: 1}
+    sampleColor: {r: 0.7728686, g: 0.7723541, b: 0.77258193, a: 1}
   - sourceId: potted_plant_04
     position: {x: 1.9, y: 0, z: -3}
     yaw: 0
     keep: 0
-    sampleColor: {r: 0.4958776, g: 0.47514814, b: 0.38634297, a: 1}
+    sampleColor: {r: 0.8060789, g: 0.79143906, b: 0.77143025, a: 1}

@@ -105,12 +105,12 @@ Print CSS gotchas already solved in `lowfi-plan-print.html`: `page-break-after:a
 - Scope discipline is the top risk — zero Unity experience against a 35% hurdle with no extension.
 - Caveman mode is usually active in these sessions (terse, fragments OK). Code, commits and security warnings still get written normally.
 
-## Current state — 3 Sep 2026, Week 6
+## Current state — 3 Sep 2026, Week 6 (end of build day 1)
 
-**Done:** IP1 tested Fri 28 Aug (n=5, all on the XR Device Simulator; hold-up loop entered 0/5) · Evaluation 1 submitted Wed 2 Sep · Unity project moved to `ip2a/RenovationPreviewer` (3 Sep).
+**Done:** IP1 tested Fri 28 Aug (n=5, simulator; hold-up loop entered 0/5) · Evaluation 1 submitted Wed 2 Sep · Unity project moved to `ip2a/RenovationPreviewer` · **IP2a build T0–T14 implemented and green** (EditMode 128, PlayMode 21): entry affordance on kept surfaces, facilitator sample-in-hand (left X held 1 s), lamp bulb-only + pull cord + pulse, six-stop time of day via the wall clock, window in Wall_S, 24-piece catalogue, place-at-ray + thumbstick rotate + locomotion lock, outline highlight, three preset rooms (frames on Wall_W), onboarding pulse, harmony thread, material cache. Plan + STATUS: `docs/superpowers/plans/2026-09-03-ip2a-build.md`.
 
-**Now: IP2a build.** Plan: `docs/superpowers/plans/2026-09-03-ip2a-build.md` (T0–T17). Test **Fri 25 Sep**, freeze **Mon 21 Sep**. Scope: entry affordance on kept surfaces (the 0/5 finding, top priority) · room 9×7×2.9 m · window on Wall_S + six-stop time of day via a wall clock · lamp bulb-only with pull cord · three preset rooms via framed pictures on Wall_W · ~24 furniture in 5 categories · grip = hold, release = place at ray, thumbstick rotate, outline highlight · 10-s onboarding pulse · harmony thread back to the source. Scheme save/cycle is **cut from the test** (code stays). Facilitator keys F1–F3 presets, F5–F10 time (1/2/3 are taken by the simulator).
+**Headless visual check exists:** PlayMode `SnapshotTests` renders 14 views to `ip2a/RenovationPreviewer/Builds/snapshots/*.png` (gitignored). Use it after any scene change instead of guessing.
 
-**Hardware:** Quest stayed `unauthorized` on 28 Aug. Solve in Week 7 (studio staff / dev mode / cable). IP2a should run on device; IP2b must.
+**Kaike next:** re-add `ip2a/RenovationPreviewer` in Unity Hub · simulator feel pass (grip/trigger/stick on the classic simulator; F1–F3 presets, F5–F10 time) · re-dress presets if wanted (`Assets/Editor/PresetAuthoring.cs`, then `Renovation → Build Presets`, then `SceneBuilder.Build`) · **Fri 5 Sep studio: Quest `unauthorized` track** (`ip2a/quest-sideload.md`), try `Builds/ip2a.apk` · voice pass on `ip2a/2026-09-25-ip2a-testing-plan.md` + `data-collection-sheet.md`.
 
-**Open:** A2 (constraint helps) still untested — primary aim for IP2a; Task 1 starts sample-in-hand so everyone reaches it · Q4 answered negatively (kept surfaces need a visual cue) · Q1–Q3, Q5, Q6 unreached · Q7 becomes testable with six time stops.
+**Open:** A2 still untested, now reachable (Task 1 starts sample-in-hand) · A1′ (does first-contact feedback get people to pull?) · Q6 tuning-twist vs furniture-rotate: rotate is now on the thumbstick, so the wrist means one thing · Q7 becomes A4 (six time stops).

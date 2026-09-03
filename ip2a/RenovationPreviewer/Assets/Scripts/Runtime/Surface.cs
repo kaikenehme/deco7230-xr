@@ -47,6 +47,9 @@ public class Surface : MonoBehaviour
     readonly List<Renderer> renderers = new();
     readonly List<Material> shipped = new();     // each renderer's original material, index-parallel
     readonly List<Collider> colliders = new();
+    // One tinted instance per (source material, renderer): hover previews used to allocate a Material per frame.
+    readonly Dictionary<(Material, Renderer), Material> instances = new();
+    public int InstanceCount => instances.Count;
 
     public IReadOnlyList<Renderer> Renderers => renderers;
     public IReadOnlyList<Collider> Colliders => colliders;
@@ -78,6 +81,12 @@ public class Surface : MonoBehaviour
     }
 
     void OnDisable() => All.Remove(this);
+
+    void OnDestroy()
+    {
+        foreach (var m in instances.Values) if (m != null) { if (Application.isPlaying) Destroy(m); else DestroyImmediate(m); }
+        instances.Clear();
+    }
 
     public void SetState(SurfaceState s) => state = s;
     public void SetKind(SurfaceKind k) => kind = k;
@@ -190,7 +199,7 @@ public class Surface : MonoBehaviour
         // A catalogue material (menu pick or preset base) shows untinted until a paint was chosen.
         bool tiled = DisplayMaterial != null || baseOverride != null;
         var tint = userIntent || !tiled ? c : Color.white;
-        foreach (var r in renderers) if (r != null) r.material.color = tint;
+        foreach (var r in renderers) if (r != null) { var m = r.sharedMaterial; if (m != null && instances.ContainsValue(m)) m.color = tint; else r.material.color = tint; }
     }
 
     void ApplyMaterial(Material m)
@@ -204,21 +213,27 @@ public class Surface : MonoBehaviour
             var tiledSrc = m != null ? m : baseOverride;
             var src = tiledSrc != null ? tiledSrc : shipped[i];
             if (src == null) continue;
-            // Instance so tint edits never write into the shared asset. A catalogue material
-            // shows untinted until a paint colour was explicitly chosen (WYSIWYG with hover).
-            var inst = new Material(src) { color = tiledSrc != null && !HasUserColour ? Color.white : DisplayColor };
-            // Catalogue materials store tiles-per-metre in mainTextureScale; a primitive cube's
-            // UVs span 0..1 per face, so multiply by the face size (two largest cube axes).
-            // Shipped prefab materials are UV-mapped and keep their own scale.
-            if (tiledSrc != null)
+            // Instance so tint edits never write into the shared asset, cached per source so a
+            // hover never allocates. A catalogue material shows untinted until a paint colour was
+            // explicitly chosen (WYSIWYG with hover).
+            if (!instances.TryGetValue((src, r), out var inst) || inst == null)
             {
-                var sc = r.transform.lossyScale;
-                float a = Mathf.Max(sc.x, sc.y, sc.z);
-                float cmin = Mathf.Min(sc.x, sc.y, sc.z);
-                float b = sc.x + sc.y + sc.z - a - cmin;
-                inst.mainTextureScale = new Vector2(src.mainTextureScale.x * a, src.mainTextureScale.y * b);
+                inst = new Material(src) { name = src.name + " (surface)" };
+                // Catalogue materials store tiles-per-metre in mainTextureScale; a primitive cube's
+                // UVs span 0..1 per face, so multiply by the face size (two largest cube axes).
+                // Shipped prefab materials are UV-mapped and keep their own scale.
+                if (tiledSrc != null)
+                {
+                    var sc = r.transform.lossyScale;
+                    float a = Mathf.Max(sc.x, sc.y, sc.z);
+                    float cmin = Mathf.Min(sc.x, sc.y, sc.z);
+                    float b = sc.x + sc.y + sc.z - a - cmin;
+                    inst.mainTextureScale = new Vector2(src.mainTextureScale.x * a, src.mainTextureScale.y * b);
+                }
+                instances[(src, r)] = inst;
             }
-            r.material = inst;
+            inst.color = tiledSrc != null && !HasUserColour ? Color.white : DisplayColor;
+            r.sharedMaterial = inst;
         }
     }
 }

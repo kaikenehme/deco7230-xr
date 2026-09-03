@@ -29,7 +29,7 @@ public class LampController : MonoBehaviour
 
     public static (Color color, float intensity) Look(LightState s) => s switch
     {
-        LightState.Warm => (WarmColor, 1.6f),
+        LightState.Warm => (WarmColor, 1.2f),
         LightState.Cool => (CoolColor, 1.0f),
         _ => (Color.black, 0f),
     };

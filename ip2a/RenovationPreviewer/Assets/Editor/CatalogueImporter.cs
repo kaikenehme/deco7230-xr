@@ -331,19 +331,27 @@ public static class CatalogueImporter
         return null;
     }
 
-    /// <summary>Mean colour of a jpg (every 8th pixel), read from bytes so import settings don't matter.
-    /// Used as the colour a sample pulled from a textured surface starts from.</summary>
+    /// <summary>Dominant colour of a jpg: the most populated 4-bit RGB bin (every 4th pixel), averaged
+    /// within the bin. A mean would blend a sofa's fabric with its wooden frame into mud; the mode
+    /// picks the largest area. Used as the colour a sample pulled from a textured surface starts from.</summary>
     public static Color AverageColour(string jpgPath)
     {
         if (jpgPath == null || !File.Exists(jpgPath)) return Color.grey;
         var tex = new Texture2D(2, 2, TextureFormat.RGB24, false);
         if (!tex.LoadImage(File.ReadAllBytes(jpgPath))) { UnityEngine.Object.DestroyImmediate(tex); return Color.grey; }
         var px = tex.GetPixels32();
-        double r = 0, g = 0, b = 0; int n = 0;
-        for (int i = 0; i < px.Length; i += 8) { r += px[i].r; g += px[i].g; b += px[i].b; n++; }
         UnityEngine.Object.DestroyImmediate(tex);
-        if (n == 0) return Color.grey;
-        return new Color((float)(r / n / 255.0), (float)(g / n / 255.0), (float)(b / n / 255.0));
+        var bins = new Dictionary<int, (long r, long g, long b, int n)>();
+        for (int i = 0; i < px.Length; i += 4)
+        {
+            var c = px[i];
+            int key = (c.r >> 4) << 8 | (c.g >> 4) << 4 | (c.b >> 4);
+            bins.TryGetValue(key, out var acc);
+            bins[key] = (acc.r + c.r, acc.g + c.g, acc.b + c.b, acc.n + 1);
+        }
+        if (bins.Count == 0) return Color.grey;
+        var best = bins.Values.OrderByDescending(v => v.n).First();
+        return new Color(best.r / (255f * best.n), best.g / (255f * best.n), best.b / (255f * best.n));
     }
 
     static Texture2D FindTexture(string dir, string tag)

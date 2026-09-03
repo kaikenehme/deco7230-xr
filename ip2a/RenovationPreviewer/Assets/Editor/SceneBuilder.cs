@@ -102,7 +102,7 @@ public static class SceneBuilder
         bulbGo.transform.SetParent(lamp.transform, false);
         var bulb = bulbGo.AddComponent<Light>();
         bulb.type = LightType.Point;
-        bulb.range = 6f;
+        bulb.range = 5f;
 
         var sunGo = new GameObject("Sun");
         var sun = sunGo.AddComponent<Light>();
@@ -166,6 +166,11 @@ public static class SceneBuilder
             rig.transform.position = new Vector3(0.3f, 0, 0.8f);
             rig.transform.rotation = Quaternion.Euler(0f, 180f, 0f);   // start facing the kept sofa + floor
             WireControllers(rig, samplePrefab, schemeMgr, floorBounds);
+
+            var onboarding = managers.AddComponent<OnboardingSequence>();
+            onboarding.presets = applier;
+            onboarding.lamp = lampCtrl;
+            onboarding.head = rig.transform.Find("Camera Offset/Main Camera");
         }
         else
         {
@@ -192,6 +197,7 @@ public static class SceneBuilder
         temp.AddComponent<Sample>();
         temp.AddComponent<HarmonyTuner>();
         temp.AddComponent<HoldUpPreviewer>();
+        temp.AddComponent<HarmonyThread>();
         var prefab = PrefabUtility.SaveAsPrefabAsset(temp, "Assets/Prefabs/Sample.prefab");
         Object.DestroyImmediate(temp);
         return prefab;
@@ -361,9 +367,9 @@ public static class SceneBuilder
             tm.text = preset.displayName;
             tm.font = UiKit.Font;
             tm.fontSize = 64;
-            tm.characterSize = 0.05f;
+            tm.characterSize = 0.018f;
             tm.anchor = TextAnchor.MiddleCenter;
-            tm.color = new Color(0.15f, 0.15f, 0.15f);
+            tm.color = new Color(0.10f, 0.10f, 0.10f);
             labelGo.GetComponent<MeshRenderer>().sharedMaterial = UiKit.Font.material;
 
             var col = root.AddComponent<SphereCollider>();
