@@ -9,8 +9,8 @@ Every assessment item in this course requires work to be committed here as well 
 | Path | Contents |
 |---|---|
 | `concept/` | Submission 1 — design concept, sketches, storyboards, ideation evidence |
-| `ip1/` | Interactive Prototype 1 — Unity project, testing plan, Statement of Originality |
-| `ip2a/` | Interactive Prototype 2a — Week 9, ungraded, feeds Evaluation 2 |
+| `ip1/` | Interactive Prototype 1 — testing plan, Statement of Originality, AI acknowledgement. Unity project as tested = tag `ip1-submitted` (see `ip1/RenovationPreviewer.md`) |
+| `ip2a/` | Interactive Prototype 2a — Unity project (`RenovationPreviewer/`, carried forward from IP1), testing plan; Week 9, ungraded, feeds Evaluation 2 |
 | `ip2b/` | Interactive Prototype 2b — Unity + Quest build, testing plan, research summary |
 | `evaluations/` | Submissions 2–4 — Evaluation reports 1, 2, 3 + final reflection |
 | `testing-data/` | Raw results from each Studio testing session |

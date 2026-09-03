@@ -65,6 +65,7 @@ Submit every 12:00 item by **10:00**. ⚠️ The three Evaluation dates come onl
 ## Environment
 
 - **Unity 6000.0.80f1** — `/Applications/Unity/Hub/Editor/6000.0.80f1`. Android Build Support, SDK (platforms 34/35/36), NDK r27c, OpenJDK 17 all installed. `adb` at `PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb`.
+- **Unity project: `ip2a/RenovationPreviewer`** (moved from `ip1/` on 3 Sep 2026; IP1 as tested = tag `ip1-submitted`). The scene is **generated** by `Assets/Editor/SceneBuilder.cs` — edit the builder, never `Room.unity`. Headless: `$UNITY -batchmode -quit -projectPath <proj> -executeMethod SceneBuilder.Build`; tests `-runTests -testPlatform EditMode|PlayMode` (no `-quit`).
 - **URP is mandatory** — built-in pipeline won't hold framerate on Quest.
 - **XR Interaction Toolkit 3.x**, Android build target.
 - Unity licence needs a one-time Hub sign-in (GUI, user-side).
@@ -104,14 +105,12 @@ Print CSS gotchas already solved in `lowfi-plan-print.html`: `page-break-after:a
 - Scope discipline is the top risk — zero Unity experience against a 35% hurdle with no extension.
 - Caveman mode is usually active in these sessions (terse, fragments OK). Code, commits and security warnings still get written normally.
 
-## Current state — 7 Aug 2026, Week 2
+## Current state — 3 Sep 2026, Week 6
 
-**Done:** repo scaffolded · Unity + Android chain installed · concept spec v1.1 · low-fi prototype built (cardboard living room, photos in `concept/`) · test plan + 5-page PDF · Week 2 peer feedback folded in.
+**Done:** IP1 tested Fri 28 Aug (n=5, all on the XR Device Simulator; hold-up loop entered 0/5) · Evaluation 1 submitted Wed 2 Sep · Unity project moved to `ip2a/RenovationPreviewer` (3 Sep).
 
-**Next:** Design Concept Report **drafted** — `concept/Concept-Report-Kaike-Nehme.pdf`, exactly 2 pages, source in `concept-report-print.html`. Still needs: Kaike's own voice pass, student number if required, and the **AI acknowledgement coversheet** (open assessment — AI is permitted but must be declared). Due **Fri 14 Aug 12:00**, Blackboard + this repo.
+**Now: IP2a build.** Plan: `docs/superpowers/plans/2026-09-03-ip2a-build.md` (T0–T17). Test **Fri 25 Sep**, freeze **Mon 21 Sep**. Scope: entry affordance on kept surfaces (the 0/5 finding, top priority) · room 9×7×2.9 m · window on Wall_S + six-stop time of day via a wall clock · lamp bulb-only with pull cord · three preset rooms via framed pictures on Wall_W · ~24 furniture in 5 categories · grip = hold, release = place at ray, thumbstick rotate, outline highlight · 10-s onboarding pulse · harmony thread back to the source. Scheme save/cycle is **cut from the test** (code stays). Facilitator keys F1–F3 presets, F5–F10 time (1/2/3 are taken by the simulator).
 
-**Not started:** any Unity code. Kaike has **zero Unity experience** — budget ramp time accordingly.
+**Hardware:** Quest stayed `unauthorized` on 28 Aug. Solve in Week 7 (studio staff / dev mode / cable). IP2a should run on device; IP2b must.
 
-**Biggest open question:** assumption **A2** — that constraining options to what matches the kept surfaces *helps* rather than frustrates. Nothing has tested it. The whole concept rests on it. IP1's testing minutes should go here.
-
-**Also open:** Q1–Q5 (discoverability of the loop) carried from Week 2 · Q6 — tuning rotation vs layout rotation now share a wrist gesture and may collide · Q7 — whether three lighting states suffice.
+**Open:** A2 (constraint helps) still untested — primary aim for IP2a; Task 1 starts sample-in-hand so everyone reaches it · Q4 answered negatively (kept surfaces need a visual cue) · Q1–Q3, Q5, Q6 unreached · Q7 becomes testable with six time stops.
