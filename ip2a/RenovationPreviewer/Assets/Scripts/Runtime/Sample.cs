@@ -14,7 +14,7 @@ public class Sample : MonoBehaviour
     public void Init(Surface source)
     {
         SourceSurface = source;
-        BaseColor = source.DisplayColor;
+        BaseColor = source.SampleColor;   // authored for textured surfaces, else the tint
         Palette = HarmonyPalette.Generate(BaseColor);
         CurrentColor = Palette[0];
         var rend = GetComponent<Renderer>();

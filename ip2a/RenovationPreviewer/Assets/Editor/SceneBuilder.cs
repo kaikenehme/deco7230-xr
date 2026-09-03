@@ -30,13 +30,12 @@ public static class SceneBuilder
         Directory.CreateDirectory("Assets/Prefabs");
 
         var timber = MakeMat("Timber", new Color(0.545f, 0.353f, 0.169f));
-        var timberAlt = MakeMat("TimberAlt", new Color(0.42f, 0.30f, 0.20f));
         var offwhite = MakeMat("OffWhite", new Color(0.93f, 0.91f, 0.87f));
         var sofaGrey = MakeMat("SofaGrey", new Color(0.45f, 0.45f, 0.48f));
         var trimWhite = MakeMat("TrimWhite", new Color(0.98f, 0.98f, 0.96f));
         var tableWood = MakeMat("TableWood", new Color(0.35f, 0.24f, 0.15f));
 
-        // --- Room shell. 4m x 3m footprint, 2.7m ceiling ---
+        // --- Room shell. RoomSpec.W x RoomSpec.D footprint, RoomSpec.H ceiling ---
         float hw = RoomW / 2f, hd = RoomD / 2f, hh = RoomH / 2f;
         var floor = MakeSurface("Floor", new Vector3(0, -T / 2f, 0), new Vector3(RoomW, T, RoomD), timber, SurfaceState.Keep, SurfaceKind.Floor);
         MakeSurface("Wall_N", new Vector3(0, hh, hd + T / 2f), new Vector3(RoomW, RoomH, T), offwhite, SurfaceState.Change, SurfaceKind.Wall);
@@ -73,21 +72,6 @@ public static class SceneBuilder
         var sofaSlot = sofa.AddComponent<FurnitureSlot>();
         sofaSlot.BindGrab(floorBounds);
         sofa.AddComponent<MenuTarget>();
-
-        // --- Alternate material display: framed second timber tone on Wall_S,
-        //     present but static (spec §7 "present but shallow") ---
-        var altFrame = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        altFrame.name = "AltMaterialFrame";
-        altFrame.transform.position = new Vector3(hw - 1.3f, 1.4f, -(hd - 0.02f));
-        altFrame.transform.localScale = new Vector3(0.55f, 0.55f, 0.04f);
-        altFrame.GetComponent<Renderer>().sharedMaterial = trimWhite;
-        Object.DestroyImmediate(altFrame.GetComponent<Collider>());
-        var altSwatch = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        altSwatch.name = "AltMaterialSwatch";
-        altSwatch.transform.position = new Vector3(hw - 1.3f, 1.4f, -(hd - 0.04f));
-        altSwatch.transform.localScale = new Vector3(0.45f, 0.45f, 0.04f);
-        altSwatch.GetComponent<Renderer>().sharedMaterial = timberAlt;
-        Object.DestroyImmediate(altSwatch.GetComponent<Collider>());
 
         // --- Lamp on side table (diegetic light control, spec §7) ---
         var table = GameObject.CreatePrimitive(PrimitiveType.Cube);

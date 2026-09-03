@@ -35,7 +35,7 @@ public class MarkTool : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
-        var surf = other.GetComponent<Surface>();
+        var surf = other.GetComponentInParent<Surface>();
         if (surf == null) return;
 
         bool grip = gripAction.action != null && gripAction.action.ReadValue<float>() > 0.5f;
@@ -54,7 +54,7 @@ public class MarkTool : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (candidate != null && other.GetComponent<Surface>() == candidate)
+        if (candidate != null && other.GetComponentInParent<Surface>() == candidate)
         {
             candidate = null;
             sweepTimer = 0f;

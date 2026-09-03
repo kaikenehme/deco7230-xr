@@ -48,9 +48,7 @@ public class HoldUpPreviewer : MonoBehaviour
         foreach (var s in Surface.All)
         {
             if (s == null || s.State != SurfaceState.Change) continue;
-            var col = s.GetComponent<Collider>();
-            if (col == null) continue;
-            float d = Vector3.Distance(col.ClosestPoint(transform.position), transform.position);
+            float d = Vector3.Distance(s.ClosestPoint(transform.position), transform.position);
             if (d < best) { best = d; nearest = s; }
         }
 

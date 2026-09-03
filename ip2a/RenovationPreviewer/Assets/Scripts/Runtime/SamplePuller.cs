@@ -20,13 +20,13 @@ public class SamplePuller : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        var s = other.GetComponent<Surface>();
+        var s = other.GetComponentInParent<Surface>();
         if (s != null) touching = s;
     }
 
     void OnTriggerExit(Collider other)
     {
-        if (touching != null && other.GetComponent<Surface>() == touching) touching = null;
+        if (touching != null && other.GetComponentInParent<Surface>() == touching) touching = null;
     }
 
     void Update()
