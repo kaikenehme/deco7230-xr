@@ -111,7 +111,7 @@ public class ControllerMenu : MonoBehaviour
         // one-line hint under the panel (simulator / first seconds only)
         var hintRt = UiKit.Child("Hint", rt);
         hintRt.anchorMin = new Vector2(0, 0); hintRt.anchorMax = new Vector2(1, 0); hintRt.offsetMin = new Vector2(0, -44); hintRt.offsetMax = new Vector2(0, -6);
-        hint = UiKit.Label(hintRt, "Right hand: point + trigger selects  ·  Left Y closes", 20, UiKit.TextDim, TextAnchor.MiddleCenter);
+        hint = UiKit.Label(hintRt, "Right hand: point + trigger selects  ·  B or left Y closes", 20, UiKit.TextDim, TextAnchor.MiddleCenter);
         hint.enabled = false;
 
         canvas.enabled = false;

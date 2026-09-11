@@ -322,4 +322,18 @@ public class SceneWiringTests
         for (int i = 0; i < 10; i++) { wall.PreviewMaterial(tiles); wall.Revert(); }
         Assert.LessOrEqual(wall.InstanceCount, 2, "one instance per source material, not per hover");
     }
+
+    [UnityTest]
+    public IEnumerator RightController_HasSameHandClose_AndEditorGazeAim()
+    {
+        yield return null;
+        var relay = Object.FindObjectsByType<MenuSelectRelay>(FindObjectsInactive.Include, FindObjectsSortMode.None).Single();
+        Assert.IsNotNull(relay.closeSameHandAction.action, "right B closes the menu");
+        StringAssert.Contains("{RightHand}/secondaryButton", relay.closeSameHandAction.action.bindings[0].path);
+        var cycler = relay.GetComponent<SchemeCycler>();
+        Assert.AreSame(relay.menu, cycler.menu, "cycler yields to the open menu");
+        var gaze = relay.GetComponent<EditorGazeAim>();
+        Assert.IsNotNull(gaze.head); Assert.IsNotNull(gaze.poseDriver);
+        Assert.AreEqual(Application.isEditor, gaze.enabled, "editor-only crutch");
+    }
 }

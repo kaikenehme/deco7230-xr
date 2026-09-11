@@ -257,6 +257,15 @@ public static class SceneBuilder
             relay.rayOrigin = right.GetComponentInChildren<NearFarInteractor>()?.transform ?? right.transform;
             relay.selectAction = ButtonAction("MenuSelect", "<XRController>{RightHand}/triggerPressed");
             relay.closeAction = ButtonAction("MenuClose", "<XRController>{LeftHand}/secondaryButton");
+            relay.closeSameHandAction = ButtonAction("MenuCloseRight", "<XRController>{RightHand}/secondaryButton");
+            var cyc = right.GetComponent<SchemeCycler>();
+            if (cyc != null) cyc.menu = menu;   // right B closes the menu before it cycles a scheme
+
+            // Editor-only gaze aim: right controller rides the head so mouse-look aims the ray.
+            // Disables itself outside the editor; F4 toggles back to the raw simulator.
+            var gaze = right.AddComponent<EditorGazeAim>();
+            gaze.head = head;
+            gaze.poseDriver = right.GetComponent<UnityEngine.InputSystem.XR.TrackedPoseDriver>();
             relay.ignoreRoot = rig.transform;
             relay.puller = right.GetComponent<SamplePuller>();
 
