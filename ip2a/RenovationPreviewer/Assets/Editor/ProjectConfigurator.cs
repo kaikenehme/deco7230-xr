@@ -20,6 +20,7 @@ public static class ProjectConfigurator
         SetupXr(BuildTargetGroup.Android);
         SetupXr(BuildTargetGroup.Standalone);
         ImportXriSamples();
+        SetupInputForSimulator();
         AssetDatabase.SaveAssets();
         Debug.Log("ProjectConfigurator: done");
     }
@@ -39,6 +40,29 @@ public static class ProjectConfigurator
         GraphicsSettings.defaultRenderPipeline = pipeline;
         QualitySettings.renderPipeline = pipeline;
         Debug.Log("ProjectConfigurator: URP configured");
+    }
+
+    /// <summary>
+    /// Editor-only input behaviour: keyboard and mouse reach the game whichever editor panel
+    /// has focus. Without this the Input System default needs the Game view focused, and a
+    /// console log or a CLI command stealing focus silently kills every simulator key
+    /// (feel pass 22 Sep: "T / Y / G not working", twice). No effect on device.
+    /// </summary>
+    public static void SetupInputForSimulator()
+    {
+        const string path = "Assets/Settings/InputSystem.inputsettings.asset";
+        var settings = AssetDatabase.LoadAssetAtPath<UnityEngine.InputSystem.InputSettings>(path);
+        if (settings == null)
+        {
+            Directory.CreateDirectory("Assets/Settings");
+            settings = ScriptableObject.CreateInstance<UnityEngine.InputSystem.InputSettings>();
+            AssetDatabase.CreateAsset(settings, path);
+        }
+        settings.editorInputBehaviorInPlayMode = UnityEngine.InputSystem.InputSettings.EditorInputBehaviorInPlayMode.AllDeviceInputAlwaysGoesToGameView;
+        EditorUtility.SetDirty(settings);
+        UnityEngine.InputSystem.InputSystem.settings = settings;
+        AssetDatabase.SaveAssets();
+        Debug.Log("ProjectConfigurator: input settings → all device input goes to the Game view in play mode");
     }
 
     /// <summary>Quest-safe shadow settings for the window sun: soft, 15 m, one cascade, 2048 map.
