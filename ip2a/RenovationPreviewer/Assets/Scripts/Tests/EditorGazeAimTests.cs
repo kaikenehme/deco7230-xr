@@ -48,8 +48,59 @@ public class EditorGazeAimTests
     }
 
     [Test]
+    public void LeftTargetMask_IsLeftDeviceAndHmd_NotRight()
+    {
+        Assert.AreEqual(2 | 8, EditorGazeAim.SimulatorTargetMaskLeft);
+        Assert.AreEqual(0, EditorGazeAim.SimulatorTargetMaskLeft & 4, "buttons go to one hand at a time");
+    }
+
+    [Test]
+    public void Reconcile_SimulatorHandChoiceWins_HmdForced_FpsDropped()
+    {
+        const int Fps = 1, Left = 2, Right = 4, Hmd = 8;
+        Assert.AreEqual(Left | Hmd, EditorGazeAim.Reconcile(Left, Right | Hmd), "T in the simulator moves the buttons left");
+        Assert.AreEqual(Right | Hmd, EditorGazeAim.Reconcile(Right | Hmd, Left | Hmd), "Y moves them back");
+        Assert.AreEqual(Left | Hmd, EditorGazeAim.Reconcile(Hmd, Left | Hmd), "no hand from the simulator keeps ours");
+        Assert.AreEqual(Left | Hmd, EditorGazeAim.Reconcile(Fps, Left | Hmd), "FPS mode never survives, ours kept");
+        Assert.AreEqual(Right | Hmd, EditorGazeAim.Reconcile(Fps, 0), "nothing anywhere: right hand");
+        Assert.AreEqual(Left | Right | Hmd, EditorGazeAim.Reconcile(Left | Right, Right | Hmd), "Shift+Space: both, as the raw simulator does");
+    }
+
+    [Test]
+    public void TargetHand_DefaultsRight_AndSwitches()
+    {
+        var go = new GameObject("right");
+        var gaze = go.AddComponent<EditorGazeAim>();
+        Assert.AreEqual(EditorGazeAim.SimulatorTargetMask, gaze.CurrentTargetMask, "right hand by default: trigger/grip are the hero loop");
+        gaze.TargetLeft();
+        Assert.AreEqual(EditorGazeAim.SimulatorTargetMaskLeft, gaze.CurrentTargetMask);
+        gaze.TargetRight();
+        Assert.AreEqual(EditorGazeAim.SimulatorTargetMask, gaze.CurrentTargetMask);
+        Object.DestroyImmediate(go);
+    }
+
+    [Test]
     public void StepRoll_NoScroll_NoChange()
     {
         Assert.AreEqual(40f, EditorGazeAim.StepRoll(40f, 0f, 15f), 1e-4f);
+    }
+
+    [Test]
+    public void MirrorForLeftHand_FlipsXOnly()
+    {
+        var m = EditorGazeAim.MirrorForLeftHand(new Vector3(0.18f, -0.22f, 0.25f));
+        Assert.AreEqual(new Vector3(-0.18f, -0.22f, 0.25f), m);
+    }
+
+    [Test]
+    public void FollowOnly_LeftInstance_NeverSteersOrTwists()
+    {
+        var go = new GameObject("left");
+        var gaze = go.AddComponent<EditorGazeAim>();
+        gaze.ConfigureAsFollower();
+        Assert.IsFalse(gaze.steerSimulator, "left hand must not retarget the simulator or buttons would reach both hands");
+        Assert.AreEqual(0f, gaze.degreesPerNotch, "scroll twist belongs to the right hand only");
+        Assert.Less(gaze.offset.x, 0f, "left hand sits left of the head");
+        Object.DestroyImmediate(go);
     }
 }

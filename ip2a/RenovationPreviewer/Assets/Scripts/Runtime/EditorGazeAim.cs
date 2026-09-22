@@ -7,7 +7,8 @@ using UnityEngine.XR.Interaction.Toolkit.Inputs.Simulation;
 /// <summary>
 /// Editor-only simulator crutch: the right controller rides the head at a fixed
 /// offset so mouse-look aims the ray, like a first-person game. Scroll wheel rolls
-/// the controller (twist-to-tune). F4 toggles back to the raw XR Device Simulator.
+/// the controller (twist-to-tune). T / Y route the buttons to the left / right hand.
+/// F4 toggles back to the raw XR Device Simulator.
 /// Inert on device: the component disables itself when not in the editor, and the
 /// TrackedPoseDriver it pauses is re-enabled on toggle-off or destroy.
 ///
@@ -22,16 +23,41 @@ public class EditorGazeAim : MonoBehaviour
 {
     public Transform head;
     public TrackedPoseDriver poseDriver;
-    public Vector3 offset = new(0.18f, -0.22f, 0.25f);
+    // 19° below eye centre: inside the Game view's 30° half-FOV, so the hand model stays on screen.
+    // The old (0.18, -0.22, 0.25) sat 41° down and was never visible without looking at the floor.
+    public Vector3 offset = new(0.2f, -0.13f, 0.38f);
     public float degreesPerNotch = 15f;
     public bool active = true;
+    /// <summary>Only one instance (the right hand) may retarget the simulator; a second would send buttons to both hands.</summary>
+    public bool steerSimulator = true;
 
     public float Roll { get; private set; }
 
     /// <summary>XRDeviceSimulator.TargetedDevices.RightDevice | HMD (internal enum: FPS=1, Left=2, Right=4, HMD=8).</summary>
     public const int SimulatorTargetMask = 4 | 8;
+    /// <summary>LeftDevice | HMD: T routes the buttons to the left hand (X hold = facilitator sample, Y = close menu), Y back to the right.</summary>
+    public const int SimulatorTargetMaskLeft = 2 | 8;
     const int SimulatorTargetFps = 1;
     const string TargetField = "m_TargetedDeviceInput";
+
+    /// <summary>Which hand the simulator's button keys (click, G, B, N) currently drive. Poses are ours either way.</summary>
+    public int CurrentTargetMask { get; private set; } = SimulatorTargetMask;
+    public void TargetLeft() => CurrentTargetMask = SimulatorTargetMaskLeft;
+    public void TargetRight() => CurrentTargetMask = SimulatorTargetMask;
+
+    const int HandBits = 2 | 4, HmdBit = 8;
+
+    /// <summary>
+    /// Merge what the simulator set this frame with our last mask: the simulator's hand
+    /// choice wins when it made one; no hand (FPS / HMD-only) keeps ours; HMD always on, FPS never.
+    /// </summary>
+    public static int Reconcile(int simulatorMask, int ours)
+    {
+        int hands = simulatorMask & HandBits;
+        if (hands == 0) hands = ours & HandBits;
+        if (hands == 0) hands = SimulatorTargetMask & HandBits;
+        return hands | HmdBit;
+    }
 
     FieldInfo targetField;
     bool targetFieldMissingLogged;
@@ -48,6 +74,20 @@ public class EditorGazeAim : MonoBehaviour
     {
         var r = current + scrollNotches * degreesPerNotch;
         return Mathf.DeltaAngle(0f, r);   // wrap to (-180, 180]
+    }
+
+    public static Vector3 MirrorForLeftHand(Vector3 rightOffset) => new(-rightOffset.x, rightOffset.y, rightOffset.z);
+
+    /// <summary>
+    /// Left-hand setup: ride the head so the hand stays in view (the simulator only moves
+    /// targeted devices, so the left one would otherwise be left behind at the spawn pose),
+    /// but no buttons, no twist, no simulator retargeting.
+    /// </summary>
+    public void ConfigureAsFollower()
+    {
+        offset = MirrorForLeftHand(offset);
+        degreesPerNotch = 0f;
+        steerSimulator = false;
     }
 
     void Awake()
@@ -75,7 +115,10 @@ public class EditorGazeAim : MonoBehaviour
             if (!targetFieldMissingLogged) { Debug.LogWarning($"EditorGazeAim: XRDeviceSimulator.{TargetField} not found; press Y in the simulator to get buttons"); targetFieldMissingLogged = true; }
             return;
         }
-        targetField.SetValue(sim, System.Enum.ToObject(targetField.FieldType, SimulatorTargetMask));
+        // The simulator's own T / Y / Tab / Shift / Space handlers already picked a hand this frame;
+        // keep that choice and only guarantee the HMD bit (mouse-look) and no FPS mode (buttons).
+        CurrentTargetMask = Reconcile(System.Convert.ToInt32(targetField.GetValue(sim)), CurrentTargetMask);
+        targetField.SetValue(sim, System.Enum.ToObject(targetField.FieldType, CurrentTargetMask));
         if (savedScrollSensitivity < 0f) { savedScrollSensitivity = sim.mouseScrollRotateSensitivity; sim.mouseScrollRotateSensitivity = 0f; }   // scroll is ours: twist, not head roll
     }
 
@@ -92,10 +135,10 @@ public class EditorGazeAim : MonoBehaviour
         var kb = Keyboard.current;
         if (kb != null && kb.f4Key.wasPressedThisFrame) { active = !active; ApplyDriverState(); }
         if (!active) return;
-        SteerSimulator();
+        if (steerSimulator) SteerSimulator();
 
         var mouse = Mouse.current;
-        if (mouse != null)
+        if (mouse != null && degreesPerNotch != 0f)
         {
             // Wheel magnitude differs per OS/mouse (±120, ±1, trackpad fractions); one step per frame of scroll is enough.
             var y = mouse.scroll.ReadValue().y;

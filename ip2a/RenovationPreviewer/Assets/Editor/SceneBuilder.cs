@@ -243,7 +243,7 @@ public static class SceneBuilder
         {
             var menuGo = new GameObject("ControllerMenu", typeof(RectTransform));
             menuGo.transform.SetParent(left.transform, false);
-            menuGo.transform.localPosition = new Vector3(0f, 0.15f, 0.08f);   // above the left hand, facing the eyes
+            menuGo.transform.localPosition = new Vector3(0f, 0.26f, 0.16f);   // above and ahead of the left hand, clear of the model (feel pass 22 Sep: was 0.15/0.08, sat on the controller)
             menu = menuGo.AddComponent<ControllerMenu>();
             menu.catalogue = catalogue;
             menu.head = head;
@@ -266,6 +266,12 @@ public static class SceneBuilder
             var gaze = right.AddComponent<EditorGazeAim>();
             gaze.head = head;
             gaze.poseDriver = right.GetComponent<UnityEngine.InputSystem.XR.TrackedPoseDriver>();
+
+            // Left hand follows the head too, so the menu hand stays in view; no buttons or twist.
+            var leftGaze = left.AddComponent<EditorGazeAim>();
+            leftGaze.head = head;
+            leftGaze.poseDriver = left.GetComponent<UnityEngine.InputSystem.XR.TrackedPoseDriver>();
+            leftGaze.ConfigureAsFollower();
             relay.ignoreRoot = rig.transform;
             relay.puller = right.GetComponent<SamplePuller>();
 

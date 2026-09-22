@@ -73,7 +73,10 @@ public class RayFeedback : MonoBehaviour
 
     SpriteRenderer reticle;
     Transform head;
-    SelectionOutline hoverOutlined;
+    SelectionOutline hoverOutlined, currentOutlined;
+    SurfaceFrame hoverFramed, currentFramed;
+
+    static SurfaceFrame FrameFor(Surface s) => s.GetComponent<SurfaceFrame>() ?? s.gameObject.AddComponent<SurfaceFrame>();
 
     void Awake()
     {
@@ -100,7 +103,11 @@ public class RayFeedback : MonoBehaviour
         if (reticle != null) reticle.enabled = false;
         Hovered = null;
         if (hoverOutlined != null && !IsHeld(hoverOutlined)) hoverOutlined.Hide();
-        hoverOutlined = null;
+        if (currentOutlined != null && !IsHeld(currentOutlined)) currentOutlined.Hide();
+        hoverOutlined = currentOutlined = null;
+        if (hoverFramed != null) hoverFramed.Hide();
+        if (currentFramed != null) currentFramed.Hide();
+        hoverFramed = currentFramed = null;
     }
 
     static bool IsHeld(SelectionOutline o) { var slot = o != null ? o.GetComponent<FurnitureSlot>() : null; return slot != null && slot.IsHeld; }
@@ -124,16 +131,39 @@ public class RayFeedback : MonoBehaviour
         else reticle.enabled = false;
         Hovered = hit;
 
-        // Furniture gets an outline (P1/P3 asked for a frame, not a tint); surfaces keep the glow.
-        var slotOutline = hit != null && hit.Slot != null ? hit.Slot.GetComponent<SelectionOutline>() : null;
-        if (hoverOutlined != null && hoverOutlined != slotOutline && !IsHeld(hoverOutlined)) hoverOutlined.Hide();
-        hoverOutlined = slotOutline;
-        if (slotOutline != null) slotOutline.Show();
-
-        var targets = new List<(Renderer, Color)>();
-        if (hit != null && slotOutline == null) foreach (var r in hit.GetComponentsInChildren<Renderer>()) targets.Add((r, HoverGlowColor));
+        // Furniture gets an outline (P1/P3 asked for a frame, not a tint); surfaces get a
+        // rectangle on the hit face (same ask, IP2a feel pass). The menu's current target keeps
+        // its outline/frame while the menu is open. Nothing glows whole any more.
         var cur = menu != null && menu.IsOpen ? menu.Current : null;
-        if (cur != null && cur != hit) foreach (var r in cur.GetComponentsInChildren<Renderer>()) targets.Add((r, CurrentGlowColor));
+        var slotOutline = OutlineFor(hit);
+        var curOutline = cur != hit ? OutlineFor(cur) : null;
+        if (hoverOutlined != null && hoverOutlined != slotOutline && hoverOutlined != curOutline && !IsHeld(hoverOutlined)) hoverOutlined.Hide();
+        if (currentOutlined != null && currentOutlined != slotOutline && currentOutlined != curOutline && !IsHeld(currentOutlined)) currentOutlined.Hide();
+        hoverOutlined = slotOutline; currentOutlined = curOutline;
+        if (slotOutline != null) slotOutline.Show();
+        if (curOutline != null) curOutline.Show();
+
+        var surfaceFrame = slotOutline == null && hit != null && hit.Surface != null ? FrameFor(hit.Surface) : null;
+        var curFrame = curOutline == null && cur != null && cur != hit && cur.Surface != null ? FrameFor(cur.Surface) : null;
+        if (hoverFramed != null && hoverFramed != surfaceFrame && hoverFramed != curFrame) hoverFramed.Hide();
+        if (currentFramed != null && currentFramed != surfaceFrame && currentFramed != curFrame) currentFramed.Hide();
+        hoverFramed = surfaceFrame; currentFramed = curFrame;
+        if (surfaceFrame != null) surfaceFrame.Show(h.normal);
+        if (curFrame != null) curFrame.Show();   // face it was hit on when the menu opened
+
+        // Fallback only: a target with neither an outline nor a frame.
+        var targets = new List<(Renderer, Color)>();
+        if (hit != null && slotOutline == null && surfaceFrame == null) foreach (var r in GlowRenderers(hit)) targets.Add((r, HoverGlowColor));
+        if (cur != null && cur != hit && curOutline == null && curFrame == null) foreach (var r in GlowRenderers(cur)) targets.Add((r, CurrentGlowColor));
         glow.Set(targets);
+    }
+
+    static SelectionOutline OutlineFor(MenuTarget t) => t != null && t.Slot != null ? t.Slot.GetComponent<SelectionOutline>() : null;
+
+    /// <summary>Mesh renderers of the target itself — not our own frame line or outline shells.</summary>
+    static IEnumerable<Renderer> GlowRenderers(MenuTarget t)
+    {
+        foreach (var r in t.GetComponentsInChildren<Renderer>())
+            if (r is not LineRenderer && r.GetComponent<OutlineShellTag>() == null) yield return r;
     }
 }
