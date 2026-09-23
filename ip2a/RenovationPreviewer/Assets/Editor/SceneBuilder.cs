@@ -40,7 +40,9 @@ public static class SceneBuilder
 
         // --- Room shell. RoomSpec.W x RoomSpec.D footprint, RoomSpec.H ceiling ---
         float hw = RoomW / 2f, hd = RoomD / 2f, hh = RoomH / 2f;
-        var floor = MakeSurface("Floor", new Vector3(0, -T / 2f, 0), new Vector3(RoomW, T, RoomD), timber, SurfaceState.Keep, SurfaceKind.Floor);
+        // Floor and ceiling slabs run under/over the walls to their outer faces: flush W x D slabs left an
+        // open 10 cm notch along every edge and the sun drew bright lines through the seams.
+        var floor = MakeSurface("Floor", new Vector3(0, -T / 2f, 0), new Vector3(RoomW + 2 * T, T, RoomD + 2 * T), timber, SurfaceState.Keep, SurfaceKind.Floor);
         MakeSurface("Wall_N", new Vector3(0, hh, hd + T / 2f), new Vector3(RoomW, RoomH, T), offwhite, SurfaceState.Change, SurfaceKind.Wall);
         // Wall_S carries the window: one logical Surface made of four cubes around the opening.
         var window = new Rect(WindowX, WindowSill, WindowW, WindowH);   // x = centre offset, y = sill height
@@ -59,7 +61,7 @@ public static class SceneBuilder
         ground.GetComponent<Renderer>().sharedMaterial = MakeMat("Ground", new Color(0.30f, 0.36f, 0.26f));
         MakeSurface("Wall_E", new Vector3(hw + T / 2f, hh, 0), new Vector3(T, RoomH, RoomD + 2 * T), offwhite, SurfaceState.Change, SurfaceKind.Wall);
         MakeSurface("Wall_W", new Vector3(-(hw + T / 2f), hh, 0), new Vector3(T, RoomH, RoomD + 2 * T), offwhite, SurfaceState.Change, SurfaceKind.Wall);
-        MakeSurface("Ceiling", new Vector3(0, RoomH + T / 2f, 0), new Vector3(RoomW, T, RoomD), offwhite, SurfaceState.Change, SurfaceKind.Ceiling);
+        MakeSurface("Ceiling", new Vector3(0, RoomH + T / 2f, 0), new Vector3(RoomW + 2 * T, T, RoomD + 2 * T), offwhite, SurfaceState.Change, SurfaceKind.Ceiling);
         MakeSurface("Door", new Vector3(hw - 0.8f, 1.05f, hd - 0.02f), new Vector3(0.9f, 2.1f, 0.06f), trimWhite, SurfaceState.Change, SurfaceKind.Trim);
         MakeSurface("Trim", new Vector3(-hw + 1.2f, 0.075f, hd - 0.02f), new Vector3(2.4f, 0.15f, 0.06f), trimWhite, SurfaceState.Change, SurfaceKind.Trim);
 

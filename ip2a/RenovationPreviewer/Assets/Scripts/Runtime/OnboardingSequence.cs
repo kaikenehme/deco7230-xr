@@ -11,7 +11,7 @@ using UnityEngine;
 /// </summary>
 public class OnboardingSequence : MonoBehaviour
 {
-    public const float Duration = 10f, PulseSeconds = 1.2f, LabelHeight = 1.0f;
+    public const float Duration = 10f, PulseSeconds = 1.2f;
     public PresetApplier presets;
     public LampController lamp;
     public Transform head;
@@ -25,17 +25,11 @@ public class OnboardingSequence : MonoBehaviour
     public static IEnumerable<Surface> Targets(IEnumerable<Surface> all) =>
         all.Where(s => s != null && s.State == SurfaceState.Keep);
 
-    /// <summary>Where the "staying" label floats: above furniture; for the floor, a metre up and toward the viewer.</summary>
-    public static Vector3 LabelAnchor(Bounds b, Vector3 head)
-    {
-        if (b.size.y < 0.3f)   // a floor: lift it and pull it toward the head so it is in view
-        {
-            var toHead = head - b.center; toHead.y = 0f;
-            var p = b.center + toHead.normalized * Mathf.Min(1.2f, toHead.magnitude * 0.5f);
-            return new Vector3(p.x, LabelHeight, p.z);
-        }
-        return new Vector3(b.center.x, b.max.y + 0.25f, b.center.z);
-    }
+    /// <summary>Where the "staying" label floats: just above the piece.</summary>
+    public static Vector3 LabelAnchor(Bounds b, Vector3 head) => new(b.center.x, b.max.y + 0.25f, b.center.z);
+
+    /// <summary>Kept furniture gets a "staying" label; the floor only pulses (a label for it floats mid-room).</summary>
+    public static bool Labelled(SurfaceKind kind) => kind != SurfaceKind.Floor;
 
     void OnEnable()
     {
@@ -54,7 +48,7 @@ public class OnboardingSequence : MonoBehaviour
         if (Running || Done) yield break;
         Running = true;
         var targets = Targets(Surface.All).ToList();
-        foreach (var s in targets) labels.Add(MakeLabel(s));
+        foreach (var s in targets) if (Labelled(s.Kind)) labels.Add(MakeLabel(s));
         Face();
 
         float t0 = Time.time;

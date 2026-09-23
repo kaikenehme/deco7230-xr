@@ -250,8 +250,9 @@ public class SceneWiringTests
     {
         yield return null;
         var floor = Surface.All.Single(s => s != null && s.name == "Floor");
-        Assert.AreEqual(RoomSpec.W, floor.transform.localScale.x, 0.001f);
-        Assert.AreEqual(RoomSpec.D, floor.transform.localScale.z, 0.001f);
+        Bounds Of(string n) => Surface.All.Single(x => x != null && x.name == n).WorldBounds;
+        Assert.AreEqual(RoomSpec.W, Of("Wall_E").min.x - Of("Wall_W").max.x, 0.001f, "interior width, wall face to wall face");
+        Assert.AreEqual(RoomSpec.D, Of("Wall_N").min.z - Of("Wall_S").max.z, 0.001f, "interior depth");
         var tele = floor.GetComponent<UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation.TeleportationArea>();
         Assert.IsNotNull(tele, "floor is a teleport area");
         Assert.AreEqual(1 << RoomSpec.TeleportLayer, tele.interactionLayers.value, "teleport layer only");
@@ -335,5 +336,24 @@ public class SceneWiringTests
         var gaze = relay.GetComponent<EditorGazeAim>();
         Assert.IsNotNull(gaze.head); Assert.IsNotNull(gaze.poseDriver);
         Assert.AreEqual(Application.isEditor, gaze.enabled, "editor-only crutch");
+    }
+
+    /// <summary>Sun leaked through the open notches where walls met the floor/ceiling edges
+    /// (bright lines on Wall_W and the floor, 23 Sep renders). Slabs must reach the walls' outer faces.</summary>
+    [UnityTest]
+    public IEnumerator Shell_FloorAndCeiling_CoverWallFootprint()
+    {
+        yield return null;
+        Bounds Of(string n) => Surface.All.Single(x => x != null && x.name == n).WorldBounds;
+        var walls = new[] { "Wall_N", "Wall_S", "Wall_E", "Wall_W" }.Select(Of).ToList();
+        var outer = walls[0]; foreach (var w in walls) outer.Encapsulate(w);
+        foreach (var slab in new[] { "Floor", "Ceiling" })
+        {
+            var b = Of(slab);
+            Assert.LessOrEqual(b.min.x, outer.min.x + 1e-3f, slab); Assert.GreaterOrEqual(b.max.x, outer.max.x - 1e-3f, slab);
+            Assert.LessOrEqual(b.min.z, outer.min.z + 1e-3f, slab); Assert.GreaterOrEqual(b.max.z, outer.max.z - 1e-3f, slab);
+        }
+        Assert.AreEqual(0f, Of("Floor").max.y, 1e-3f, "floor top stays at y = 0");
+        Assert.AreEqual(RoomSpec.H, Of("Ceiling").min.y, 1e-3f, "ceiling underside stays at H");
     }
 }

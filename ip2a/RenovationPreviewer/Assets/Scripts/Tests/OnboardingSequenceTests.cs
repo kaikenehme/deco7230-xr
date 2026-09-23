@@ -28,13 +28,11 @@ public class OnboardingSequenceTests
     }
 
     [Test]
-    public void LabelAnchor_Floor_AtEyeHeight_TowardHead()
+    public void Labelled_FloorPulsesWithoutLabel_FurnitureKeepsIt()
     {
-        var floor = new Bounds(Vector3.zero, new Vector3(9f, 0.1f, 7f));
-        var head = new Vector3(0.3f, 1.6f, 0.8f);
-        var p = OnboardingSequence.LabelAnchor(floor, head);
-        Assert.AreEqual(OnboardingSequence.LabelHeight, p.y, 1e-4f);
-        Assert.Greater(p.z, 0f, "pulled toward the head");
-        Assert.Less(Vector3.Distance(new Vector3(p.x, 0, p.z), new Vector3(head.x, 0, head.z)), 1f, "within a metre of the viewer");
+        // The floor's label floated mid-room over the coffee table (23 Sep renders); the pulse alone reads as "the floor".
+        Assert.IsFalse(OnboardingSequence.Labelled(SurfaceKind.Floor));
+        Assert.IsTrue(OnboardingSequence.Labelled(SurfaceKind.None));
+        Assert.IsTrue(OnboardingSequence.Labelled(SurfaceKind.Wall));
     }
 }
