@@ -115,7 +115,7 @@ Print CSS gotchas already solved in `lowfi-plan-print.html`: `page-break-after:a
 
 **Headless visual check exists:** PlayMode `SnapshotTests` renders 14 views to `ip2a/RenovationPreviewer/Builds/snapshots/*.png` (gitignored).
 
-**Open bug, first thing Tue 23 Sep:** furniture grab "still bugged" after keys were confirmed reaching the simulator (`G` logged, outline reportedly appears). Not diagnosed — no probe run yet on `FurnitureInput`/`FurnitureSlot` with the ray on a chair. Start there, with Kaike aiming and a probe of `FurnitureSlot.IsHeld` + the interactor's select state.
+**Grab bug fixed 23 Sep (`cb21ea0`):** mechanics were fine; grabbing made the piece jump to where the ray met the floor behind it (1.3 m on the armchair). Now keeps the grab-time offset, floor point capped at 6 m reach. `FurnitureGrabTests` (PlayMode) drives the real rig. EditMode 152, PlayMode 23. **Still unconfirmed: a real `G` press on a chair in the simulator** — first thing Kaike does in the editor.
 
 **Kaike next (Wed–Fri):** finish the lap (sample pull → twist → hold-up → commit; presets on Wall_W; clock + lamp; menu furniture pages) · voice pass on `ip2a/2026-09-25-ip2a-testing-plan.md` + `data-collection-sheet.md` · AI-log consolidation + T15 sweep (AI) · Thu freeze, print sheets · **Fri: first 10 min with staff on the Quest (`ip2a/quest-sideload.md`), then test (simulator fallback is fine for IP2a), push `testing-data/ip2a/` before leaving.** Pilot #1 (Sat 19) and freeze (Mon 21) were missed. **APK: build only when Kaike says go, right before a headset session.**
 
