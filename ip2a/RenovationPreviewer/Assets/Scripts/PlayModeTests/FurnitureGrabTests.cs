@@ -74,7 +74,8 @@ public class FurnitureGrabTests
 
         // Re-aim: the ray's floor point moves by delta → the chair moves by the same delta.
         var oldFloor = FurnitureSlot.FloorPointOnRay(from, (aimAt - from).normalized);
-        var newAim = aimAt + new Vector3(0.8f, 0f, 0.5f);
+        // Toward the room centre, so the clamp at the walls never decides the result.
+        var newAim = aimAt + new Vector3(-Mathf.Sign(aimAt.x) * 0.8f, 0f, -Mathf.Sign(aimAt.z) * 0.5f);
         Pose(controller, from, newAim);
         for (int i = 0; i < 5; i++) yield return null;
         var delta = FurnitureSlot.FloorPointOnRay(from, (newAim - from).normalized) - oldFloor;

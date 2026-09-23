@@ -406,4 +406,15 @@ public class SceneWiringTests
         Assert.IsEmpty(problems, string.Join("\n", problems));
         applier.Apply(0);
     }
+
+    [UnityTest]
+    public IEnumerator Menu_SitsAtItsOffsetFromTheLeftHand()
+    {
+        yield return null;
+        var menu = Object.FindObjectsByType<ControllerMenu>(FindObjectsInactive.Include, FindObjectsSortMode.None).Single();
+        Assert.AreEqual("Left Controller", menu.transform.parent.name);
+        var p = menu.transform.localPosition;
+        Assert.AreEqual(0.16f, p.y, 0.001f, "lift survives the Canvas the menu adds in Awake");
+        Assert.AreEqual(0.40f, p.z, 0.001f);
+    }
 }

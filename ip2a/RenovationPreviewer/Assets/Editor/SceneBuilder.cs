@@ -21,6 +21,7 @@ public static class SceneBuilder
     // Room envelope (metres) lives in RoomSpec (runtime) so tests can read it. Everything here derives from it.
     const float RoomW = RoomSpec.W, RoomD = RoomSpec.D, RoomH = RoomSpec.H;
     const float T = 0.1f;   // wall/slab thickness
+    public static readonly Vector3 MenuOffset = new(0f, 0.16f, 0.40f);   // controller menu, left-hand local
     const int TeleportLayer = RoomSpec.TeleportLayer;
     // Window in Wall_S: centre offset along the wall, sill height, width, height (metres).
     public const float WindowX = 0.8f, WindowSill = 1.0f, WindowW = 2.0f, WindowH = 1.2f;
@@ -245,8 +246,12 @@ public static class SceneBuilder
         {
             var menuGo = new GameObject("ControllerMenu", typeof(RectTransform));
             menuGo.transform.SetParent(left.transform, false);
-            menuGo.transform.localPosition = new Vector3(0f, 0.26f, 0.16f);   // above and ahead of the left hand, clear of the model (feel pass 22 Sep: was 0.15/0.08, sat on the controller)
             menu = menuGo.AddComponent<ControllerMenu>();
+            // A Canvas RectTransform serializes anchoredPosition, not localPosition x/y, so a plain
+            // localPosition lift was dropped on save (the 22 Sep 0.26 m never applied). Set it after
+            // AddComponent (Awake adds the Canvas). Out ahead of the left hand: ~0.8 m from the eye,
+            // eye level in the simulator.
+            ((RectTransform)menuGo.transform).anchoredPosition3D = MenuOffset;
             menu.catalogue = catalogue;
             menu.head = head;
             menu.floorBounds = floorBounds;

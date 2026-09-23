@@ -103,4 +103,32 @@ public class EditorGazeAimTests
         Assert.Less(gaze.offset.x, 0f, "left hand sits left of the head");
         Object.DestroyImmediate(go);
     }
+
+    [Test]
+    public void Converge_RayPointsAtWhatTheEyeSees()
+    {
+        // Hand 20 cm right / 13 cm down of the eye; the eye looks at a menu 0.8 m ahead.
+        var head = new Pose(new Vector3(0f, 1.6f, 0f), Quaternion.identity);
+        var hand = EditorGazeAim.Compute(head, new Vector3(0.2f, -0.13f, 0.38f), 0f).position;
+        var aim = new Vector3(0f, 1.6f, 0.8f);
+        var rot = EditorGazeAim.Converge(hand, aim, head.rotation, 0f);
+        var dir = rot * Vector3.forward;
+        var toAim = (aim - hand).normalized;
+        Assert.Greater(Vector3.Dot(dir, toAim), 0.9999f, "ray lands on the gaze point, no 20 cm parallax");
+    }
+
+    [Test]
+    public void Converge_KeepsTwistRoll()
+    {
+        var head = Quaternion.identity;
+        var rot = EditorGazeAim.Converge(Vector3.zero, new Vector3(0f, 0f, 2f), head, 30f);
+        Assert.AreEqual(30f, Mathf.DeltaAngle(0f, rot.eulerAngles.z), 0.01f, "scroll twist still reads on the controller");
+    }
+
+    [Test]
+    public void Converge_AimBehindHand_FallsBackToHeadForward()
+    {
+        var rot = EditorGazeAim.Converge(new Vector3(0f, 0f, 1f), new Vector3(0f, 0f, 0.5f), Quaternion.identity, 0f);
+        Assert.Greater(Vector3.Dot(rot * Vector3.forward, Vector3.forward), 0.999f, "never points back at the player");
+    }
 }

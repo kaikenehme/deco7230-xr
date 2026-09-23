@@ -70,6 +70,37 @@ public class EditorGazeAim : MonoBehaviour
         return new Pose(pos, rot);
     }
 
+    /// <summary>Hand rotation whose forward runs from the hand to the point the eye is looking at,
+    /// with the scroll twist on top. Without it the ray ran parallel to the gaze, 20 cm right of it,
+    /// and missed the menu by that much. An aim point at or behind the hand keeps the head's forward.</summary>
+    public static Quaternion Converge(Vector3 hand, Vector3 aim, Quaternion head, float rollDegrees)
+    {
+        var fwd = head * Vector3.forward;
+        var to = aim - hand;
+        var look = Vector3.Dot(to, fwd) > 0.05f ? Quaternion.LookRotation(to.normalized, head * Vector3.up) : head;
+        return look * Quaternion.AngleAxis(rollDegrees, Vector3.forward);
+    }
+
+    public const float GazeReach = 15f;
+    static readonly RaycastHit[] GazeHits = new RaycastHit[16];
+
+    /// <summary>What the eye looks at: nearest non-trigger hit along the gaze, skipping the rig
+    /// (except the menu panel) and anything currently held, so a far-held piece cannot steer its own ray.</summary>
+    public static Vector3 GazePoint(Vector3 eye, Vector3 dir, Transform rig)
+    {
+        int n = Physics.RaycastNonAlloc(eye, dir, GazeHits, GazeReach, ~0, QueryTriggerInteraction.Ignore);
+        float best = GazeReach;
+        for (int i = 0; i < n; i++)
+        {
+            var c = GazeHits[i].collider;
+            if (rig != null && c.transform.IsChildOf(rig) && !c.CompareTag("MenuPanel")) continue;
+            var held = c.GetComponentInParent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRBaseInteractable>();
+            if (held != null && held.isSelected) continue;
+            if (GazeHits[i].distance < best) best = GazeHits[i].distance;
+        }
+        return eye + dir * best;
+    }
+
     public static float StepRoll(float current, float scrollNotches, float degreesPerNotch)
     {
         var r = current + scrollNotches * degreesPerNotch;
@@ -150,6 +181,9 @@ public class EditorGazeAim : MonoBehaviour
     {
         if (!active || head == null) return;
         var p = Compute(new Pose(head.position, head.rotation), offset, Roll);
-        transform.SetPositionAndRotation(p.position, p.rotation);
+        var rot = p.rotation;
+        // The aiming hand converges on the gaze point so the reticle sits where you look.
+        if (steerSimulator) rot = Converge(p.position, GazePoint(head.position, head.forward, head.root), head.rotation, Roll);
+        transform.SetPositionAndRotation(p.position, rot);
     }
 }
