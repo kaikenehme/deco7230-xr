@@ -279,6 +279,10 @@ public static class SceneBuilder
             leftGaze.head = head;
             leftGaze.poseDriver = left.GetComponent<UnityEngine.InputSystem.XR.TrackedPoseDriver>();
             leftGaze.ConfigureAsFollower();
+            // Editor-only desktop mode (no headset for IP2a): free cursor aims the right ray, right-drag
+            // looks, WASD walks. F4 returns to the raw simulator.
+            var desk = rig.AddComponent<EditorDesktopRig>();
+            desk.head = head;
             relay.ignoreRoot = rig.transform;
             relay.puller = right.GetComponent<SamplePuller>();
 

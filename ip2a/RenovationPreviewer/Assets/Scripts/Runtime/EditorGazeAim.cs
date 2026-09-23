@@ -182,8 +182,16 @@ public class EditorGazeAim : MonoBehaviour
         if (!active || head == null) return;
         var p = Compute(new Pose(head.position, head.rotation), offset, Roll);
         var rot = p.rotation;
-        // The aiming hand converges on the gaze point so the reticle sits where you look.
-        if (steerSimulator) rot = Converge(p.position, GazePoint(head.position, head.forward, head.root), head.rotation, Roll);
+        // The aiming hand converges on what you point at: the mouse cursor in desktop mode, else the
+        // centre of the view, so the reticle sits under the cursor / where you look.
+        if (steerSimulator)
+        {
+            var desk = EditorDesktopRig.Current;
+            var aim = desk != null && desk.TryCursorRay(out var ray)
+                ? GazePoint(ray.origin, ray.direction, head.root)
+                : GazePoint(head.position, head.forward, head.root);
+            rot = Converge(p.position, aim, head.rotation, Roll);
+        }
         transform.SetPositionAndRotation(p.position, rot);
     }
 }

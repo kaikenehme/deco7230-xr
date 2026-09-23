@@ -417,4 +417,16 @@ public class SceneWiringTests
         Assert.AreEqual(0.16f, p.y, 0.001f, "lift survives the Canvas the menu adds in Awake");
         Assert.AreEqual(0.40f, p.z, 0.001f);
     }
+
+    [UnityTest]
+    public IEnumerator DesktopMode_OnInEditor_CursorFree_HeadDriverOff()
+    {
+        yield return null;
+        var desk = Object.FindFirstObjectByType<EditorDesktopRig>();
+        Assert.IsNotNull(desk, "desktop rig on the XR Origin");
+        Assert.IsNotNull(desk.head);
+        Assert.AreSame(desk, EditorDesktopRig.Current);
+        Assert.AreEqual(CursorLockMode.None, Cursor.lockState, "cursor free to aim");
+        Assert.IsFalse(desk.head.GetComponent<UnityEngine.InputSystem.XR.TrackedPoseDriver>().enabled, "head driven by the mouse, not the simulator");
+    }
 }

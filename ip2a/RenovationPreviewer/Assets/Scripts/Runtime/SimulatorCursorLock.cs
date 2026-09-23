@@ -20,13 +20,13 @@ public class SimulatorCursorLock : MonoBehaviour
 
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
+        if (EditorDesktopRig.Current == null) Cursor.lockState = CursorLockMode.Locked;   // desktop mode keeps the cursor free
     }
 
     void Update()
     {
         var mouse = Mouse.current;
-        if (mouse != null && Cursor.lockState == CursorLockMode.None && mouse.leftButton.wasPressedThisFrame)
+        if (EditorDesktopRig.Current == null && mouse != null && Cursor.lockState == CursorLockMode.None && mouse.leftButton.wasPressedThisFrame)
             Cursor.lockState = CursorLockMode.Locked;
     }
 }
