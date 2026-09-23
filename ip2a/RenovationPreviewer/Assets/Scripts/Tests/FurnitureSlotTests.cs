@@ -104,6 +104,31 @@ public class FurnitureSlotTests
     }
 
     [Test]
+    public void Spawn_Rotated90_ColliderFitsModelNotWorldBox()
+    {
+        // 2 m long, 0.5 m deep piece turned 90°: the box must lie along world z, not stick out along x.
+        var prefab = new GameObject("Long");
+        var mesh = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        mesh.transform.SetParent(prefab.transform);
+        mesh.transform.localPosition = new Vector3(0, 0.4f, 0);
+        mesh.transform.localScale = new Vector3(2f, 0.8f, 0.5f);
+        var opt = new FurnitureOption { name = "Long", sourceId = "Long", prefab = prefab, category = FurnitureCategory.Storage };
+        var slot = FurnitureSlot.Spawn(opt, Vector3.zero, 90f, new Bounds(Vector3.zero, new Vector3(9, 0.1f, 7)), false, Color.grey, SlotOrigin.User);
+        var col = slot.GetComponent<BoxCollider>();
+        Assert.AreEqual(2f, col.size.x, 0.01f); Assert.AreEqual(0.5f, col.size.z, 0.01f);
+        Assert.AreEqual(0.5f, col.bounds.size.x, 0.01f, "world x = depth"); Assert.AreEqual(2f, col.bounds.size.z, 0.01f, "world z = length");
+        Object.DestroyImmediate(prefab);
+    }
+
+    [Test]
+    public void Spawn_Rotated45_ColliderNotInflated()
+    {
+        var slot = FurnitureSlot.Spawn(Option("Sq"), Vector3.zero, 45f, new Bounds(Vector3.zero, new Vector3(9, 0.1f, 7)), false, Color.grey, SlotOrigin.User);
+        var col = slot.GetComponent<BoxCollider>();
+        Assert.AreEqual(0.6f, col.size.x, 0.01f); Assert.AreEqual(0.6f, col.size.z, 0.01f);
+    }
+
+    [Test]
     public void FloorPointOnRay_HitsPlaneY0()
     {
         var p = FurnitureSlot.FloorPointOnRay(new Vector3(0f, 1f, 0f), new Vector3(0f, -1f, 1f).normalized);

@@ -73,32 +73,62 @@ MonoBehaviour:
     sampleColor: {r: 0.95, g: 0.94, b: 0.91, a: 1}
   furniture:
   - sourceId: sofa_02
-    position: {x: -2.4, y: 0, z: -2.9}
+    position: {x: -1.4, y: 0, z: -2.99}
     yaw: 0
     keep: 1
     sampleColor: {r: 0.027001102, g: 0.024937512, b: 0.013676283, a: 1}
   - sourceId: modern_coffee_table_01
-    position: {x: -2.4, y: 0, z: -1.4}
+    position: {x: -1.4, y: 0, z: -1.86}
     yaw: 0
     keep: 0
     sampleColor: {r: 0.5367708, g: 0.40876245, b: 0.2834135, a: 1}
   - sourceId: mid_century_lounge_chair
-    position: {x: 0.8, y: 0, z: -1.2}
-    yaw: -100
+    position: {x: 0.5, y: 0, z: -1.9}
+    yaw: -110
     keep: 0
     sampleColor: {r: 0.53047323, g: 0.35794488, b: 0.20465949, a: 1}
-  - sourceId: ClassicConsole_01
-    position: {x: 4.1, y: 0, z: 1.5}
-    yaw: -90
+  - sourceId: modern_arm_chair_01
+    position: {x: -3.2, y: 0, z: -1.85}
+    yaw: 105
     keep: 0
-    sampleColor: {r: 0.0333415, g: 0.020253835, b: 0.012652527, a: 1}
-  - sourceId: wooden_display_shelves_01
-    position: {x: -1.5, y: 0, z: 3.15}
-    yaw: 180
-    keep: 0
-    sampleColor: {r: 0.7728686, g: 0.7723541, b: 0.77258193, a: 1}
-  - sourceId: potted_plant_04
-    position: {x: 1.9, y: 0, z: -3}
+    sampleColor: {r: 0.53748494, g: 0.39489737, b: 0.26844186, a: 1}
+  - sourceId: side_table_tall_01
+    position: {x: -2.65, y: 0, z: -3.15}
     yaw: 0
     keep: 0
-    sampleColor: {r: 0.8060789, g: 0.79143906, b: 0.77143025, a: 1}
+    sampleColor: {r: 0.2058761, g: 0.09038751, b: 0.037638362, a: 1}
+  - sourceId: potted_plant_01
+    position: {x: -3.95, y: 0, z: -3}
+    yaw: 0
+    keep: 0
+    sampleColor: {r: 0.0014024195, g: 0.0015176047, b: 0.0019358046, a: 1}
+  - sourceId: ArmChair_01
+    position: {x: 3, y: 0, z: -2}
+    yaw: -45
+    keep: 0
+    sampleColor: {r: 0.6031483, g: 0.59726745, b: 0.5887242, a: 1}
+  - sourceId: side_table_01
+    position: {x: 3.85, y: 0, z: -1.55}
+    yaw: -90
+    keep: 0
+    sampleColor: {r: 0.59089977, g: 0.39619213, b: 0.23058146, a: 1}
+  - sourceId: wooden_display_shelves_01
+    position: {x: 4.2, y: 0, z: 0.3}
+    yaw: -90
+    keep: 0
+    sampleColor: {r: 0.7728686, g: 0.7723541, b: 0.77258193, a: 1}
+  - sourceId: ClassicConsole_01
+    position: {x: -1.4, y: 0, z: 3.15}
+    yaw: 180
+    keep: 0
+    sampleColor: {r: 0.0333415, g: 0.020253835, b: 0.012652527, a: 1}
+  - sourceId: ceramic_vase_01
+    position: {x: -0.35, y: 0, z: 3.2}
+    yaw: 0
+    keep: 0
+    sampleColor: {r: 0.83580416, g: 0.82331026, b: 0.8051592, a: 1}
+  - sourceId: potted_plant_01
+    position: {x: -4, y: 0, z: 3.15}
+    yaw: 0
+    keep: 0
+    sampleColor: {r: 0.0014024195, g: 0.0015176047, b: 0.0019358046, a: 1}

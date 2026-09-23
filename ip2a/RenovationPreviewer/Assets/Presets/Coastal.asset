@@ -73,27 +73,72 @@ MonoBehaviour:
     sampleColor: {r: 0.95, g: 0.94, b: 0.91, a: 1}
   furniture:
   - sourceId: painted_wooden_bench
-    position: {x: -2.4, y: 0, z: -2.9}
+    position: {x: 0.8, y: 0, z: -3.15}
     yaw: 0
     keep: 1
     sampleColor: {r: 0.2185694, g: 0.13670099, b: 0.11167831, a: 1}
-  - sourceId: CoffeeTable_01
-    position: {x: -2.4, y: 0, z: -1.4}
+  - sourceId: ceramic_vase_01
+    position: {x: 0, y: 0, z: -3.25}
     yaw: 0
+    keep: 0
+    sampleColor: {r: 0.83580416, g: 0.82331026, b: 0.8051592, a: 1}
+  - sourceId: sofa_03
+    position: {x: 3.9, y: 0, z: 0.2}
+    yaw: -90
+    keep: 0
+    sampleColor: {r: 0.33296177, g: 0.23653027, b: 0.15661967, a: 1}
+  - sourceId: CoffeeTable_01
+    position: {x: 2.55, y: 0, z: 0.2}
+    yaw: 90
     keep: 0
     sampleColor: {r: 0.36321443, g: 0.7559293, b: 0.7240811, a: 1}
   - sourceId: GreenChair_01
-    position: {x: 0.6, y: 0, z: -1.3}
-    yaw: -100
+    position: {x: 1.25, y: 0, z: -0.55}
+    yaw: 70
     keep: 0
     sampleColor: {r: 0.15079851, g: 0.107812494, b: 0.07601115, a: 1}
+  - sourceId: GreenChair_01
+    position: {x: 1.55, y: 0, z: 1.2}
+    yaw: 110
+    keep: 0
+    sampleColor: {r: 0.15079851, g: 0.107812494, b: 0.07601115, a: 1}
+  - sourceId: side_table_01
+    position: {x: 3.9, y: 0, z: -1.55}
+    yaw: -90
+    keep: 0
+    sampleColor: {r: 0.59089977, g: 0.39619213, b: 0.23058146, a: 1}
+  - sourceId: potted_plant_01
+    position: {x: 4.05, y: 0, z: 2.1}
+    yaw: 0
+    keep: 0
+    sampleColor: {r: 0.0014024195, g: 0.0015176047, b: 0.0019358046, a: 1}
+  - sourceId: round_wooden_table_01
+    position: {x: -2, y: 0, z: -0.6}
+    yaw: 0
+    keep: 0
+    sampleColor: {r: 0.21470493, g: 0.08709906, b: 0.040078152, a: 1}
+  - sourceId: ArmChair_01
+    position: {x: -2, y: 0, z: -1.72}
+    yaw: 0
+    keep: 0
+    sampleColor: {r: 0.6031483, g: 0.59726745, b: 0.5887242, a: 1}
+  - sourceId: ArmChair_01
+    position: {x: -2, y: 0, z: 0.52}
+    yaw: 180
+    keep: 0
+    sampleColor: {r: 0.6031483, g: 0.59726745, b: 0.5887242, a: 1}
   - sourceId: painted_wooden_cabinet
     position: {x: -1.5, y: 0, z: 3.15}
     yaw: 180
     keep: 0
     sampleColor: {r: 0.21043701, g: 0.15134843, b: 0.105588, a: 1}
+  - sourceId: painted_wooden_shelves
+    position: {x: -2.4, y: 0, z: -3.2}
+    yaw: 0
+    keep: 0
+    sampleColor: {r: 0.14984551, g: 0.107899114, b: 0.092122875, a: 1}
   - sourceId: potted_plant_01
-    position: {x: 2, y: 0, z: -3}
+    position: {x: -3.95, y: 0, z: -3}
     yaw: 0
     keep: 0
     sampleColor: {r: 0.0014024195, g: 0.0015176047, b: 0.0019358046, a: 1}

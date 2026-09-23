@@ -216,13 +216,26 @@ public class FurnitureSlot : MonoBehaviour
     {
         var col = GetComponent<BoxCollider>();
         if (col == null || Visual == null) return;
-        var rends = Visual.GetComponentsInChildren<Renderer>();
-        if (rends.Length == 0) return;
-        var b = rends[0].bounds;
-        foreach (var r in rends) b.Encapsulate(r.bounds);
-        col.center = transform.InverseTransformPoint(b.center);
-        var s = transform.lossyScale;
-        col.size = new Vector3(b.size.x / s.x, b.size.y / s.y, b.size.z / s.z);
+        // Measure in the slot's own space: world-space renderer bounds of a turned piece are the
+        // turned piece's AABB, and using them as the local size transposed the box at ±90° and
+        // inflated it at 45°.
+        var toSlot = transform.worldToLocalMatrix;
+        Bounds? b = null;
+        foreach (var mf in Visual.GetComponentsInChildren<MeshFilter>())
+        {
+            if (mf.sharedMesh == null || mf.GetComponent<OutlineShellTag>() != null) continue;
+            var m = toSlot * mf.transform.localToWorldMatrix;
+            var mb = mf.sharedMesh.bounds;
+            for (int i = 0; i < 8; i++)
+            {
+                var corner = mb.center + Vector3.Scale(mb.extents, new Vector3((i & 1) == 0 ? -1 : 1, (i & 2) == 0 ? -1 : 1, (i & 4) == 0 ? -1 : 1));
+                var p = m.MultiplyPoint3x4(corner);
+                if (b == null) b = new Bounds(p, Vector3.zero); else { var e = b.Value; e.Encapsulate(p); b = e; }
+            }
+        }
+        if (b == null) return;
+        col.center = b.Value.center;
+        col.size = b.Value.size;
     }
 
     static void DestroyNow(Object o)

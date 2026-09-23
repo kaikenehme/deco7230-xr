@@ -28,11 +28,22 @@ public static class PresetAuthoring
         Paint(cat, scandi, Walls, "Whisper White");
         Paint(cat, scandi, new[] { "Ceiling" }, "Vivid White");
         Paint(cat, scandi, Trims, "Vivid White");
-        Place(cat, scandi, "Sofa_01", -2.4f, -2.9f, 0f, keep: true);
-        Place(cat, scandi, "coffee_table_round_01", -2.4f, -1.4f, 0f);
-        Place(cat, scandi, "ArmChair_01", 0.6f, -1.3f, -100f);
-        Place(cat, scandi, "potted_plant_01", -4.0f, -2.9f, 0f);
-        Place(cat, scandi, "Shelf_01", 4.1f, 0.6f, -90f);
+        // Layout (all three): 9 x 7 m room, lounge on the window wall, reading nook by the lamp (SE),
+        // storage on the walls, plants in corners. Coffee table 40 cm off the sofa, 76 cm+ walkways,
+        // Wall_W (preset frames), the start spot, the door and the lamp kept clear (SceneWiringTests).
+        Place(cat, scandi, "Sofa_01", -1.4f, -3.07f, 0f, keep: true);            // under the clock
+        Place(cat, scandi, "coffee_table_round_01", -1.4f, -1.67f, 0f);
+        Place(cat, scandi, "modern_arm_chair_01", 0.45f, -1.85f, -105f);        // pair angled in on the table
+        Place(cat, scandi, "ArmChair_01", -3.2f, -1.85f, 105f);
+        Place(cat, scandi, "side_table_01", -2.65f, -3.15f, 0f);
+        Place(cat, scandi, "potted_plant_01", -3.95f, -3.0f, 0f);
+        Place(cat, scandi, "GreenChair_01", 3.1f, -2.1f, -45f);                 // reading nook, lamp at its shoulder
+        Place(cat, scandi, "side_table_tall_01", 3.85f, -1.75f, 0f);
+        Place(cat, scandi, "Shelf_01", 4.2f, 0.3f, -90f);                       // bookcase on Wall_E
+        Place(cat, scandi, "round_wooden_table_01", -2.0f, 2.1f, 0f);           // small table + two chairs, north side
+        Place(cat, scandi, "GreenChair_01", -2.0f, 1.05f, 0f);
+        Place(cat, scandi, "GreenChair_01", -0.95f, 2.1f, -90f);
+        Place(cat, scandi, "painted_wooden_shelves", -1.2f, 3.2f, 180f);
         Swatches(cat, scandi, "WoodFloor051", "Whisper White", "Sofa_01");
 
         // ---- Mid-century: walnut kept, terracotta accent wall behind the sofa ----
@@ -42,12 +53,18 @@ public static class PresetAuthoring
         Paint(cat, mid, new[] { "Wall_S" }, "Terracotta", userColour: true);
         Paint(cat, mid, new[] { "Ceiling" }, "Antique White U.S.A.");
         Paint(cat, mid, Trims, "Natural White");
-        Place(cat, mid, "sofa_02", -2.4f, -2.9f, 0f, keep: true);
-        Place(cat, mid, "modern_coffee_table_01", -2.4f, -1.4f, 0f);
-        Place(cat, mid, "mid_century_lounge_chair", 0.8f, -1.2f, -100f);
-        Place(cat, mid, "ClassicConsole_01", 4.1f, 1.5f, -90f);
-        Place(cat, mid, "wooden_display_shelves_01", -1.5f, 3.15f, 180f);
-        Place(cat, mid, "potted_plant_04", 1.9f, -3.0f, 0f);
+        Place(cat, mid, "sofa_02", -1.4f, -2.99f, 0f, keep: true);
+        Place(cat, mid, "modern_coffee_table_01", -1.4f, -1.86f, 0f);
+        Place(cat, mid, "mid_century_lounge_chair", 0.5f, -1.9f, -110f);
+        Place(cat, mid, "modern_arm_chair_01", -3.2f, -1.85f, 105f);
+        Place(cat, mid, "side_table_tall_01", -2.65f, -3.15f, 0f);
+        Place(cat, mid, "potted_plant_01", -3.95f, -3.0f, 0f);
+        Place(cat, mid, "ArmChair_01", 3.0f, -2.0f, -45f);                      // reading nook
+        Place(cat, mid, "side_table_01", 3.85f, -1.55f, -90f);
+        Place(cat, mid, "wooden_display_shelves_01", 4.2f, 0.3f, -90f);
+        Place(cat, mid, "ClassicConsole_01", -1.4f, 3.15f, 180f);               // console on Wall_N, vase beside
+        Place(cat, mid, "ceramic_vase_01", -0.35f, 3.2f, 0f);
+        Place(cat, mid, "potted_plant_01", -4.0f, 3.15f, 0f);
         Swatches(cat, mid, "WoodFloor043", "Antique White U.S.A.", "Terracotta");
 
         // ---- Coastal: stone tiles kept, cool blue-grey walls, painted bench ----
@@ -57,11 +74,20 @@ public static class PresetAuthoring
         Paint(cat, coastal, new[] { "Wall_N" }, "Powder Blue", userColour: true);
         Paint(cat, coastal, new[] { "Ceiling" }, "Vivid White");
         Paint(cat, coastal, Trims, "Vivid White");
-        Place(cat, coastal, "painted_wooden_bench", -2.4f, -2.9f, 0f, keep: true);
-        Place(cat, coastal, "CoffeeTable_01", -2.4f, -1.4f, 0f);
-        Place(cat, coastal, "GreenChair_01", 0.6f, -1.3f, -100f);
+        Place(cat, coastal, "painted_wooden_bench", 0.8f, -3.15f, 0f, keep: true);   // window seat
+        Place(cat, coastal, "ceramic_vase_01", 0.0f, -3.25f, 0f);
+        Place(cat, coastal, "sofa_03", 3.9f, 0.2f, -90f);                       // lounge faces west, off Wall_E
+        Place(cat, coastal, "CoffeeTable_01", 2.55f, 0.2f, 90f);
+        Place(cat, coastal, "GreenChair_01", 1.25f, -0.55f, 70f);
+        Place(cat, coastal, "GreenChair_01", 1.55f, 1.2f, 110f);
+        Place(cat, coastal, "side_table_01", 3.9f, -1.55f, -90f);
+        Place(cat, coastal, "potted_plant_01", 4.05f, 2.1f, 0f);
+        Place(cat, coastal, "round_wooden_table_01", -2.0f, -0.6f, 0f);         // table for two, west half
+        Place(cat, coastal, "ArmChair_01", -2.0f, -1.72f, 0f);
+        Place(cat, coastal, "ArmChair_01", -2.0f, 0.52f, 180f);
         Place(cat, coastal, "painted_wooden_cabinet", -1.5f, 3.15f, 180f);
-        Place(cat, coastal, "potted_plant_01", 2.0f, -3.0f, 0f);
+        Place(cat, coastal, "painted_wooden_shelves", -2.4f, -3.2f, 0f);
+        Place(cat, coastal, "potted_plant_01", -3.95f, -3.0f, 0f);
         Swatches(cat, coastal, "Tiles040", "Tranquil Retreat", "Powder Blue");
 
         foreach (var p in new[] { scandi, mid, coastal }) { WriteCard(p); EditorUtility.SetDirty(p); }

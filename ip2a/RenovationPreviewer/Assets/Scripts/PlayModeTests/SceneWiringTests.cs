@@ -356,4 +356,54 @@ public class SceneWiringTests
         Assert.AreEqual(0f, Of("Floor").max.y, 1e-3f, "floor top stays at y = 0");
         Assert.AreEqual(RoomSpec.H, Of("Ceiling").min.y, 1e-3f, "ceiling underside stays at H");
     }
+
+    /// <summary>Each preset reads as a lived-in room, not a cluster: pieces never overlap, the
+    /// participant's start spot, the preset frames, the door and the lamp stay reachable, and the
+    /// furniture uses the room (spread over most of its width and depth).</summary>
+    [UnityTest]
+    public IEnumerator Presets_Layout_NoOverlap_KeyPlacesClear_Spread()
+    {
+        yield return null; yield return null;
+        var applier = Object.FindObjectsByType<PresetApplier>(FindObjectsSortMode.None).Single();
+        float hw = RoomSpec.W / 2f, hd = RoomSpec.D / 2f;
+        var start = new Vector3(0.3f, 0f, 0.8f);
+        var lamp = GameObject.Find("Lamp").transform.position;
+        // Floor rectangles (xz) that must stay empty.
+        var keepClear = new (string what, Rect r)[]
+        {
+            ("start spot", Rect.MinMaxRect(start.x - 0.7f, start.z - 0.7f, start.x + 0.7f, start.z + 0.7f)),
+            ("preset frames", Rect.MinMaxRect(-hw, -1.2f, -hw + 1.2f, 2.8f)),
+            ("door", Rect.MinMaxRect(hw - 1.4f, hd - 1.0f, hw, hd)),
+            ("lamp", Rect.MinMaxRect(lamp.x - 0.45f, lamp.z - 0.45f, lamp.x + 0.45f, lamp.z + 0.45f)),
+        };
+        var problems = new System.Collections.Generic.List<string>();
+        void Check(bool bad, string msg) { if (bad) problems.Add(msg); }
+        for (int p = 0; p < applier.presets.Length; p++)
+        {
+            applier.Apply(p); yield return null;
+            var name = applier.presets[p].displayName;
+            var slots = Object.FindObjectsByType<FurnitureSlot>(FindObjectsSortMode.None).Where(x => x.Visual != null).ToList();
+            Check(slots.Count < 7, $"{name}: only {slots.Count} pieces, want 7+ to read as a living room");
+            var boxes = slots.Select(x => (name: x.name, b: x.GetComponent<BoxCollider>().bounds)).ToList();
+            string Fmt(Bounds b) => $"x {b.min.x:F2}..{b.max.x:F2} z {b.min.z:F2}..{b.max.z:F2}";
+            for (int i = 0; i < boxes.Count; i++)
+            {
+                var bi = boxes[i].b;
+                var flat = Rect.MinMaxRect(bi.min.x, bi.min.z, bi.max.x, bi.max.z);
+                foreach (var (what, r) in keepClear) Check(flat.Overlaps(r), $"{name}: {boxes[i].name} ({Fmt(bi)}) blocks the {what}");
+                Check(bi.min.x < -hw - 0.01f || bi.max.x > hw + 0.01f || bi.min.z < -hd - 0.01f || bi.max.z > hd + 0.01f, $"{name}: {boxes[i].name} ({Fmt(bi)}) through a wall");
+                for (int j = i + 1; j < boxes.Count; j++)
+                {
+                    var bj = boxes[j].b;
+                    bool overlap = bi.min.x < bj.max.x - 0.02f && bj.min.x < bi.max.x - 0.02f && bi.min.z < bj.max.z - 0.02f && bj.min.z < bi.max.z - 0.02f;
+                    Check(overlap, $"{name}: {boxes[i].name} ({Fmt(bi)}) overlaps {boxes[j].name} ({Fmt(bj)})");
+                }
+            }
+            var all = boxes[0].b; foreach (var x in boxes) all.Encapsulate(x.b);
+            Check(all.size.x < RoomSpec.W * 0.7f, $"{name}: spread {all.size.x:F1} m of the width");
+            Check(all.size.z < RoomSpec.D * 0.7f, $"{name}: spread {all.size.z:F1} m of the depth");
+        }
+        Assert.IsEmpty(problems, string.Join("\n", problems));
+        applier.Apply(0);
+    }
 }
