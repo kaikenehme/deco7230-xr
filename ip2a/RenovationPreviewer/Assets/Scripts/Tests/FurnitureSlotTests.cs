@@ -112,12 +112,40 @@ public class FurnitureSlotTests
     }
 
     [Test]
-    public void FloorPointOnRay_UpwardRay_UsesFallback()
+    public void FloorPointOnRay_UpwardRay_StopsAtMaxReach()
     {
         var p = FurnitureSlot.FloorPointOnRay(new Vector3(0f, 1f, 0f), new Vector3(0f, 0.5f, 1f).normalized, 2f);
         Assert.AreEqual(0f, p.y, 1e-4f);
-        Assert.Greater(p.z, 0f);
-        Assert.Less(p.z, 2.01f);
+        Assert.AreEqual(2f, p.z, 1e-3f, "level or upward ray = the far end of reach, not a point near the hand");
+    }
+
+    [Test]
+    public void FloorPointOnRay_ShallowRay_CappedAtMaxReach()
+    {
+        // 1.4 m hand height, 5° down: the floor is 16 m away — cap it so the piece never shoots off.
+        var dir = Quaternion.Euler(5f, 0f, 0f) * Vector3.forward;
+        var p = FurnitureSlot.FloorPointOnRay(new Vector3(0f, 1.4f, 0f), dir, 6f);
+        Assert.AreEqual(6f, p.z, 1e-3f);
+    }
+
+    [Test]
+    public void FloorPointOnRay_JustBelowAndJustAboveLevel_Continuous()
+    {
+        var o = new Vector3(0f, 1.4f, 0f);
+        var below = FurnitureSlot.FloorPointOnRay(o, Quaternion.Euler(0.5f, 0f, 0f) * Vector3.forward, 6f);
+        var above = FurnitureSlot.FloorPointOnRay(o, Quaternion.Euler(-0.5f, 0f, 0f) * Vector3.forward, 6f);
+        Assert.Less(Vector3.Distance(below, above), 0.01f, "crossing the horizon must not make the piece jump");
+    }
+
+    [Test]
+    public void GrabOffset_KeepsPieceWhereItWas_ThenMovesWithTarget()
+    {
+        var piece = new Vector3(0.6f, 0f, -1.3f);
+        var rayFloor = new Vector3(1.14f, 0f, -2.47f);   // where the ray behind the chair met the floor (probe, 23 Sep)
+        var offset = FurnitureSlot.GrabOffset(piece, rayFloor);
+        Assert.Less(Vector3.Distance(piece, rayFloor + offset), 1e-4f, "grab = no jump");
+        Assert.Less(Vector3.Distance(piece + new Vector3(1f, 0f, 0.6f), rayFloor + new Vector3(1f, 0f, 0.6f) + offset), 1e-4f);
+        Assert.AreEqual(0f, offset.y);
     }
 
     [Test] public void YawStep_BelowDeadzone_IsZero() => Assert.AreEqual(0f, FurnitureSlot.YawStep(new Vector2(0.2f, 0.9f), 1f));

@@ -11,15 +11,18 @@ public enum SlotOrigin { Scene, Preset, User }
 /// Swap() replaces. Remove() leaves the empty slot so nothing else dangles.
 ///
 /// Manipulation (Evaluation 1 §05, P2/P4 "place it, don't drop it"): XRI pose tracking
-/// is off; while held the slot sits where the ray meets the floor (far grab) or under
-/// the hand (near grab), the thumbstick of the holding hand yaws it, and locomotion is
-/// locked so the stick never turns the player instead. Release snaps it upright inside
-/// the room.
+/// is off; while held the slot follows where the ray meets the floor (far grab) or the
+/// hand (near grab), keeping the offset it had when grabbed so it never jumps; the
+/// thumbstick of the holding hand yaws it, and locomotion is locked so the stick never
+/// turns the player instead. Release snaps it upright inside the room.
 /// </summary>
 public class FurnitureSlot : MonoBehaviour
 {
     public const float FloorMargin = 0.3f;
-    public const float RotateDegPerSec = 90f, StickDeadzone = 0.3f, RayFallbackDistance = 2f;
+    public const float RotateDegPerSec = 90f, StickDeadzone = 0.3f;
+    /// <summary>Horizontal cap on how far a far grab can push a piece (m). A shallow ray meets the floor
+    /// tens of metres out; beyond this it stops, and level/upward rays sit here too, so crossing the horizon never jumps.</summary>
+    public const float MaxReach = 6f;
 
     /// <summary>Thumbstick values, written each frame by FurnitureInput.</summary>
     public static Vector2 LeftStick, RightStick;
@@ -35,6 +38,10 @@ public class FurnitureSlot : MonoBehaviour
     NearFarInteractor nearFar;
     SelectionOutline outline;
     float yaw;
+    // Piece position minus the ray/hand target at grab time (XZ), so the grab never moves the piece;
+    // re-measured whenever the hold switches between near and far.
+    Vector3 grabOffset;
+    NearFarInteractor.Region? offsetRegion;
 
     public void Swap(FurnitureOption option)
     {
@@ -133,6 +140,7 @@ public class FurnitureSlot : MonoBehaviour
         holder = args.interactorObject;
         nearFar = holder as NearFarInteractor ?? (holder as Component)?.GetComponentInParent<NearFarInteractor>();
         yaw = transform.eulerAngles.y;
+        offsetRegion = null;
         LocomotionLock.Acquire();
         if (outline != null) outline.Show();
     }
@@ -156,7 +164,8 @@ public class FurnitureSlot : MonoBehaviour
     {
         if (!IsHeld || holder == null) return;
         Vector3 target;
-        if (nearFar != null && nearFar.selectionRegion.Value == NearFarInteractor.Region.Far)
+        var region = nearFar != null ? nearFar.selectionRegion.Value : NearFarInteractor.Region.Near;
+        if (region == NearFarInteractor.Region.Far)
         {
             var ray = nearFar.transform;
             target = FloorPointOnRay(ray.position, ray.forward);
@@ -166,7 +175,8 @@ public class FurnitureSlot : MonoBehaviour
             var attach = holder.GetAttachTransform(grab);
             target = attach != null ? attach.position : transform.position;
         }
-        transform.position = Clamp(target);
+        if (offsetRegion != region) { grabOffset = GrabOffset(transform.position, target); offsetRegion = region; }
+        transform.position = Clamp(target + grabOffset);
         yaw += YawStep(StickFor(holder), Time.deltaTime);
         transform.rotation = Quaternion.Euler(0f, yaw, 0f);
     }
@@ -174,19 +184,19 @@ public class FurnitureSlot : MonoBehaviour
     static Vector2 StickFor(IXRInteractor interactor) =>
         interactor != null && interactor.handedness == InteractorHandedness.Left ? LeftStick : RightStick;
 
-    /// <summary>Where a ray meets the floor plane (y = 0). A level or upward ray falls back to a
-    /// point a fixed distance along it, dropped to the floor, so the piece never vanishes.</summary>
-    public static Vector3 FloorPointOnRay(Vector3 origin, Vector3 dir, float fallbackDistance = RayFallbackDistance)
+    /// <summary>Where a ray meets the floor plane (y = 0), at most maxReach away horizontally.
+    /// A level or upward ray lands at maxReach, so the piece never vanishes and never jumps back.</summary>
+    public static Vector3 FloorPointOnRay(Vector3 origin, Vector3 dir, float maxReach = MaxReach)
     {
-        if (dir.y < -1e-4f)
-        {
-            float t = -origin.y / dir.y;
-            var p = origin + dir * t;
-            return new Vector3(p.x, 0f, p.z);
-        }
-        var f = origin + dir.normalized * fallbackDistance;
-        return new Vector3(f.x, 0f, f.z);
+        var flat = new Vector3(dir.x, 0f, dir.z);
+        var floorOrigin = new Vector3(origin.x, 0f, origin.z);
+        if (flat.sqrMagnitude < 1e-8f) return floorOrigin;   // straight down or up
+        float along = dir.y < -1e-4f ? -origin.y / dir.y * flat.magnitude : float.PositiveInfinity;
+        return floorOrigin + flat.normalized * Mathf.Min(along, maxReach);
     }
+
+    /// <summary>Offset that keeps a piece where it is when the target first takes hold of it (flat, XZ only).</summary>
+    public static Vector3 GrabOffset(Vector3 piece, Vector3 target) => new(piece.x - target.x, 0f, piece.z - target.z);
 
     /// <summary>Degrees of yaw for one frame of stick input; dead zone, stick right = clockwise.</summary>
     public static float YawStep(Vector2 stick, float dt) =>

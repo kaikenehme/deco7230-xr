@@ -5,7 +5,8 @@
         "Renovation.Runtime",
         "UnityEngine.TestRunner",
         "Unity.XR.Interaction.Toolkit",
-        "Unity.InputSystem"
+        "Unity.InputSystem",
+        "Unity.XR.CoreUtils"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
