@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public enum FurnitureCategory { Seating, Table, Storage, Decor, Lighting }
+public enum FurnitureCategory { Seating, Table, Storage, Decor, Lighting, Bed }
 
 [Serializable]
 public class PaintOption

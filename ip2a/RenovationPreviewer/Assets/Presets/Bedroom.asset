@@ -1,0 +1,129 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 401a185d182cf4d1aafd3032c7ba135e, type: 3}
+  m_Name: Bedroom
+  m_EditorClassIdentifier: 
+  displayName: Bedroom
+  floorSwatch: {r: 0.7413165, g: 0.7013535, b: 0.591242, a: 1}
+  wallSwatch: {r: 0.7529412, g: 0.6862745, b: 0.6117647, a: 1}
+  accentSwatch: {r: 0.7442024, g: 0.72676, b: 0.70570445, a: 1}
+  looks:
+  - surfaceName: Floor
+    state: 0
+    material: {fileID: 2100000, guid: ace3c9e2305cf4ee8a0ef314ad3e2857, type: 2}
+    color: {r: 1, g: 1, b: 1, a: 1}
+    userColour: 0
+    sampleColor: {r: 0.7413165, g: 0.7013535, b: 0.591242, a: 1}
+  - surfaceName: Wall_N
+    state: 1
+    material: {fileID: 0}
+    color: {r: 0.7529412, g: 0.6862745, b: 0.6117647, a: 1}
+    userColour: 0
+    sampleColor: {r: 0.7529412, g: 0.6862745, b: 0.6117647, a: 1}
+  - surfaceName: Wall_E
+    state: 1
+    material: {fileID: 0}
+    color: {r: 0.7529412, g: 0.6862745, b: 0.6117647, a: 1}
+    userColour: 0
+    sampleColor: {r: 0.7529412, g: 0.6862745, b: 0.6117647, a: 1}
+  - surfaceName: Wall_W
+    state: 1
+    material: {fileID: 0}
+    color: {r: 0.7529412, g: 0.6862745, b: 0.6117647, a: 1}
+    userColour: 0
+    sampleColor: {r: 0.7529412, g: 0.6862745, b: 0.6117647, a: 1}
+  - surfaceName: Wall_S
+    state: 1
+    material: {fileID: 0}
+    color: {r: 0.7647059, g: 0.76862746, b: 0.7607843, a: 1}
+    userColour: 1
+    sampleColor: {r: 0.7647059, g: 0.76862746, b: 0.7607843, a: 1}
+  - surfaceName: Ceiling
+    state: 1
+    material: {fileID: 0}
+    color: {r: 0.95, g: 0.94, b: 0.91, a: 1}
+    userColour: 0
+    sampleColor: {r: 0.95, g: 0.94, b: 0.91, a: 1}
+  - surfaceName: Door
+    state: 1
+    material: {fileID: 0}
+    color: {r: 0.95, g: 0.94, b: 0.91, a: 1}
+    userColour: 0
+    sampleColor: {r: 0.95, g: 0.94, b: 0.91, a: 1}
+  - surfaceName: Trim
+    state: 1
+    material: {fileID: 0}
+    color: {r: 0.95, g: 0.94, b: 0.91, a: 1}
+    userColour: 0
+    sampleColor: {r: 0.95, g: 0.94, b: 0.91, a: 1}
+  - surfaceName: WindowFrame
+    state: 1
+    material: {fileID: 0}
+    color: {r: 0.95, g: 0.94, b: 0.91, a: 1}
+    userColour: 0
+    sampleColor: {r: 0.95, g: 0.94, b: 0.91, a: 1}
+  furniture:
+  - sourceId: GothicBed_01
+    position: {x: -1.4, y: 0, z: -2.45}
+    yaw: 0
+    keep: 1
+    sampleColor: {r: 0.7442024, g: 0.72676, b: 0.70570445, a: 1}
+  - sourceId: ClassicNightstand_01
+    position: {x: -2.5, y: 0, z: -3.26}
+    yaw: 0
+    keep: 0
+    sampleColor: {r: 0.085036576, g: 0.04494813, b: 0.014473879, a: 1}
+  - sourceId: ClassicNightstand_01
+    position: {x: -0.3, y: 0, z: -3.26}
+    yaw: 0
+    keep: 0
+    sampleColor: {r: 0.085036576, g: 0.04494813, b: 0.014473879, a: 1}
+  - sourceId: painted_wooden_bench
+    position: {x: -1.4, y: 0, z: -1.05}
+    yaw: 0
+    keep: 0
+    sampleColor: {r: 0.2185694, g: 0.13670099, b: 0.11167831, a: 1}
+  - sourceId: GreenChair_01
+    position: {x: 3.1, y: 0, z: -2.1}
+    yaw: -45
+    keep: 0
+    sampleColor: {r: 0.15079851, g: 0.107812494, b: 0.07601115, a: 1}
+  - sourceId: side_table_tall_01
+    position: {x: 3.85, y: 0, z: -1.75}
+    yaw: 0
+    keep: 0
+    sampleColor: {r: 0.2058761, g: 0.09038751, b: 0.037638362, a: 1}
+  - sourceId: drawer_cabinet
+    position: {x: 4.22, y: 0, z: 0.4}
+    yaw: -90
+    keep: 0
+    sampleColor: {r: 0.0012466164, g: 0.00034363318, b: 0.0009319347, a: 1}
+  - sourceId: painted_wooden_cabinet
+    position: {x: -1.5, y: 0, z: 3.15}
+    yaw: 180
+    keep: 0
+    sampleColor: {r: 0.21043701, g: 0.15134843, b: 0.105588, a: 1}
+  - sourceId: painted_wooden_shelves
+    position: {x: 0.6, y: 0, z: 3.2}
+    yaw: 180
+    keep: 0
+    sampleColor: {r: 0.14984551, g: 0.107899114, b: 0.092122875, a: 1}
+  - sourceId: potted_plant_01
+    position: {x: -3.95, y: 0, z: -3}
+    yaw: 0
+    keep: 0
+    sampleColor: {r: 0.0014024195, g: 0.0015176047, b: 0.0019358046, a: 1}
+  - sourceId: potted_plant_04
+    position: {x: 4.05, y: 0, z: 2.1}
+    yaw: 0
+    keep: 0
+    sampleColor: {r: 0.8060789, g: 0.79143906, b: 0.77143025, a: 1}

@@ -38,8 +38,10 @@ All 3D models and textures are CC0 (public domain). Colour data is public Dulux 
 - Shelf_01 — https://polyhaven.com/a/Shelf_01
 - wooden_display_shelves_01 — https://polyhaven.com/a/wooden_display_shelves_01
 - painted_wooden_cabinet — https://polyhaven.com/a/painted_wooden_cabinet
+- drawer_cabinet — https://polyhaven.com/a/drawer_cabinet
 - potted_plant_01 — https://polyhaven.com/a/potted_plant_01
 - potted_plant_04 — https://polyhaven.com/a/potted_plant_04
 - ceramic_vase_01 — https://polyhaven.com/a/ceramic_vase_01
 - vintage_oil_lamp — https://polyhaven.com/a/vintage_oil_lamp
+- GothicBed_01 — https://polyhaven.com/a/GothicBed_01
 

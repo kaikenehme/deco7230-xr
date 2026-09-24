@@ -257,6 +257,12 @@ MonoBehaviour:
     category: 2
     thumbnail: {fileID: 2800000, guid: c7b9d9b18162e4bb1a0a84cf56b05c3f, type: 3}
     sampleColor: {r: 0.21043701, g: 0.15134843, b: 0.105588, a: 1}
+  - name: Chest of drawers
+    sourceId: drawer_cabinet
+    prefab: {fileID: 2778602078465759720, guid: 4e0458a7a44934aee8f53035f0f0be63, type: 3}
+    category: 2
+    thumbnail: {fileID: 2800000, guid: 3ae85d23dd59b4108b812bfc44f5cf94, type: 3}
+    sampleColor: {r: 0.0012466164, g: 0.00034363318, b: 0.0009319347, a: 1}
   - name: Potted plant
     sourceId: potted_plant_01
     prefab: {fileID: 8883477556394894290, guid: a4364de4e1a10425c9b4ba4c33547277, type: 3}
@@ -281,3 +287,9 @@ MonoBehaviour:
     category: 4
     thumbnail: {fileID: 2800000, guid: 239c847ecdb254d27af3c303eaf3a428, type: 3}
     sampleColor: {r: 0.47656533, g: 0.40022632, b: 0.28049785, a: 1}
+  - name: Bed
+    sourceId: GothicBed_01
+    prefab: {fileID: 2168757457855383451, guid: 082900bdcdf8a4a69acba381c610ceed, type: 3}
+    category: 5
+    thumbnail: {fileID: 2800000, guid: b66f7e56e1f814abd8ad49294739bd65, type: 3}
+    sampleColor: {r: 0.7442024, g: 0.72676, b: 0.70570445, a: 1}

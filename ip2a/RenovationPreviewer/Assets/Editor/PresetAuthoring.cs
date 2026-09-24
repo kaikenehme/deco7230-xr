@@ -11,7 +11,7 @@ using UnityEngine;
 public static class PresetAuthoring
 {
     const string Root = "Assets/Presets";
-    public static readonly string[] Names = { "Scandi", "MidCentury", "Coastal" };
+    public static readonly string[] Names = { "Scandi", "MidCentury", "Bedroom" };
     static readonly string[] Walls = { "Wall_N", "Wall_S", "Wall_E", "Wall_W" };
     static readonly string[] Trims = { "Door", "Trim", "WindowFrame" };
 
@@ -67,30 +67,29 @@ public static class PresetAuthoring
         Place(cat, mid, "potted_plant_01", -4.0f, 3.15f, 0f);
         Swatches(cat, mid, "WoodFloor043", "Antique White U.S.A.", "Terracotta");
 
-        // ---- Coastal: stone tiles kept, cool blue-grey walls, painted bench ----
-        var coastal = Preset(cat, "Coastal", "Coastal");
-        Floor(cat, coastal, "Tiles040");
-        Paint(cat, coastal, new[] { "Wall_S", "Wall_E", "Wall_W" }, "Tranquil Retreat");
-        Paint(cat, coastal, new[] { "Wall_N" }, "Powder Blue", userColour: true);
-        Paint(cat, coastal, new[] { "Ceiling" }, "Vivid White");
-        Paint(cat, coastal, Trims, "Vivid White");
-        Place(cat, coastal, "painted_wooden_bench", 0.8f, -3.15f, 0f, keep: true);   // window seat
-        Place(cat, coastal, "ceramic_vase_01", 0.0f, -3.25f, 0f);
-        Place(cat, coastal, "sofa_03", 3.9f, 0.2f, -90f);                       // lounge faces west, off Wall_E
-        Place(cat, coastal, "CoffeeTable_01", 2.55f, 0.2f, 90f);
-        Place(cat, coastal, "GreenChair_01", 1.25f, -0.55f, 70f);
-        Place(cat, coastal, "GreenChair_01", 1.55f, 1.2f, 110f);
-        Place(cat, coastal, "side_table_01", 3.9f, -1.55f, -90f);
-        Place(cat, coastal, "potted_plant_01", 4.05f, 2.1f, 0f);
-        Place(cat, coastal, "round_wooden_table_01", -2.0f, -0.6f, 0f);         // table for two, west half
-        Place(cat, coastal, "ArmChair_01", -2.0f, -1.72f, 0f);
-        Place(cat, coastal, "ArmChair_01", -2.0f, 0.52f, 180f);
-        Place(cat, coastal, "painted_wooden_cabinet", -1.5f, 3.15f, 180f);
-        Place(cat, coastal, "painted_wooden_shelves", -2.4f, -3.2f, 0f);
-        Place(cat, coastal, "potted_plant_01", -3.95f, -3.0f, 0f);
-        Swatches(cat, coastal, "Tiles040", "Tranquil Retreat", "Powder Blue");
+        // ---- Bedroom: carpet and bed kept, warm walls, soft blue-grey behind the bed ----
+        // Headboard on the window wall under the clock (where the living rooms keep the sofa), so the
+        // kept bed is in view from the start spot. Nightstands either side, bench at the foot.
+        var bed = Preset(cat, "Bedroom", "Bedroom");
+        Floor(cat, bed, "Carpet016");
+        Paint(cat, bed, new[] { "Wall_N", "Wall_E", "Wall_W" }, "Warm Neutral");
+        Paint(cat, bed, new[] { "Wall_S" }, "Tranquil Retreat", userColour: true);
+        Paint(cat, bed, new[] { "Ceiling" }, "Vivid White");
+        Paint(cat, bed, Trims, "Vivid White");
+        Place(cat, bed, "GothicBed_01", -1.4f, -2.45f, 0f, keep: true);         // 1.5 x 2.0 m, head to Wall_S
+        Place(cat, bed, "ClassicNightstand_01", -2.5f, -3.26f, 0f);
+        Place(cat, bed, "ClassicNightstand_01", -0.3f, -3.26f, 0f);
+        Place(cat, bed, "painted_wooden_bench", -1.4f, -1.05f, 0f);              // foot of the bed
+        Place(cat, bed, "GreenChair_01", 3.1f, -2.1f, -45f);                     // reading corner, lamp at its shoulder
+        Place(cat, bed, "side_table_tall_01", 3.85f, -1.75f, 0f);
+        Place(cat, bed, "drawer_cabinet", 4.22f, 0.4f, -90f);                    // chest of drawers on Wall_E
+        Place(cat, bed, "painted_wooden_cabinet", -1.5f, 3.15f, 180f);          // wardrobe on Wall_N
+        Place(cat, bed, "painted_wooden_shelves", 0.6f, 3.2f, 180f);
+        Place(cat, bed, "potted_plant_01", -3.95f, -3.0f, 0f);
+        Place(cat, bed, "potted_plant_04", 4.05f, 2.1f, 0f);
+        Swatches(cat, bed, "Carpet016", "Warm Neutral", "GothicBed_01");
 
-        foreach (var p in new[] { scandi, mid, coastal }) { WriteCard(p); EditorUtility.SetDirty(p); }
+        foreach (var p in new[] { scandi, mid, bed }) { WriteCard(p); EditorUtility.SetDirty(p); }
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
         Debug.Log("PresetAuthoring: 3 presets written");

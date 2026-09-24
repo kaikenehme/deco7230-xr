@@ -47,10 +47,13 @@ public static class CatalogueImporter
         ("Shelf_01", "Bookshelf", FurnitureCategory.Storage),
         ("wooden_display_shelves_01", "Display shelves", FurnitureCategory.Storage),
         ("painted_wooden_cabinet", "Cabinet", FurnitureCategory.Storage),
+        ("drawer_cabinet", "Chest of drawers", FurnitureCategory.Storage),
         ("potted_plant_01", "Potted plant", FurnitureCategory.Decor),
         ("potted_plant_04", "Succulent", FurnitureCategory.Decor),
         ("ceramic_vase_01", "Ceramic vase", FurnitureCategory.Decor),
         ("vintage_oil_lamp", "Oil lamp", FurnitureCategory.Lighting),
+
+        ("GothicBed_01", "Bed", FurnitureCategory.Bed),
     };
 
     // tile = metres per texture repeat (ambientCG textures are authored at roughly 1–2 m per repeat)
