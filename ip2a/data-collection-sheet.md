@@ -29,7 +29,7 @@
 | # | Measure | Result |
 |---|---|---|
 | 10 | Armchair placed where intended on the first try? | ☐ yes ☐ no ☐ needed prompt |
-| 11 | Rotate (thumbstick while holding) discovered? | ☐ unprompted ☐ prompted ☐ no |
+| 11 | Rotate (thumbstick while holding; Q/E in desktop mode) discovered? | ☐ unprompted ☐ prompted ☐ no |
 | 12 | Clock touched? stops visited (tally) | ☐ yes ☐ no · ☐☐☐☐☐☐ |
 | 13 | Lamp found? | ☐ unprompted ☐ prompted ☐ no |
 | 14 | Menu opened / furniture added? | ☐ unprompted ☐ prompted · ☐ added ☐ failed |
@@ -54,7 +54,7 @@
 4. "Try holding it near a wall."
 5. "Try twisting your wrist while holding it."
 6. "Point at the floor and press the trigger."
-7. "Squeeze the grip to hold the furniture; let go to place it. Push the thumbstick to turn it."
+7. "Squeeze the grip to hold the furniture; let go to place it. Push the thumbstick to turn it."  *(desktop: "Hold G on the chair to pick it up; Q and E turn it; let go to put it down.")*
 8. "Touch the clock by the window."
 
 **Facilitator: hold X for one second to put a floor sample in the participant's right hand (Task 1 start). F1–F3 presets, F5–F10 time (simulator only).**

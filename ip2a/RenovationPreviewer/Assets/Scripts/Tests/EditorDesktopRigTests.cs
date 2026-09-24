@@ -34,4 +34,14 @@ public class EditorDesktopRigTests
         var p = EditorDesktopRig.Walk(Vector3.zero, 0f, new Vector2(1f, 1f), 1f, 1f, 9f, 9f, 0f);
         Assert.AreEqual(1f, new Vector2(p.x, p.z).magnitude, 1e-4f);
     }
+
+    [Test]
+    public void TurnKeys_Q_Left_E_Right_BothCancel()
+    {
+        Assert.AreEqual(0f, EditorDesktopRig.TurnKeys(false, false));
+        Assert.AreEqual(-1f, EditorDesktopRig.TurnKeys(true, false), "Q turns anticlockwise, like the stick pushed left");
+        Assert.AreEqual(1f, EditorDesktopRig.TurnKeys(false, true));
+        Assert.AreEqual(0f, EditorDesktopRig.TurnKeys(true, true));
+        Assert.Greater(Mathf.Abs(EditorDesktopRig.TurnKeys(false, true)), FurnitureSlot.StickDeadzone, "clears the stick deadzone");
+    }
 }

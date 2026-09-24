@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.XR;
+using UnityEngine.XR.Interaction.Toolkit.Inputs.Simulation;
 
 /// <summary>
 /// Editor-only desktop controls for testing without a headset (IP2a is run in the editor).
@@ -9,6 +10,8 @@ using UnityEngine.InputSystem.XR;
 /// Hold the right mouse button and drag to look (the cursor hides and locks while you do, so a
 /// turn is not cut short at the screen edge); WASD walks, clamped inside the room.
 /// Buttons still go through the XR Device Simulator (click = trigger, G = grip, B/N, T/Y).
+/// WASD stops reaching the simulated thumbsticks (it pushed them forward = teleport aim); a held
+/// piece turns with Q/E instead of the thumbstick.
 /// A click on a touch-only prop (preset frame, lamp, clock) touches it, since the hands can't
 /// reach a wall here. The controller menu comes in closer while desktop mode is on.
 /// F4 hands everything back to the raw simulator. Inert on device.
@@ -67,6 +70,9 @@ public class EditorDesktopRig : MonoBehaviour
         return null;
     }
 
+    /// <summary>Q/E as a thumbstick x for turning a held piece: Q = left (−1), E = right (+1).</summary>
+    public static float TurnKeys(bool q, bool e) => (e ? 1f : 0f) - (q ? 1f : 0f);
+
     /// <summary>Yaw/pitch after a mouse drag; pitch clamped so the view never flips.</summary>
     public static Vector2 Look(Vector2 yawPitch, Vector2 mouseDelta, float degreesPerPixel) =>
         new(yawPitch.x + mouseDelta.x * degreesPerPixel,
@@ -107,7 +113,12 @@ public class EditorDesktopRig : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
-        else if (Current == this) Current = null;
+        else
+        {
+            if (Current == this) Current = null;
+            var sim = XRDeviceSimulator.instance;
+            if (sim != null) sim.axis2DTargets = XRDeviceSimulator.Axis2DTargets.Primary2DAxis;   // F4: raw simulator gets its thumbsticks back
+        }
     }
 
     void Update()
@@ -115,6 +126,10 @@ public class EditorDesktopRig : MonoBehaviour
         var kb = Keyboard.current;
         if (kb != null && kb.f4Key.wasPressedThisFrame) { active = !active; Apply(); }
         if (!active || head == null) return;
+        // The simulator copies WASD into the controllers' primary2DAxis; thumbstick-forward is XRI's teleport aim.
+        // Every frame, since the simulator has its own toggle key for this.
+        var sim = XRDeviceSimulator.instance;
+        if (sim != null && sim.axis2DTargets != XRDeviceSimulator.Axis2DTargets.None) sim.axis2DTargets = XRDeviceSimulator.Axis2DTargets.None;
 
         var mouse = Mouse.current;
         bool looking = mouse != null && mouse.rightButton.isPressed;
