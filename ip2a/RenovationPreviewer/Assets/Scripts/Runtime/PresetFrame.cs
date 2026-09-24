@@ -4,7 +4,7 @@ using UnityEngine;
 /// A framed picture on the wall; touching it dresses the room in that preset. The
 /// current preset's frame glows amber. Same touch-with-controller pattern as the lamp.
 /// </summary>
-public class PresetFrame : MonoBehaviour
+public class PresetFrame : MonoBehaviour, ITouchable
 {
     public PresetApplier applier;
     public int index;
@@ -25,7 +25,11 @@ public class PresetFrame : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponent<MarkTool>() == null) return; // only controller cues count
+        if (other.GetComponent<MarkTool>() != null) Touch(); // only controller cues count
+    }
+
+    public void Touch()
+    {
         if (Time.time - lastTouch < Debounce) return;
         lastTouch = Time.time;
         if (applier != null) applier.Apply(index);

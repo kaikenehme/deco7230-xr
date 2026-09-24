@@ -413,6 +413,11 @@ public class SceneWiringTests
         yield return null;
         var menu = Object.FindObjectsByType<ControllerMenu>(FindObjectsInactive.Include, FindObjectsSortMode.None).Single();
         Assert.AreEqual("Left Controller", menu.transform.parent.name);
+        // In the editor desktop mode pulls the menu in; switching it off restores the device offset.
+        var desk = Object.FindFirstObjectByType<EditorDesktopRig>();
+        Assert.AreSame(menu.transform, desk.menu, "desktop rig knows the menu");
+        Assert.Less(Vector3.Distance(EditorDesktopRig.MenuOffset, menu.transform.localPosition), 0.001f, "desktop: menu pulled in");
+        desk.enabled = false;
         var p = menu.transform.localPosition;
         Assert.AreEqual(0.16f, p.y, 0.001f, "lift survives the Canvas the menu adds in Awake");
         Assert.AreEqual(0.40f, p.z, 0.001f);

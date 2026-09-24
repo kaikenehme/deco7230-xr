@@ -283,6 +283,7 @@ public static class SceneBuilder
             // looks, WASD walks. F4 returns to the raw simulator.
             var desk = rig.AddComponent<EditorDesktopRig>();
             desk.head = head;
+            if (menu != null) desk.menu = (RectTransform)menu.transform;
             relay.ignoreRoot = rig.transform;
             relay.puller = right.GetComponent<SamplePuller>();
 

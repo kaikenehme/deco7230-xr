@@ -5,7 +5,7 @@ using UnityEngine;
 /// hour hand shows it. Same touch-with-controller pattern as the lamp. The clock's
 /// front faces +Z (into the room from Wall_S), so clockwise is a negative Z rotation.
 /// </summary>
-public class WallClock : MonoBehaviour
+public class WallClock : MonoBehaviour, ITouchable
 {
     public TimeOfDayController controller;
     public Transform hourHand, minuteHand;
@@ -28,7 +28,11 @@ public class WallClock : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponent<MarkTool>() == null) return; // only controller cues count
+        if (other.GetComponent<MarkTool>() != null) Touch(); // only controller cues count
+    }
+
+    public void Touch()
+    {
         if (Time.time - lastTouch < Debounce) return;
         lastTouch = Time.time;
         if (controller != null) controller.Next();

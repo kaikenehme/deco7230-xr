@@ -7,7 +7,7 @@ using UnityEngine;
 /// combining the two. The shade pulses until first touch so studio-condition users
 /// find it (IP1: found 0/2 in the studio, 2/3 at home).
 /// </summary>
-public class LampController : MonoBehaviour
+public class LampController : MonoBehaviour, ITouchable
 {
     public enum LightState { Warm, Cool, Off }
 
@@ -42,7 +42,11 @@ public class LampController : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponent<MarkTool>() == null) return; // only controller cues count
+        if (other.GetComponent<MarkTool>() != null) Touch(); // only controller cues count
+    }
+
+    public void Touch()
+    {
         if (Time.time - lastTouch < Debounce) return;
         lastTouch = Time.time;
         Touched = true;
