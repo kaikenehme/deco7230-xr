@@ -24,7 +24,7 @@ Structured observation with a timed task protocol, think-aloud, and a short post
 
 ## Prototype description / requirements
 
-A 9 × 7 m virtual living room in VR (Quest, controllers). One of three **preset rooms** is loaded at start (Scandi, Mid-century, Coastal — different kept floor, wall colours and furniture); framed pictures on the left wall switch between them. The floor and one piece of furniture are **kept**; walls, ceiling, door, trim and window frame are **changeable**. It supports:
+A 9 × 7 m virtual living room, run in the Unity editor in **desktop mode** (mouse and keyboard, no headset; decided 23 Sep). One of three **preset rooms** is loaded at start (Scandi and Mid-century living rooms, and a Bedroom that keeps the bed; each has a different kept floor, wall colours and furniture); framed pictures on the left wall switch between them. The floor and one piece of furniture are **kept**; walls, ceiling, door, trim and window frame are **changeable**. It supports:
 
 - **First contact** — moving a controller toward a kept surface shows a swatch tab at that point and the controller glows; pressing trigger peels a sample off the tab into the hand. *(new: IP1's weakest thing, rebuilt)*
 - **Hold / Tune / Commit** — as IP1: near a changeable surface previews the colour; twisting the wrist walks seven harmonised options; release commits, mid-air discards. A thread runs from the sample back to the surface it came from, so the constraint shows what it is doing. *(thread new)*
@@ -37,7 +37,7 @@ A 9 × 7 m virtual living room in VR (Quest, controllers). One of three **preset
 
 ## Data collection method
 
-Silent observation through Phase 1; Task prompts read verbatim; scripted prompts only after ~20 s stuck, each logged by number. One paper sheet per participant (`data-collection-sheet.md`), screen recording with consent. Results transcribed to `../testing-data/ip2a/README.md` before leaving the room.
+Silent observation through Phase 1; Task prompts read verbatim; scripted prompts only after ~20 s stuck, each logged by number. One record per participant, logged live on an iPad in the session logger (https://claude.ai/artifact/SXDX155ZVLBknmy5gvajCD; same rows as `data-collection-sheet.md`, saves as you go), screen recording with consent. Records exported to `../testing-data/ip2a/` before leaving the room.
 
 | Measure | Type | Validates |
 |---|---|---|
@@ -61,11 +61,11 @@ Silent observation through Phase 1; Task prompts read verbatim; scripted prompts
 
 ## Testing Setup
 
-Quest charged, `Builds/ip2a.apk` sideloaded and launched to the room (see `quest-sideload.md`; if the headset is still `unauthorized`, run on the XR Device Simulator and write the platform on every sheet). Print 7 sheets, clipboard, stopwatch. Restart the app between participants (committed colours, furniture moves and the time of day must not leak). Preset 1 (Scandi) loads by default; keep it for everyone so the kept floor and sofa are the same across participants. Consent line before recording. 2 m × 2 m clear floor.
+Laptop on charge, Unity open on `Room.unity`, Game view Gizmos off, desktop mode on (F4 toggles). iPad charged with the session logger open (it has the phase timers, the commit stopwatch and the participant controls card). Mouse with a scroll wheel. Restart the app between participants (committed colours, furniture moves and the time of day must not leak). Preset 1 (Scandi) loads by default; keep it for everyone so the kept floor and sofa are the same across participants. Consent line before recording.
 
 ## Testing process (~7 min per participant, aim ≥5, recruit beyond the flat)
 
-- Brief: "You're in a living room you're renovating. The floor and the sofa are staying." Consent for recording. Ask: "Have you seen this project before?" Headset on. **(45 s)**
+- Brief: "You're in a living room you're renovating. The floor and the sofa are staying." Consent for recording. Ask: "Have you seen this project before?" Show the controls card on the iPad. **(45 s)**
 - **Phase 1, free look, no instruction.** Silent. Log: what is reached for first; tab/glow noticed; sample pulled unprompted. Prompts allowed only after 20 s stuck, by number. **(45 s)**
 - **Phase 2, Task 1.** Facilitator holds X for one second: a floor sample appears in the participant's right hand. Read verbatim: **"That's a sample of the floor you're keeping. Repaint this room so it works with the floor and sofa."** Start stopwatch. Log time to first unprompted commit, options tried, twist discovery, prompts, method for the kept choice. **(2 min)**
 - **Phase 3, Task 2.** Read verbatim: **"Now move the armchair to where you'd want it, add one more piece of furniture, and check how your wall colour looks at a different time of day."** Log placement success, rotate discovery, clock use, lamp use, preset switching if it happens. **(2 min)**
@@ -75,6 +75,6 @@ Quest charged, `Builds/ip2a.apk` sideloaded and launched to the room (see `quest
 
 ## Known limits, stated up front
 
-- Platform: if the headset cannot be authorised in time, the simulator replaces it and every count is reported as simulator data, as in IP1.
+- Platform: desktop mode, not VR. Mouse aiming and walking with keys stand in for reaching and moving in a headset, so reach, scale and hold-up distance are not tested here; every count is reported as desktop data. IP2b runs on the Quest.
 - The sun's path is a six-stop approximation, not a real hemisphere; the question is whether time of day is *used*, not whether it is accurate.
 - Lighting has one floor-standing option (Poly Haven has no floor lamps under CC0); the Lighting page is thin and participants may say so.

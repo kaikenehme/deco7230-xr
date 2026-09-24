@@ -1,6 +1,8 @@
 # IP2a data collection sheet — one per participant
 
-**Participant #: ____ · Date: Fri 25 Sep 2026 · Facilitator: Kaike Nehme · Platform: ☐ Quest ☐ Simulator**
+> Logged live on the iPad: https://claude.ai/artifact/SXDX155ZVLBknmy5gvajCD (same rows; prompts reworded for desktop mode). This file is the reference copy.
+
+**Participant #: ____ · Date: Fri 25 Sep 2026 · Facilitator: Kaike Nehme · Platform: ☐ Desktop (mouse) ☐ Quest ☐ Simulator**
 **Seen this project before? ☐ yes ☐ no · Recording consent: ☐ yes ☐ no · File #: ______ · Preset at start: Scandi**
 
 **Phase 1 — free look (45 s, silent)**
