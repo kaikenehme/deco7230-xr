@@ -30,7 +30,7 @@ public class DesktopTouchTests
     {
         var p = Box("Lamp", new Vector3(0f, 0f, 3f), trigger: true).AddComponent<Prop>();
         Physics.SyncTransforms();
-        Assert.AreSame(p, EditorDesktopRig.PickTouchable(Forward, null, 10f));
+        Assert.AreSame(p, RayUtil.PickTouchable(Forward, null, 10f));
     }
 
     [Test]
@@ -41,7 +41,7 @@ public class DesktopTouchTests
         var p = root.AddComponent<Prop>();
         Box("Backing", new Vector3(0f, 0f, 3f), trigger: false, parent: root.transform);
         Physics.SyncTransforms();
-        Assert.AreSame(p, EditorDesktopRig.PickTouchable(Forward, null, 10f));
+        Assert.AreSame(p, RayUtil.PickTouchable(Forward, null, 10f));
     }
 
     [Test]
@@ -50,7 +50,7 @@ public class DesktopTouchTests
         Box("Wall", new Vector3(0f, 0f, 2f), trigger: false);
         Box("Lamp", new Vector3(0f, 0f, 4f), trigger: true).AddComponent<Prop>();
         Physics.SyncTransforms();
-        Assert.IsNull(EditorDesktopRig.PickTouchable(Forward, null, 10f));
+        Assert.IsNull(RayUtil.PickTouchable(Forward, null, 10f));
     }
 
     [Test]
@@ -62,7 +62,7 @@ public class DesktopTouchTests
         panel.tag = "MenuPanel";
         Box("PresetFrame", new Vector3(0f, 0f, 3f), trigger: true).AddComponent<Prop>();
         Physics.SyncTransforms();
-        Assert.IsNull(EditorDesktopRig.PickTouchable(Forward, rig.transform, 10f));
+        Assert.IsNull(RayUtil.PickTouchable(Forward, rig.transform, 10f));
     }
 
     [Test]
@@ -73,6 +73,16 @@ public class DesktopTouchTests
         Box("Zone", new Vector3(0f, 0f, 2f), trigger: true);
         var p = Box("Clock", new Vector3(0f, 0f, 4f), trigger: true).AddComponent<Prop>();
         Physics.SyncTransforms();
-        Assert.AreSame(p, EditorDesktopRig.PickTouchable(Forward, rig.transform, 10f));
+        Assert.AreSame(p, RayUtil.PickTouchable(Forward, rig.transform, 10f));
+    }
+
+    [Test]
+    public void Pick_PropInFrontOfWall_Found_SoTheWallMenuStaysShut()
+    {
+        // Lamp and clock colliders are triggers; the menu ray skips triggers and used to open the wall behind.
+        Box("Wall_S", new Vector3(0f, 0f, 5f), trigger: false);
+        var p = Box("WallClock", new Vector3(0f, 0f, 4.8f), trigger: true).AddComponent<Prop>();
+        Physics.SyncTransforms();
+        Assert.AreSame(p, RayUtil.PickTouchable(Forward, null, 10f));
     }
 }

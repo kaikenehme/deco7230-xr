@@ -39,6 +39,9 @@ public class MenuSelectRelay : MonoBehaviour
         if (puller != null && puller.CanPull) return;
 
         var origin = rayOrigin != null ? rayOrigin : transform;
+        // Lamp, clock and preset frames are touched, not menued; their colliders are triggers, which TryHit
+        // skips, so without this the click fell through and opened the wall or floor behind them.
+        if (RayUtil.PickTouchable(new Ray(origin.position, origin.forward), ignoreRoot, maxDistance) != null) return;
         if (!RayUtil.TryHit(origin.position, origin.forward, maxDistance, ignoreRoot, out var hit))
         {
             menu.Hide();
