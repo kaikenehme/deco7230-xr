@@ -45,6 +45,18 @@ public class ControllerMenuTests
     }
 
     [Test]
+    public void Blocker_OnlyWhileOpen()
+    {
+        // A closed menu must not be an invisible wall in front of the player.
+        var blocker = menu.GetComponent<BoxCollider>();
+        Assert.IsFalse(blocker.enabled, "closed at start");
+        menu.Show(Surf(SurfaceState.Change, SurfaceKind.Wall));
+        Assert.IsTrue(blocker.enabled, "open blocks clicks to what's behind");
+        menu.Hide();
+        Assert.IsFalse(blocker.enabled, "closed again");
+    }
+
+    [Test]
     public void Show_FloorTarget_BuildsThreeTabs_PaintGridFirst()
     {
         menu.Show(Surf(SurfaceState.Change, SurfaceKind.Floor));

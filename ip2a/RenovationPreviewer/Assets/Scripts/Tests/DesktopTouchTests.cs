@@ -54,6 +54,18 @@ public class DesktopTouchTests
     }
 
     [Test]
+    public void Pick_MenuPanelInFront_Blocks()
+    {
+        // The menu hangs off the left hand (inside the rig) but must still stop a click reaching the frame behind it.
+        var rig = new GameObject("Rig"); made.Add(rig);
+        var panel = Box("MenuBlocker", new Vector3(0f, 0f, 1f), trigger: false, parent: rig.transform);
+        panel.tag = "MenuPanel";
+        Box("PresetFrame", new Vector3(0f, 0f, 3f), trigger: true).AddComponent<Prop>();
+        Physics.SyncTransforms();
+        Assert.IsNull(EditorDesktopRig.PickTouchable(Forward, rig.transform, 10f));
+    }
+
+    [Test]
     public void Pick_RigAndStrayTriggers_SkippedNotBlocking()
     {
         var rig = new GameObject("Rig"); made.Add(rig);

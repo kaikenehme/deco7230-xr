@@ -35,6 +35,7 @@ public class ControllerMenu : MonoBehaviour
     public const int Cols = 4, Rows = 2, PageSize = Cols * Rows;
 
     Canvas canvas;
+    BoxCollider blocker;
     RectTransform panel, tabBar, gridRoot;
     Text title, subtitle, pageLabel, hint;
     Button prevBtn, nextBtn;
@@ -63,7 +64,7 @@ public class ControllerMenu : MonoBehaviour
         rt.sizeDelta = new Vector2(CanvasW, CanvasH);
         rt.localScale = Vector3.one * CanvasScale;
         // Blocks the scene raycast so a button click never selects the wall behind the menu.
-        var blocker = gameObject.GetComponent<BoxCollider>();
+        blocker = gameObject.GetComponent<BoxCollider>();
         if (blocker == null) blocker = gameObject.AddComponent<BoxCollider>();
         blocker.size = new Vector3(CanvasW, CanvasH, 1f);
         gameObject.tag = "MenuPanel";
@@ -114,7 +115,14 @@ public class ControllerMenu : MonoBehaviour
         hint = UiKit.Label(hintRt, "Right hand: point + trigger selects  ·  B or left Y closes", 20, UiKit.TextDim, TextAnchor.MiddleCenter);
         hint.enabled = false;
 
-        canvas.enabled = false;
+        SetVisible(false);
+    }
+
+    // The blocker stops clicks reaching what's behind the panel; a closed menu must not be an invisible wall.
+    void SetVisible(bool on)
+    {
+        if (canvas != null) canvas.enabled = on;
+        if (blocker != null) blocker.enabled = on;
     }
 
     void LateUpdate()
@@ -135,7 +143,7 @@ public class ControllerMenu : MonoBehaviour
         if (target == null) { Hide(); return; }
         if (Current != null && Current != target) RevertPreview();
         Current = target;
-        canvas.enabled = true;
+        SetVisible(true);
         title.text = target.DisplayName;
         subtitle.text = "";
         if (hint != null && !UnityEngine.XR.XRSettings.isDeviceActive && Application.isPlaying) { hint.enabled = true; hintUntil = Time.time + 8f; }
@@ -165,7 +173,7 @@ public class ControllerMenu : MonoBehaviour
     {
         RevertPreview();
         Current = null;
-        if (canvas != null) canvas.enabled = false;
+        SetVisible(false);
     }
 
     // Test/automation hooks — same paths the pointer events use.
