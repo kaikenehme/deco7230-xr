@@ -1,6 +1,6 @@
 # XR Renovation Previewer — Testing plan for Interactive Prototype 2a
 
-**DECO7230 · Kaike Nehme · Studio test: Fri 25 Sep 2026 (Week 9) · v1 (3 Sep, draft — freeze Mon 21 Sep)**
+**DECO7230 · Kaike Nehme · Studio test: Fri 25 Sep 2026 (Week 9) · v2 (24 Sep: desktop mode, Bedroom preset, iPad logging)**
 Template: IP1 brief p.3 (IP2a has no template of its own; results feed Evaluation 2). Concept: `../concept/2026-08-07-xr-renovation-concept-design.md` (v1.1). What changed since IP1 and why: `../evaluations/evaluation-1-print.html` §05–06, `../testing-data/ip1/findings.md` §5–6.
 
 ## Pitch
@@ -16,24 +16,41 @@ From IP1's results and Evaluation 1, four assumptions need testing:
 - **A3** — Given both the constrained hold-up loop and the open catalogue menu, which do people use for the choice they keep, and which do they say they trust?
 - **A4** — Six times of day through the window are used to check a colour, and change at least one decision (Q7: are three lighting states enough?).
 
-Secondary, on the furniture changes participants asked for: does grip-hold / release-place-at-ray succeed first time, and is thumbstick rotate discovered?
+Secondary, on the furniture changes participants asked for: does grab-hold / release-place-at-ray succeed first time, and is rotate discovered?
 
 ## Testing Methodologies
 
-Structured observation with a timed task protocol, think-aloud, and a short post-test interview, on a Unity prototype. Phase 1 is uninstructed (free look) and measures **entry discovery only** — whether the tab and glow get someone to pull, with no help. Phase 2 starts Task 1 **with a sample already in the participant's hand** (facilitator holds X for one second), so A2 is measured on everyone regardless of Phase 1. Phase 3 is the furniture / light task. The interview branches: people who chose from the constrained set are asked whether it felt helpful or restrictive; people who chose from the menu are asked why the menu. Every row is logged live on one sheet per participant; prompt **numbers** (not ticks) go in the tally boxes so it is known which prompt unstuck whom. Sessions are screen recorded with consent (QuickTime for the simulator, Quest's own recorder on device). Standardised questionnaires stay out at seven minutes per session; they belong to IP2b.
+Structured observation with a timed task protocol, think-aloud, and a short post-test interview, on a Unity prototype. Phase 1 is uninstructed (free look) and measures **entry discovery only** — whether the tab and glow get someone to pull, with no help. Phase 2 starts Task 1 **with a sample already in the participant's hand** (facilitator presses T, then holds B for one second), so A2 is measured on everyone regardless of Phase 1. Phase 3 is the furniture / light task. The interview branches: people who chose from the constrained set are asked whether it felt helpful or restrictive; people who chose from the menu are asked why the menu. Every row is logged live on an iPad, one record per participant; prompts are logged by **number** (not ticks) so it is known which prompt unstuck whom. Sessions are screen recorded with consent (QuickTime, recording the Unity editor). Standardised questionnaires stay out at seven minutes per session; they belong to IP2b.
 
 ## Prototype description / requirements
 
-A 9 × 7 m virtual living room, run in the Unity editor in **desktop mode** (mouse and keyboard, no headset; decided 23 Sep). One of three **preset rooms** is loaded at start (Scandi and Mid-century living rooms, and a Bedroom that keeps the bed; each has a different kept floor, wall colours and furniture); framed pictures on the left wall switch between them. The floor and one piece of furniture are **kept**; walls, ceiling, door, trim and window frame are **changeable**. It supports:
+A 9 × 7 m virtual living room, run in the Unity editor in **desktop mode** (mouse and keyboard, no headset; decided 23 Sep). One of three **preset rooms** is loaded at start (Scandi and Mid-century living rooms, and a Bedroom that keeps the bed; each has a different kept floor, wall colours and furniture); framed pictures on the left wall switch between them. The floor and one piece of furniture are **kept**; walls, ceiling, door, trim and window frame are **changeable**. The list below describes each interaction as designed for the headset; the table after it gives what the participant does in desktop mode. It supports:
 
 - **First contact** — moving a controller toward a kept surface shows a swatch tab at that point and the controller glows; pressing trigger peels a sample off the tab into the hand. *(new: IP1's weakest thing, rebuilt)*
 - **Hold / Tune / Commit** — as IP1: near a changeable surface previews the colour; twisting the wrist walks seven harmonised options; release commits, mid-air discards. A thread runs from the sample back to the surface it came from, so the constraint shows what it is doing. *(thread new)*
 - **Light** — a window in the far wall; touching the wall clock beside it steps the sun through 07:00, 10:00, 13:00, 16:00, 19:00, 22:00 (night: the lamp is the only light). Touching the lamp's pull cord cycles warm / cool / off. *(new)*
 - **Presets** — touching a framed picture re-dresses the room. *(new)*
-- **Menu** — as IP1: point at a surface, trigger; paint colours, materials, and 24 pieces of furniture in three pages (seating / tables / storage, decor, lighting).
+- **Menu** — as IP1: point at a surface, trigger; paint colours, materials, and 26 pieces of furniture over four pages (seating / tables / storage, decor, lighting / beds).
 - **Move** — grip on a piece holds it; it sits where the ray meets the floor and follows the ray; the thumbstick of the holding hand rotates it; release places it. Hovering a piece shows an outline. *(placement, rotate and outline new — P2, P4, P1, P3's requests)*
 - **Onboarding** — on entry the kept surfaces pulse twice under a "staying" label and the lamp glows, for ten seconds. No panels. *(new)*
 - **Cut from this test** — scheme save/cycle (found by 0/4 in IP1). The buttons still work; the script does not mention them.
+
+**Desktop mode — what the participant does** (shown to them on a controls card before Phase 1):
+
+| Designed for the headset | Desktop mode |
+|---|---|
+| Point the controller | Move the mouse (the right-hand ray follows the cursor) |
+| Trigger | Left click |
+| Touch the lamp, clock or a framed picture | Left click on it |
+| Look around | Hold the right mouse button and drag |
+| Walk / teleport | W A S D (kept inside the room) |
+| Grip (hold furniture) | Hold G |
+| Twist the wrist (tune the colour) | Scroll wheel |
+| Thumbstick (turn held furniture) | Q / E |
+| Bring the sample near a wall | Walk up to the wall with it |
+| Close the menu | Backspace |
+
+Facilitator keys: T then hold B for 1 s puts a floor sample in the hand (Task 1 start) · F1–F3 presets · F5–F10 time of day. Esc is never pressed (it stops the simulator responding).
 
 ## Data collection method
 
@@ -51,7 +68,7 @@ Silent observation through Phase 1; Task prompts read verbatim; scripted prompts
 | Menu users: "why the menu rather than pulling from the floor or sofa?" (verbatim) | qualitative | A3 |
 | Which colour did you reject, and why? (verbatim) | qualitative | A2 |
 | Method used for the kept choice (hold-up / menu / both) | categorical | A3 |
-| "Which did you trust more, and why?" (verbatim) — **printed this time** | qualitative | A3 |
+| "Which did you trust more, and why?" (verbatim) — **on the logger this time** | qualitative | A3 |
 | Clock touched? stops visited (tally) · did a time change a choice? | quantitative + boolean | A4 |
 | Lamp found (unprompted / prompted / no) | categorical | discoverability |
 | Furniture: placed where intended first try? rotate discovered? | boolean × 2 | secondary |
@@ -67,9 +84,9 @@ Laptop on charge, Unity open on `Room.unity`, Game view Gizmos off, desktop mode
 
 - Brief: "You're in a living room you're renovating. The floor and the sofa are staying." Consent for recording. Ask: "Have you seen this project before?" Show the controls card on the iPad. **(45 s)**
 - **Phase 1, free look, no instruction.** Silent. Log: what is reached for first; tab/glow noticed; sample pulled unprompted. Prompts allowed only after 20 s stuck, by number. **(45 s)**
-- **Phase 2, Task 1.** Facilitator holds X for one second: a floor sample appears in the participant's right hand. Read verbatim: **"That's a sample of the floor you're keeping. Repaint this room so it works with the floor and sofa."** Start stopwatch. Log time to first unprompted commit, options tried, twist discovery, prompts, method for the kept choice. **(2 min)**
+- **Phase 2, Task 1.** Facilitator presses T, then holds B for one second: a floor sample appears in the participant's right hand. Read verbatim: **"That's a sample of the floor you're keeping. Repaint this room so it works with the floor and sofa."** Start stopwatch. Log time to first unprompted commit, options tried, twist discovery, prompts, method for the kept choice. **(2 min)**
 - **Phase 3, Task 2.** Read verbatim: **"Now move the armchair to where you'd want it, add one more piece of furniture, and check how your wall colour looks at a different time of day."** Log placement success, rotate discovery, clock use, lamp use, preset switching if it happens. **(2 min)**
-- **Post-test**, in order: confidence 1–5 · row 10 (branched by row 14) · "which colour did you reject and why?" · "which did you trust more, pulling from the room or the menu, and why?" · "did changing the time of day change your mind about anything?" · one thing that confused you. **(1 min 30)**
+- **Post-test**, in order: confidence 1–5 · "helpful or restrictive?" if the kept colour came from hold-up, or "why the menu?" if it came from the menu (sheet rows 17a / 17b, branched on row 8) · "which colour did you reject and why?" · "which did you trust more, pulling from the room or the menu, and why?" · "did changing the time of day change your mind about anything?" · one thing that confused you. **(1 min 30)**
 
 **Results posted to this repo (`testing-data/ip2a/`) before leaving the room.**
 

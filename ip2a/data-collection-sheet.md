@@ -57,7 +57,7 @@
 7. "Squeeze the grip to hold the furniture; let go to place it. Push the thumbstick to turn it."  *(desktop: "Hold G on the chair to pick it up; Q and E turn it; let go to put it down.")*
 8. "Touch the clock by the window."
 
-**Facilitator: hold X for one second to put a floor sample in the participant's right hand (Task 1 start). F1–F3 presets, F5–F10 time (simulator only).**
+**Facilitator: T, then hold B for one second to put a floor sample in the participant's right hand (Task 1 start; on the headset: hold X). F1–F3 presets, F5–F10 time (editor only).**
 
 **Observer notes (gestures, hesitations, errors, stuck previews, anything broken):**
 

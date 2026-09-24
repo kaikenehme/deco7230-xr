@@ -1,0 +1,221 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<title>XR Renovation Previewer — IP2a Testing Plan</title><style>
+  @page { size: A4; margin: 16mm 16mm 14mm 16mm; }
+  :root{ --uq:#51247a; --ink:#1c1c1c; --muted:#5c5c5c; --rule:#d5d0da; --tint:#f6f3f8; }
+  *{ box-sizing:border-box; }
+  html{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  body{ margin:0; font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+        font-size:9.6pt; line-height:1.45; color:var(--ink); }
+  h1{ font-size:17pt; font-weight:700; color:var(--uq); margin:0 0 4px; letter-spacing:-.01em; }
+  h2{ font-size:11pt; font-weight:700; color:var(--uq); margin:12px 0 4px;
+      page-break-after:avoid; break-after:avoid; }
+  p{ margin:0 0 6px; }
+  .meta{ color:var(--muted); font-size:9pt; margin-bottom:8px; }
+  ul, ol{ margin:0 0 8px; padding-left:18px; }
+  li{ margin-bottom:2px; }
+  b.tag{ color:var(--uq); }
+  table{ width:100%; border-collapse:collapse; margin:6px 0 8px; font-size:8.8pt; }
+  th{ text-align:left; font-weight:700; color:#fff; background:var(--uq);
+      padding:4px 7px; border:1px solid var(--uq); }
+  td{ padding:4px 7px; border:1px solid var(--rule); vertical-align:top; }
+  tbody tr:nth-child(even) td{ background:var(--tint); }
+
+  code{ font-family:Menlo,monospace; font-size:8.4pt; background:var(--tint); padding:0 2px; }
+  strong{ color:inherit; }
+  a{ color:var(--uq); text-decoration:none; }
+  table{ page-break-inside:avoid; break-inside:avoid; }
+</style></head>
+<body><h1>XR Renovation Previewer — Testing plan for Interactive Prototype 2a</h1><p><strong>DECO7230 · Kaike Nehme · Studio test: Fri 25 Sep 2026 (Week 9) · v2 (24 Sep: desktop mode, Bedroom preset, iPad logging)</strong>
+Template: IP1 brief p.3 (IP2a has no template of its own; results feed Evaluation 2). Concept: <code>../concept/2026-08-07-xr-renovation-concept-design.md</code> (v1.1). What changed since IP1 and why: <code>../evaluations/evaluation-1-print.html</code> §05–06, <code>../testing-data/ip1/findings.md</code> §5–6.</p>
+<h2>Pitch</h2>
+<p>This project is a phone paint-visualiser app — Dulux Visualizer, Houzz, Home Depot Project Color — but using XR so you can hold a colour sample up against the surfaces you're keeping, at full size, in your own light. Samples are pulled directly off the things staying in the room, and those samples generate the options that work with them. IP1 found that nobody pulled a sample: kept surfaces gave nothing back when touched (0/5). IP2a rebuilds that first contact, starts the main task with a sample already in hand so the constrained set is finally reached, and adds the things participants asked for: a pre-furnished room to rearrange, more furniture, and a window whose light changes through the day.</p>
+<h2>Testing Objective</h2>
+<p>From IP1's results and Evaluation 1, four assumptions need testing:</p>
+<ul>
+<li><strong>A1′</strong> — With first-contact feedback (a swatch tab at the touch point, the controller glowing, the sample visibly peeling off), people pull a sample from a kept surface <strong>without being told</strong>. IP1 baseline: 0/5.</li>
+<li><strong>A2</strong> — Constraining the colour options to what harmonises with the kept surfaces <strong>helps</strong> people decide, rather than frustrating them. <strong>Primary objective, untested after IP1</strong> because the gate to it never opened. Task 1 now starts sample-in-hand so every participant reaches it.</li>
+<li><strong>A3</strong> — Given both the constrained hold-up loop and the open catalogue menu, which do people use for the choice they keep, and which do they say they trust?</li>
+<li><strong>A4</strong> — Six times of day through the window are used to check a colour, and change at least one decision (Q7: are three lighting states enough?).</li>
+</ul>
+<p>Secondary, on the furniture changes participants asked for: does grab-hold / release-place-at-ray succeed first time, and is rotate discovered?</p>
+<h2>Testing Methodologies</h2>
+<p>Structured observation with a timed task protocol, think-aloud, and a short post-test interview, on a Unity prototype. Phase 1 is uninstructed (free look) and measures <strong>entry discovery only</strong> — whether the tab and glow get someone to pull, with no help. Phase 2 starts Task 1 <strong>with a sample already in the participant's hand</strong> (facilitator presses T, then holds B for one second), so A2 is measured on everyone regardless of Phase 1. Phase 3 is the furniture / light task. The interview branches: people who chose from the constrained set are asked whether it felt helpful or restrictive; people who chose from the menu are asked why the menu. Every row is logged live on an iPad, one record per participant; prompts are logged by <strong>number</strong> (not ticks) so it is known which prompt unstuck whom. Sessions are screen recorded with consent (QuickTime, recording the Unity editor). Standardised questionnaires stay out at seven minutes per session; they belong to IP2b.</p>
+<h2>Prototype description / requirements</h2>
+<p>A 9 × 7 m virtual living room, run in the Unity editor in <strong>desktop mode</strong> (mouse and keyboard, no headset; decided 23 Sep). One of three <strong>preset rooms</strong> is loaded at start (Scandi and Mid-century living rooms, and a Bedroom that keeps the bed; each has a different kept floor, wall colours and furniture); framed pictures on the left wall switch between them. The floor and one piece of furniture are <strong>kept</strong>; walls, ceiling, door, trim and window frame are <strong>changeable</strong>. The list below describes each interaction as designed for the headset; the table after it gives what the participant does in desktop mode. It supports:</p>
+<ul>
+<li><strong>First contact</strong> — moving a controller toward a kept surface shows a swatch tab at that point and the controller glows; pressing trigger peels a sample off the tab into the hand. <em>(new: IP1's weakest thing, rebuilt)</em></li>
+<li><strong>Hold / Tune / Commit</strong> — as IP1: near a changeable surface previews the colour; twisting the wrist walks seven harmonised options; release commits, mid-air discards. A thread runs from the sample back to the surface it came from, so the constraint shows what it is doing. <em>(thread new)</em></li>
+<li><strong>Light</strong> — a window in the far wall; touching the wall clock beside it steps the sun through 07:00, 10:00, 13:00, 16:00, 19:00, 22:00 (night: the lamp is the only light). Touching the lamp's pull cord cycles warm / cool / off. <em>(new)</em></li>
+<li><strong>Presets</strong> — touching a framed picture re-dresses the room. <em>(new)</em></li>
+<li><strong>Menu</strong> — as IP1: point at a surface, trigger; paint colours, materials, and 26 pieces of furniture over four pages (seating / tables / storage, decor, lighting / beds).</li>
+<li><strong>Move</strong> — grip on a piece holds it; it sits where the ray meets the floor and follows the ray; the thumbstick of the holding hand rotates it; release places it. Hovering a piece shows an outline. <em>(placement, rotate and outline new — P2, P4, P1, P3's requests)</em></li>
+<li><strong>Onboarding</strong> — on entry the kept surfaces pulse twice under a "staying" label and the lamp glows, for ten seconds. No panels. <em>(new)</em></li>
+<li><strong>Cut from this test</strong> — scheme save/cycle (found by 0/4 in IP1). The buttons still work; the script does not mention them.</li>
+</ul>
+<p><strong>Desktop mode — what the participant does</strong> (shown to them on a controls card before Phase 1):</p>
+<table>
+<thead>
+<tr>
+<th>Designed for the headset</th>
+<th>Desktop mode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Point the controller</td>
+<td>Move the mouse (the right-hand ray follows the cursor)</td>
+</tr>
+<tr>
+<td>Trigger</td>
+<td>Left click</td>
+</tr>
+<tr>
+<td>Touch the lamp, clock or a framed picture</td>
+<td>Left click on it</td>
+</tr>
+<tr>
+<td>Look around</td>
+<td>Hold the right mouse button and drag</td>
+</tr>
+<tr>
+<td>Walk / teleport</td>
+<td>W A S D (kept inside the room)</td>
+</tr>
+<tr>
+<td>Grip (hold furniture)</td>
+<td>Hold G</td>
+</tr>
+<tr>
+<td>Twist the wrist (tune the colour)</td>
+<td>Scroll wheel</td>
+</tr>
+<tr>
+<td>Thumbstick (turn held furniture)</td>
+<td>Q / E</td>
+</tr>
+<tr>
+<td>Bring the sample near a wall</td>
+<td>Walk up to the wall with it</td>
+</tr>
+<tr>
+<td>Close the menu</td>
+<td>Backspace</td>
+</tr>
+</tbody>
+</table>
+<p>Facilitator keys: T then hold B for 1 s puts a floor sample in the hand (Task 1 start) · F1–F3 presets · F5–F10 time of day. Esc is never pressed (it stops the simulator responding).</p>
+<h2>Data collection method</h2>
+<p>Silent observation through Phase 1; Task prompts read verbatim; scripted prompts only after ~20 s stuck, each logged by number. One record per participant, logged live on an iPad in the session logger (https://claude.ai/artifact/SXDX155ZVLBknmy5gvajCD; same rows as <code>data-collection-sheet.md</code>, saves as you go), screen recording with consent. Records exported to <code>../testing-data/ip2a/</code> before leaving the room.</p>
+<table>
+<thead>
+<tr>
+<th>Measure</th>
+<th>Type</th>
+<th>Validates</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tab / glow noticed in free look? (remark or visible reaction)</td>
+<td>boolean</td>
+<td>A1′</td>
+</tr>
+<tr>
+<td>Sample pulled <strong>unprompted</strong> in free look</td>
+<td>boolean</td>
+<td><strong>A1′ — decisive</strong></td>
+</tr>
+<tr>
+<td>Time to first unprompted commit (Task 1, sample already in hand)</td>
+<td>quantitative</td>
+<td>A1′ / A2</td>
+</tr>
+<tr>
+<td>Twist-to-tune discovered unprompted?</td>
+<td>boolean</td>
+<td>A1′</td>
+</tr>
+<tr>
+<td>Harmonised options tried before first commit (tally)</td>
+<td>quantitative</td>
+<td>A2</td>
+</tr>
+<tr>
+<td>Confidence in the kept choice (1–5)</td>
+<td>quantitative</td>
+<td>A2</td>
+</tr>
+<tr>
+<td>Constrained-set users: "helpful or restrictive?" (verbatim)</td>
+<td>qualitative</td>
+<td><strong>A2 — decisive</strong></td>
+</tr>
+<tr>
+<td>Menu users: "why the menu rather than pulling from the floor or sofa?" (verbatim)</td>
+<td>qualitative</td>
+<td>A3</td>
+</tr>
+<tr>
+<td>Which colour did you reject, and why? (verbatim)</td>
+<td>qualitative</td>
+<td>A2</td>
+</tr>
+<tr>
+<td>Method used for the kept choice (hold-up / menu / both)</td>
+<td>categorical</td>
+<td>A3</td>
+</tr>
+<tr>
+<td>"Which did you trust more, and why?" (verbatim) — <strong>on the logger this time</strong></td>
+<td>qualitative</td>
+<td>A3</td>
+</tr>
+<tr>
+<td>Clock touched? stops visited (tally) · did a time change a choice?</td>
+<td>quantitative + boolean</td>
+<td>A4</td>
+</tr>
+<tr>
+<td>Lamp found (unprompted / prompted / no)</td>
+<td>categorical</td>
+<td>discoverability</td>
+</tr>
+<tr>
+<td>Furniture: placed where intended first try? rotate discovered?</td>
+<td>boolean × 2</td>
+<td>secondary</td>
+</tr>
+<tr>
+<td>Preset switched unprompted?</td>
+<td>boolean</td>
+<td>secondary</td>
+</tr>
+<tr>
+<td>Prompts needed — <strong>numbers</strong>, not ticks</td>
+<td>quantitative</td>
+<td>A1′</td>
+</tr>
+<tr>
+<td>Seen this project before? (yes / no)</td>
+<td>boolean</td>
+<td>sample</td>
+</tr>
+</tbody>
+</table>
+<h2>Testing Setup</h2>
+<p>Laptop on charge, Unity open on <code>Room.unity</code>, Game view Gizmos off, desktop mode on (F4 toggles). iPad charged with the session logger open (it has the phase timers, the commit stopwatch and the participant controls card). Mouse with a scroll wheel. Restart the app between participants (committed colours, furniture moves and the time of day must not leak). Preset 1 (Scandi) loads by default; keep it for everyone so the kept floor and sofa are the same across participants. Consent line before recording.</p>
+<h2>Testing process (~7 min per participant, aim ≥5, recruit beyond the flat)</h2>
+<ul>
+<li>Brief: "You're in a living room you're renovating. The floor and the sofa are staying." Consent for recording. Ask: "Have you seen this project before?" Show the controls card on the iPad. <strong>(45 s)</strong></li>
+<li><strong>Phase 1, free look, no instruction.</strong> Silent. Log: what is reached for first; tab/glow noticed; sample pulled unprompted. Prompts allowed only after 20 s stuck, by number. <strong>(45 s)</strong></li>
+<li><strong>Phase 2, Task 1.</strong> Facilitator presses T, then holds B for one second: a floor sample appears in the participant's right hand. Read verbatim: <strong>"That's a sample of the floor you're keeping. Repaint this room so it works with the floor and sofa."</strong> Start stopwatch. Log time to first unprompted commit, options tried, twist discovery, prompts, method for the kept choice. <strong>(2 min)</strong></li>
+<li><strong>Phase 3, Task 2.</strong> Read verbatim: <strong>"Now move the armchair to where you'd want it, add one more piece of furniture, and check how your wall colour looks at a different time of day."</strong> Log placement success, rotate discovery, clock use, lamp use, preset switching if it happens. <strong>(2 min)</strong></li>
+<li><strong>Post-test</strong>, in order: confidence 1–5 · "helpful or restrictive?" if the kept colour came from hold-up, or "why the menu?" if it came from the menu (sheet rows 17a / 17b, branched on row 8) · "which colour did you reject and why?" · "which did you trust more, pulling from the room or the menu, and why?" · "did changing the time of day change your mind about anything?" · one thing that confused you. <strong>(1 min 30)</strong></li>
+</ul>
+<p><strong>Results posted to this repo (<code>testing-data/ip2a/</code>) before leaving the room.</strong></p>
+<h2>Known limits, stated up front</h2>
+<ul>
+<li>Platform: desktop mode, not VR. Mouse aiming and walking with keys stand in for reaching and moving in a headset, so reach, scale and hold-up distance are not tested here; every count is reported as desktop data. IP2b runs on the Quest.</li>
+<li>The sun's path is a six-stop approximation, not a real hemisphere; the question is whether time of day is <em>used</em>, not whether it is accurate.</li>
+<li>Lighting has one floor-standing option (Poly Haven has no floor lamps under CC0); the Lighting page is thin and participants may say so.</li>
+</ul></body></html>
