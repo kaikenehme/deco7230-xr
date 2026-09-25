@@ -37,3 +37,4 @@ Soft shadows at 2048 / 15 m / 1 cascade, 24 furniture prefabs, transparent glass
 | Date | What happened |
 |---|---|
 | 2026-08-28 | `unauthorized` all day, no in-headset dialog even with dev settings open. Suspect managed device. |
+| 2026-09-25 | **Working.** Quest 3S (`340YC10G6L046X`) authorised over USB. It dropped back to `unauthorized` twice (headset asleep / adb restart) until "Always allow from this computer" was ticked. `BuildScript.BuildAndroid` headless: 72 MB APK in 3 min 30 s, 0 errors. First launch shows the headset's "controller required" dialog → Continue. On device: **72/72 fps**, no Unity errors in logcat. Mirror: `brew install scrcpy`, run with Unity's adb so the two adb versions don't fight: `ADB="$ADB" scrcpy --no-audio --max-fps=30 --video-bit-rate=8M --stay-awake`. (QuestLiveView DMG not used: unsigned, Gatekeeper rejects it.) |
