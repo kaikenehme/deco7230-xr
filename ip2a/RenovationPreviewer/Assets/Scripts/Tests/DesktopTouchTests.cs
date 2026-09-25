@@ -85,4 +85,23 @@ public class DesktopTouchTests
         Physics.SyncTransforms();
         Assert.AreSame(p, RayUtil.PickTouchable(Forward, null, 10f));
     }
+
+    [Test]
+    public void Relay_TriggerOnProp_TouchesIt_AndReportsHandled()
+    {
+        // On the headset, point + trigger at the lamp, clock or a frame presses it (same as a click in desktop mode).
+        Box("Wall_S", new Vector3(0f, 0f, 5f), trigger: false);
+        var p = Box("Lamp", new Vector3(0f, 0f, 3f), trigger: true).AddComponent<Prop>();
+        Physics.SyncTransforms();
+        Assert.IsTrue(MenuSelectRelay.TryTouchProp(Forward, null, 10f));
+        Assert.AreEqual(1, p.touches);
+    }
+
+    [Test]
+    public void Relay_TriggerOnWall_NotHandled()
+    {
+        Box("Wall_S", new Vector3(0f, 0f, 5f), trigger: false);
+        Physics.SyncTransforms();
+        Assert.IsFalse(MenuSelectRelay.TryTouchProp(Forward, null, 10f));
+    }
 }
