@@ -1,0 +1,55 @@
+{
+  "consent": "No",
+  "created": 1790310820556,
+  "n": 3,
+  "platform": "Quest",
+  "prompts": [
+    {
+      "at": 1790313668652,
+      "n": 3,
+      "phase": "task 1"
+    },
+    {
+      "at": 1790313741634,
+      "n": 5,
+      "phase": "task 1"
+    },
+    {
+      "at": 1790313806558,
+      "n": 3,
+      "phase": "task 1"
+    },
+    {
+      "at": 1790313807157,
+      "n": 2,
+      "phase": "task 1"
+    },
+    {
+      "at": 1790313827107,
+      "n": 8,
+      "phase": "task 1"
+    }
+  ],
+  "r1": "Sofa",
+  "r10": "Yes",
+  "r11": "Unprompted",
+  "r12": "Yes",
+  "r12stops": 4,
+  "r13": "Prompted",
+  "r14": "Unprompted",
+  "r15": "Yes",
+  "r16": "4",
+  "r17b": "Easier to use",
+  "r18": "Light colour by personal preference ",
+  "r19": "Menu, easier to use",
+  "r2": "Yes",
+  "r20": "No",
+  "r21": "Everything was pretty smooth ",
+  "r3": "Unprompted",
+  "r5ms": 180000,
+  "r6": "Unprompted",
+  "r7": 2,
+  "r8": "Menu",
+  "seen": "No",
+  "updatedAt": 1790315422319
+}

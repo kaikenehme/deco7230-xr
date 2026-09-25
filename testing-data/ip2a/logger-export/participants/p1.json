@@ -1,0 +1,52 @@
+{
+  "consent": "No",
+  "created": 1790230446404,
+  "n": 1,
+  "notes": "different  iteraction with the lamp (fisical interaction)\n \nGaming interaction like ballon trough in the wall and change the colour \n\n\n\n\n\n\n\n",
+  "platform": "Quest",
+  "prompts": [
+    {
+      "at": 1790311038175,
+      "n": 1,
+      "phase": "task 1"
+    },
+    {
+      "at": 1790311043493,
+      "n": 4,
+      "phase": "task 1"
+    },
+    {
+      "at": 1790311140174,
+      "n": 3,
+      "phase": "task 1"
+    },
+    {
+      "at": 1790311149464,
+      "n": 8,
+      "phase": "task 1"
+    }
+  ],
+  "r1": "The forniture",
+  "r10": "Yes",
+  "r11": "Unprompted",
+  "r12": "Yes",
+  "r12stops": 5,
+  "r13": "Prompted",
+  "r14": "Unprompted",
+  "r14b": "Added furniture",
+  "r15": "Yes",
+  "r16": "5",
+  "r18": "Light colour , personal preference ",
+  "r19": "From the room, she misses more physical interaction ",
+  "r2": "Yes",
+  "r20": "No",
+  "r21": "The drag from the furnitures",
+  "r3": "Unprompted",
+  "r5ms": 60000,
+  "r6": "No",
+  "r7": 2,
+  "r8": "Menu",
+  "r9": "Yes",
+  "seen": "No",
+  "updatedAt": 1790315424534
+}
