@@ -105,7 +105,11 @@ Print CSS gotchas already solved in `lowfi-plan-print.html`: `page-break-after:a
 - Scope discipline is the top risk — zero Unity experience against a 35% hurdle with no extension.
 - Caveman mode is usually active in these sessions (terse, fragments OK). Code, commits and security warnings still get written normally.
 
-## Current state — 24 Sep 2026, Week 9 (IP2a test **tomorrow**, Fri 25 Sep)
+## Current state — 25 Sep 2026, Week 9 — **IP2a tested** (next: Evaluation 2, Wed 7 Oct 12:00)
+
+**25 Sep:** IP2a ran **on the Quest 3S, not desktop mode** (Kaike switched on the day; Quest now authorised over USB — tick "Always allow"). n = 5, all headset. Results: `testing-data/ip2a/README.md` (table generated from the logger JSON in `testing-data/ip2a/logger-export/`, raw counts per assumption, data-quality notes — read them before quoting). Headline raw counts: pulled a sample unprompted in free look **4/5** (IP1 0/5, simulator); kept colour from the **menu 5/5**, so the A2 helpful/restrictive question never fired; confidence 5,4,4,4,5. Fixes on the day: point + trigger presses lamp/clock/frames on device (`edd1d07`). Quest notes (pauses = Meta button / proximity sleep; `prox_close` / `automation_disable`; battery drains on the Mac's USB; scrcpy mirror + `ip2a/record-session.sh`): `ip2a/quest-sideload.md`. HEAD `b7d476f`.
+
+### Before the test (24 Sep)
 
 **Build is test-ready (Kaike checked the full lap by hand, 24 Sep).** HEAD `424ff1e`. EditMode 169/169, PlayMode 27/27. Platform = **Unity editor, desktop mode (mouse + keys), no headset** (decided 23 Sep).
 
@@ -119,8 +123,6 @@ Print CSS gotchas already solved in `lowfi-plan-print.html`: `page-break-after:a
 
 **Headless visual check:** PlayMode `SnapshotTests` renders 14 views to `ip2a/RenovationPreviewer/Builds/snapshots/*.png` (gitignored).
 
-**Fri 25 Sep (Kaike):** laptop charged, Unity open on `Room.unity`, desktop mode on · iPad logger open (dry-run one fake participant tonight, then Clear) · restart Play between participants · optional 10 min with staff on the Quest (`ip2a/quest-sideload.md`) — IP2b needs it, IP2a doesn't. **After the sessions: tell Claude → export the logger's `participants` collection into `testing-data/ip2a/` and push.** APK: only on Kaike's go.
-
-**Still to do before the test:** Kaike's voice pass on `ip2a/2026-09-25-ip2a-testing-plan.md` (prompt wording in the logger is AI's) · AI-log consolidation + T15 sweep (AI). Pilot #1 (Sat 19) and freeze (Mon 21) were missed.
+**Next:** Evaluation 2 from `testing-data/ip2a/` (3 pages + appendices, same template as Eval 1) · the plan PDF describes desktop mode — note the platform change in Eval 2 rather than rewriting the plan after the fact · IP2b (Fri 23 Oct, MR passthrough on Quest, ≥5 academic refs) can now build on a working device pipeline.
 
 **Open:** A2 still untested, now reachable (Task 1 starts sample-in-hand) · A1′ (does first-contact feedback get people to pull?) · Q6 twist vs rotate: separate in desktop mode (scroll vs Q/E), on device wrist vs thumbstick · Q7 becomes A4 (six time stops) · desktop mode doesn't test reach, scale or hold-up distance — report all counts as desktop data.
