@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Evaluation 2 — XR Renovation Previewer</title>
+<style>
+  @page { size: A4; margin: 13mm 14mm 11mm 14mm; }
+  :root{
+    --ink:#16130f; --muted:#7a7167; --kraft:#b08968;
+    --red:#c0392b; --green:#6fa03c; --flame:#e8912a;
+    --tint:#faf7f2; --rule:#e5ded4;
+  }
+  *{ box-sizing:border-box; }
+  html{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  body{ margin:0; font-family:Georgia,"Times New Roman",serif; font-size:8.1pt; line-height:1.36; color:var(--ink); }
+  h1,h2,h3,.eyebrow,th,.tag,.cat{ font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; }
+
+  .masthead{ border-bottom:2.5px solid var(--ink); padding-bottom:6px; margin-bottom:9px; }
+  .eyebrow{ font-size:6.6pt; letter-spacing:.17em; text-transform:uppercase; color:var(--muted); font-weight:700; margin-bottom:5px; }
+  h1{ font-size:15.5pt; line-height:1.1; margin:0; letter-spacing:-.015em; font-weight:700; }
+  h1 .sub{ display:block; font-size:9.4pt; font-weight:400; color:var(--muted); margin-top:3px; letter-spacing:0; }
+  .byline{ font-size:7.2pt; color:var(--muted); margin-top:6px; }
+  .byline strong{ color:var(--ink); font-weight:600; }
+
+  h2{ font-size:7.2pt; letter-spacing:.14em; text-transform:uppercase; font-weight:700;
+      margin:8px 0 4px; padding-bottom:3px; border-bottom:1px solid var(--rule);
+      page-break-after:avoid; break-after:avoid; }
+  h2 .num{ color:var(--kraft); margin-right:6px; }
+  h3{ font-size:8.1pt; margin:6px 0 3px; font-weight:700; page-break-after:avoid; break-after:avoid; }
+  p{ margin:0 0 4px; }
+  table,.note{ page-break-inside:avoid; break-inside:avoid; }
+  table.long{ page-break-inside:auto; break-inside:auto; }
+
+  table{ width:100%; border-collapse:collapse; margin:5px 0 3px; font-size:7.7pt; }
+  th{ text-align:left; font-size:6.3pt; letter-spacing:.1em; text-transform:uppercase; font-weight:700;
+      color:var(--muted); border-bottom:1.4px solid var(--ink); padding:0 6px 3px 0; vertical-align:bottom; }
+  td{ padding:2.5px 6px 2.5px 0; border-bottom:1px solid var(--rule); vertical-align:top; line-height:1.32; }
+  tr:last-child td{ border-bottom:0; }
+  td.k{ font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; font-weight:700; color:var(--kraft); white-space:nowrap; }
+  td.c, th.c{ text-align:center; }
+  td.n{ font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; font-weight:700; white-space:nowrap; }
+  .yes{ color:var(--green); font-weight:700; } .no{ color:var(--red); font-weight:700; }
+
+  .cat{ display:inline-block; background:var(--ink); color:#fff; font-size:6.6pt; font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:2.5px 6px; }
+  .tag{ display:inline-block; font-size:6.2pt; font-weight:700; letter-spacing:.08em; text-transform:uppercase; padding:1.5px 5px; border:1px solid var(--ink); margin-right:3px; }
+  .tag.val{ border-color:var(--green); color:var(--green); }
+  .tag.inv{ border-color:var(--red); color:var(--red); }
+  .tag.unt{ border-color:var(--flame); color:var(--flame); }
+  .tag.half{ border-color:var(--kraft); color:var(--kraft); }
+
+  .note{ border-left:2.5px solid var(--flame); background:#fdf8f0; padding:5px 9px; margin:6px 0 3px; font-size:7.7pt; line-height:1.38; }
+  .note b{ font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; font-size:7.3pt; letter-spacing:.03em; }
+
+  .two{ display:flex; gap:14px; } .two > div{ flex:1; }
+  ul{ margin:2px 0 4px; padding-left:14px; } li{ margin-bottom:1.5px; }
+
+  footer{ margin-top:8px; padding-top:5px; border-top:1px solid var(--rule); font-size:6.6pt; color:var(--muted); }
+  .pb{ page-break-before:always; }
+
+  body{ font-size:9pt; line-height:1.4; }
+  table{ font-size:8.4pt; }
+  .glance{ border:1.5px solid var(--ink); background:var(--tint); padding:6px 10px 4px; margin:0 0 6px; page-break-inside:avoid; }
+  .glance-title{ font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; font-size:7pt; letter-spacing:.14em; text-transform:uppercase; font-weight:700; color:var(--kraft); margin-bottom:2px; }
+  table.plain{ margin:0; } table.plain td{ border-bottom:0; padding:1.5px 6px 1.5px 0; }
+  td.gk, td.qk{ font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; font-weight:700; white-space:nowrap; width:1%; padding-right:12px; }
+  td.qk{ color:var(--kraft); white-space:normal; width:18%; }
+  tr.grp td{ font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; font-size:6.8pt; letter-spacing:.1em; text-transform:uppercase; font-weight:700; color:var(--kraft); background:var(--tint); padding:2px 4px; }
+  .ins{ margin:0 0 5px; padding-left:8px; border-left:2px solid var(--kraft); }
+  .small{ font-size:8pt; color:var(--muted); }
+  .small b{ color:var(--ink); }
+  table.refl td{ vertical-align:top; border-bottom:0; }
+  table.refl ul{ margin:0; }
+  td.yes{ color:var(--green); } td.no{ color:var(--red); }
+
+  h2{ font-size:11.5pt; letter-spacing:0; text-transform:none; margin:11px 0 5px; padding-bottom:3px; border-bottom:1.6px solid var(--ink); }
+  h2 .num{ font-size:11.5pt; }
+  h3{ font-size:9.6pt; margin:7px 0 3px; color:var(--ink); }
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <div class="eyebrow">DECO7230 · Interactive Prototype Outcome Evaluation 2 · Submission 3</div>
+  <h1>XR Renovation Previewer
+    <span class="sub">Evaluation of Interactive Prototype 2a · Week 9 studio, Fri 25 Sep 2026</span>
+  </h1>
+  <div class="byline"><strong>Kaike Nehme</strong> · s4959287 · Semester 2, 2026 · github.com/kaikenehme/deco7230-xr · raw data in Appendices A–D</div>
+</div>
+
+<div class="glance">
+  <div class="glance-title">At a glance</div>
+  <table class="plain">
+    <tr><td class="gk">Tested</td><td>5 participants, all on the <b>Meta Quest 3S</b> headset (the plan said desktop mode; see note in §1).</td></tr>
+    <tr><td class="gk">Fixed</td><td>The way into the hero interaction: <b>4 of 5</b> pulled a colour sample without help (IP1: 0 of 5). Furniture: <b>5 of 5</b> placed it first try.</td></tr>
+    <tr><td class="gk">Found</td><td>Everyone still kept a colour from the <b>menu</b> (5 of 5), because it was easier: nobody saw more than 2 of the 7 matching colours the sample offers.</td></tr>
+    <tr><td class="gk">Still open</td><td>Whether limiting the options <i>helps</i> (A2). My interview question never reached anyone.</td></tr>
+    <tr><td class="gk">Next</td><td>Show all 7 colours at once, build them around lightness, test in the participant's real room (IP2b).</td></tr>
+  </table>
+</div>
+
+<h2><span class="num">01</span>Objective and validation metrics</h2>
+<p><span class="cat">Category: Creation</span></p>
+<p style="margin-top:5px;"><b>The prototype.</b> A furnished virtual living room. The floor and sofa are <b>staying</b>; the walls can change. The hero interaction: touch a kept surface to pull off a colour sample, <b>hold it up</b> against a wall to preview a matching paint, twist the wrist to step through 7 matching options, let go to commit. A normal menu with the full paint catalogue is available too, as the comparison. New since IP1: a visible tab and glow when you touch a kept surface, furniture you can grab, place and rotate, a clock that changes the daylight, a lamp, and three preset rooms.</p>
+<table>
+  <tr><th style="width:21%">Aim</th><th style="width:38%">Question</th><th>How it was measured</th></tr>
+  <tr><td class="k">A1′ · Getting in</td><td>Do people pull a sample <b>without being told</b>, now that touching gives feedback?</td><td>Pulled a sample during the silent first 45 s · noticed the tab/glow · found the wrist twist</td></tr>
+  <tr><td class="k">A2 · Constraint</td><td>Does limiting options to matching colours <b>help</b> people decide? <b>(primary aim)</b></td><td>"Helpful or restrictive?" · options tried · confidence 1–5 · which colour was rejected and why</td></tr>
+  <tr><td class="k">A3 · Route</td><td>Hold-up or menu: which do people <b>use</b> for the final colour, and which do they <b>trust</b>?</td><td>Method of the kept colour · "why the menu?" · "which did you trust more?"</td></tr>
+  <tr><td class="k">A4 · Light</td><td>Do people use time of day, and does it <b>change a decision</b>?</td><td>Clock used, stops visited · "did the time of day change your mind?"</td></tr>
+  <tr><td class="k">Furniture</td><td>Do the grab / place / rotate fixes from IP1 work first time?</td><td>Armchair placed first try · rotate found · lamp found</td></tr>
+</table>
+<p><b>Session (~7 min each):</b> brief → 45 s silent free look → Task 1, starting with a floor sample already in hand: <i>"Repaint this room so it works with the floor and sofa"</i> → Task 2: move the armchair, add a piece, check another time of day → 6 interview questions, logged live on an iPad. No numeric pass marks were set, so aims are judged on how consistent the evidence is.</p>
+
+<div class="note"><b>Platform change.</b> The testing plan says <b>desktop mode</b> (mouse and keyboard) because the headset had failed to connect before IP1. On the day it connected, so all five sessions ran <b>on the Quest 3S</b>. The plan is left as written. This means IP2a is real headset data, but any comparison with IP1 (simulator) mixes a design change with a platform change.</div>
+
+<h2><span class="num">02</span>Results</h2>
+<p>5 participants, all studio peers. P4 and P5 had seen the project before. Nobody agreed to recording. — = not recorded.</p>
+
+<h3>What they did</h3>
+<table>
+  <tr><th style="width:34%">Behaviour</th><th class="c">P1</th><th class="c">P2</th><th class="c">P3</th><th class="c">P4</th><th class="c">P5</th><th class="c">Total</th><th class="c">IP1</th></tr>
+  <tr class="grp"><td colspan="8">Getting in (A1′)</td></tr>
+  <tr><td>Noticed the tab or glow</td><td class="c yes">✓</td><td class="c yes">✓</td><td class="c yes">✓</td><td class="c yes">✓</td><td class="c yes">✓</td><td class="c n">5/5</td><td class="c">—</td></tr>
+  <tr><td>Pulled a sample without help</td><td class="c yes">✓</td><td class="c yes">✓</td><td class="c yes">✓</td><td class="c">—</td><td class="c yes">✓</td><td class="c n">4/5</td><td class="c">0/5</td></tr>
+  <tr><td>Found the wrist twist</td><td class="c no">✗</td><td class="c no">✗</td><td class="c yes">✓</td><td class="c yes">✓</td><td class="c yes">✓</td><td class="c n">3/5</td><td class="c">0/3</td></tr>
+  <tr class="grp"><td colspan="8">Choosing a colour (A2, A3)</td></tr>
+  <tr><td>Matching options seen (of 7)</td><td class="c">2</td><td class="c">2</td><td class="c">2</td><td class="c">1</td><td class="c">2</td><td class="c n">max 2</td><td class="c">—</td></tr>
+  <tr><td>Kept colour came from</td><td class="c">menu</td><td class="c">menu</td><td class="c">menu</td><td class="c">menu</td><td class="c">menu</td><td class="c n">menu 5/5</td><td class="c">menu 5/5</td></tr>
+  <tr><td>Confidence in kept colour (1–5)</td><td class="c">5</td><td class="c">4</td><td class="c">4</td><td class="c">4</td><td class="c">5</td><td class="c n">avg 4.4</td><td class="c">avg 3.0</td></tr>
+  <tr class="grp"><td colspan="8">Light (A4) and furniture</td></tr>
+  <tr><td>Clock stops visited (of 6)</td><td class="c">5</td><td class="c">3</td><td class="c">4</td><td class="c">5</td><td class="c">3</td><td class="c n">all ≥3</td><td class="c">—</td></tr>
+  <tr><td>Armchair placed first try</td><td class="c yes">✓</td><td class="c yes">✓</td><td class="c yes">✓</td><td class="c yes">✓</td><td class="c yes">✓</td><td class="c n">5/5</td><td class="c">—</td></tr>
+  <tr><td>Found rotate without help</td><td class="c yes">✓</td><td class="c yes">✓</td><td class="c yes">✓</td><td class="c yes">✓</td><td class="c yes">✓</td><td class="c n">5/5</td><td class="c">—</td></tr>
+  <tr><td>Found the lamp without help</td><td class="c no">✗</td><td class="c yes">✓</td><td class="c no">✗</td><td class="c yes">✓</td><td class="c yes">✓</td><td class="c n">3/5</td><td class="c">2/5</td></tr>
+</table>
+
+<h3>What they said</h3>
+<table class="quotes">
+  <tr><td class="qk">Why the menu?</td><td>"Easier to use" (P3) · "More intuitive" (P4) · "Easy setup" (P5)</td></tr>
+  <tr><td class="qk">Trusted more</td><td><b>Menu:</b> "easier to use" (P3), "more intuitive" (P4) · <b>From the room:</b> "misses more physical interaction" (P1)</td></tr>
+  <tr><td class="qk">Rejected colour</td><td>"Light colour, personal preference" (P1) · "Light colour, personal preference" (P3) · "Black colour, personal" (P4)</td></tr>
+  <tr><td class="qk">Time of day changed a decision?</td><td>"No" (P1, P3) · not asked of the others</td></tr>
+  <tr><td class="qk">Confusing / ideas</td><td>"The drag from the furniture" (P1) · "Too sensitive, the furniture moving" (P4) · "Everything was pretty smooth" (P3) · ideas: a physical lamp, "a balloon thrown at the wall changes the colour" (P1), "other types of room" (P2)</td></tr>
+</table>
+<p class="small"><b>Data caveats</b> (full list in Appendix C): prompt timing wasn't captured, so it's unknown whether the hint "press the trigger on the tab" — logged for all four who pulled — came before or after their pull. The hint "touch the clock" was given to all five, so clock use was not discovery.</p>
+
+<h2><span class="num">03</span>Analysis and insights</h2>
+<div class="ins"><b>1 · The way in now works.</b> Everyone noticed the tab or glow and 4 of 5 pulled a sample; in IP1 the same touch led nowhere for all 5. Caution: the headset also changed, and a hint may have come first for some, so I can't say how much is the new design alone.</div>
+<div class="ins"><b>2 · People preview with the sample but decide with the menu.</b> All five held a matching sample; all five kept a menu colour, saying it was easier. Why: nobody saw more than 2 of the 7 options, and 2 of 5 never found the twist that shows the rest. It was two hidden colours against a whole visible catalogue. That tests visibility, not whether limiting options helps.</div>
+<div class="ins"><b>3 · People judged on lightness, the generator varies hue.</b> All three rejections were about lightness ("light", "black"), and nobody mentioned the floor or sofa. The colour generator changes hue in 5 of 7 options and leaves out off-whites, which is what most real walls are.</div>
+<div class="ins"><b>4 · The menu wins on effort, the room wins on feel.</b> Menu-trusters said "easier" and "intuitive". The one room-truster wanted <i>more</i> physical interaction (a physical lamp, throwing colour at the wall). The hold-up route loses for as long as it is also the slower one.</div>
+<div class="ins"><b>5 · Furniture is solved, it needs tuning.</b> IP1's biggest complaint is gone (5/5 placed, 5/5 rotated). What's left is "too sensitive" and "the drag".</div>
+<div class="ins"><b>6 · Time of day was used because they were told to.</b> Everyone used the clock, but the task and a hint asked them to. Neither of the 2 asked changed a decision.</div>
+
+<h2><span class="num">04</span>Evaluation of aims</h2>
+<table>
+  <tr><th style="width:18%">Aim</th><th style="width:19%">Verdict</th><th>Why</th><th style="width:22%">Confidence</th></tr>
+  <tr><td class="k">A1′ · Getting in</td><td><span class="tag val">Supported</span></td><td>4/5 pulled, 5/5 noticed. The twist (3/5) is now the weak step</td><td>Medium: mixed with platform change</td></tr>
+  <tr><td class="k">A2 · Constraint</td><td><span class="tag unt">Untested</span></td><td>The "helpful or restrictive?" question was only asked of people who <i>kept</i> a hold-up colour, and nobody did. My instrument error</td><td>Low: behaviour leans against the constraint as built</td></tr>
+  <tr><td class="k">A3 · Route</td><td><span class="tag val">Answered</span></td><td>Menu 5/5 for the kept colour, with both routes working. Reason: ease</td><td>Medium for use, low for trust (3 answers)</td></tr>
+  <tr><td class="k">A4 · Light</td><td><span class="tag half">Partly</span></td><td>Used by all, but on instruction; changed 0 of 2 decisions</td><td>Low</td></tr>
+  <tr><td class="k">Furniture</td><td><span class="tag val">Validated</span></td><td>5/5 placed first try, 5/5 found rotate (IP1: 1/5 grab)</td><td>Medium</td></tr>
+</table>
+<p><b>Summary:</b> IP2a fixed the way in and the furniture, and measured a real preference for the first time: the menu, on ease. The primary aim (A2) is still untested: in IP1 the prototype blocked it, in IP2a my question did, because I asked based on <i>what people kept</i> instead of <i>who held a sample</i>.</p>
+
+<h2><span class="num">05</span>Concept iteration</h2>
+<p>The concept (match against what's staying, hold it up, no menus) is <b>kept but not yet proven</b>. Changes are framed for IP2b, which runs in the participant's <b>real room</b> (MR passthrough).</p>
+<table>
+  <tr><th style="width:27%">Because…</th><th>Change</th><th style="width:12%">Type</th></tr>
+  <tr><td>The way in works (insight 1)</td><td><b>Keep</b> the tab, glow and peel; in MR they attach to the participant's own floor and furniture. This also answers "other types of room".</td><td>Affirm</td></tr>
+  <tr><td>Hidden options lose to a visible catalogue (2)</td><td>The sample <b>fans open in the hand like a paint fan deck</b>: all 7 colours visible at once, pick one with the other hand, hold it to the wall. Still a held object, not a menu.</td><td>Change</td></tr>
+  <tr><td>People judge on lightness (3)</td><td>Build the 7 options <b>light to dark</b>, always including two off-whites. Keep the thread back to the source.</td><td>Change</td></tr>
+  <tr><td>Room wins on feel, wants more physical (4)</td><td>Behind "throw a balloon at the wall": committing from a distance, and play. Test <b>tossing the chip at the wall</b> against hold-up. Lamp becomes a pull cord you grab.</td><td>Test</td></tr>
+  <tr><td>Furniture "too sensitive" (5)</td><td>Smooth the movement and slow the rotation.</td><td>Fix</td></tr>
+  <tr><td>Time of day changed nothing (6)</td><td>In MR the room's <b>real light</b> replaces the clock; the clock stays in VR mode only.</td><td>Change</td></tr>
+  <tr><td>A2 never asked</td><td>Ask "helpful or restrictive?" of <b>everyone who held a sample</b>, and add a short phase before the menu appears.</td><td>Test plan</td></tr>
+</table>
+
+<h2><span class="num">06</span>Reflection and next steps</h2>
+<table class="refl">
+  <tr><th style="width:33%">What worked</th><th style="width:33%">What didn't</th><th>What I'll change</th></tr>
+  <tr>
+    <td><ul>
+      <li>Switching to the headset gave real reach and scale data</li>
+      <li>The device pipeline now works (72 fps), removing IP2b's biggest risk</li>
+      <li>The iPad logger lost no rows and logged which hint was used</li>
+      <li>Starting Task 1 with a sample in hand got everyone to the matching colours</li>
+    </ul></td>
+    <td><ul>
+      <li>The platform switch broke comparison with the plan and with IP1</li>
+      <li>My interview branch skipped the primary question</li>
+      <li>Phase timers unused, so hint timing was lost</li>
+      <li>Studio peers only; 2 had seen the project</li>
+    </ul></td>
+    <td><ul>
+      <li>Branch questions on <i>exposure</i>, not outcome</li>
+      <li>One "next phase" button that timestamps everything</li>
+      <li>IP2b plan: standardised questionnaire, ≥5 academic references, the five design principles</li>
+      <li>Build: fan deck, lightness palette, toss-to-commit, real light</li>
+    </ul></td>
+  </tr>
+</table>
+<p style="margin-top:6px;"><b>The main lesson.</b> Twice now, the primary aim went unanswered for a reason unrelated to the concept: in IP1 people never reached the constrained colours; in IP2a they reached them but were never asked about them. Both times I designed the test around the path I expected people to take. For IP2b, every decisive question is asked of everyone who was <i>exposed</i> to the thing it asks about, whatever they chose. The platform switch was the right call for data quality, but I'll decide the platform before writing the plan, not on the day.</p>
+
+<footer>Kaike Nehme · s4959287 · DECO7230 Evaluation 2 · raw data in <code>testing-data/ip2a/</code> at github.com/kaikenehme/deco7230-xr</footer>
+
+<!-- ============================ APPENDICES ============================ -->
+<div class="pb"></div>
+<div class="masthead">
+  <div class="eyebrow">DECO7230 · Evaluation 2 · Appendices (not counted toward the 3-page limit)</div>
+  <h1>Appendices <span class="sub">A full logger results · B prompts as logged · C data-quality and transcription notes · D session and device notes</span></h1>
+</div>
+
+<h2><span class="num">A</span>Full results from the iPad logger, Fri 25 Sep 2026, Week 9 studio (n = 5, Meta Quest 3S)</h2>
+<p>Exported the same day from the session logger to <code>testing-data/ip2a/logger-export/participants/p1–p5.json</code>. Text is as typed live on the iPad, spelling included. Blank (—) = not recorded. Facilitator: Kaike Nehme, solo. No recordings (consent declined by all five).</p>
+<table class="long">
+  <tr><th style="width:4%">#</th><th style="width:27%">Measure</th><th>P1</th><th>P2</th><th>P3</th><th>P4</th><th>P5</th></tr>
+  <tr><td class="k">—</td><td>Seen the project before</td><td>No</td><td>No</td><td>No</td><td>Yes</td><td>Yes</td></tr>
+  <tr><td class="k">—</td><td>Recording consent</td><td>No</td><td>No</td><td>No</td><td>No</td><td>No</td></tr>
+  <tr><td class="k">1</td><td>Reached for first</td><td>The forniture</td><td>Walls</td><td>Sofa</td><td>Forniture</td><td>Floor</td></tr>
+  <tr><td class="k">2</td><td>Tab or glow noticed</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+  <tr><td class="k">3</td><td>Sample pulled in free look</td><td>Unprompted</td><td>Unprompted</td><td>Unprompted</td><td>—</td><td>Unprompted</td></tr>
+  <tr><td class="k">4</td><td>Prompts used (numbers, logged order)</td><td>1, 4, 3, 8</td><td>1, 3, 6, 8</td><td>3, 5, 3, 2, 8</td><td>1, 2, 6, 8</td><td>3, 5, 7, 6, 8</td></tr>
+  <tr><td class="k">5</td><td>Time to first unprompted commit</td><td>1 min</td><td>2 min</td><td>3 min</td><td>4 min</td><td>4 min</td></tr>
+  <tr><td class="k">6</td><td>Twist-to-tune found</td><td>No</td><td>No</td><td>Unprompted</td><td>Unprompted</td><td>Unprompted</td></tr>
+  <tr><td class="k">7</td><td>Harmonised options tried before first commit</td><td>2</td><td>2</td><td>2</td><td>1</td><td>2</td></tr>
+  <tr><td class="k">8</td><td>Method for the kept colour</td><td>Menu</td><td>Menu</td><td>Menu</td><td>Menu</td><td>Menu</td></tr>
+  <tr><td class="k">9</td><td>Thread noticed</td><td>Yes</td><td>Yes</td><td>—</td><td>Yes</td><td>Yes</td></tr>
+  <tr><td class="k">10</td><td>Armchair placed first try</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+  <tr><td class="k">11</td><td>Rotate found</td><td>Unprompted</td><td>Unprompted</td><td>Unprompted</td><td>Unprompted</td><td>Unprompted</td></tr>
+  <tr><td class="k">12</td><td>Clock used · stops visited</td><td>Yes · 5</td><td>— · 3</td><td>Yes · 4</td><td>Yes · 5</td><td>Yes · 3</td></tr>
+  <tr><td class="k">13</td><td>Lamp found</td><td>Prompted</td><td>Unprompted</td><td>Prompted</td><td>Unprompted</td><td>Unprompted</td></tr>
+  <tr><td class="k">14</td><td>Menu opened · furniture</td><td>Unprompted · Added furniture</td><td>Unprompted · Added furniture</td><td>Unprompted</td><td>Unprompted</td><td>Unprompted</td></tr>
+  <tr><td class="k">15</td><td>Preset switched</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+  <tr><td class="k">16</td><td>Confidence 1–5</td><td>5</td><td>4</td><td>4</td><td>4</td><td>5</td></tr>
+  <tr><td class="k">17a</td><td>Helpful or restrictive? (hold-up users)</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+  <tr><td class="k">17b</td><td>Why the menu? (menu users)</td><td>—</td><td>—</td><td>Easier to use</td><td>More intuitive</td><td>Easy setup</td></tr>
+  <tr><td class="k">18</td><td>Rejected colour, why</td><td>Light colour , personal preference</td><td>—</td><td>Light colour by personal preference</td><td>Black colour personal</td><td>—</td></tr>
+  <tr><td class="k">19</td><td>Trusted more, why</td><td>From the room, she misses more physical interaction</td><td>—</td><td>Menu, easier to use</td><td>Menu, more intuitive</td><td>—</td></tr>
+  <tr><td class="k">20</td><td>Time of day changed a decision</td><td>No</td><td>—</td><td>No</td><td>—</td><td>—</td></tr>
+  <tr><td class="k">21</td><td>One thing that confused them</td><td>The drag from the furnitures</td><td>—</td><td>Everything was pretty smooth</td><td>—</td><td>—</td></tr>
+</table>
+
+<h2><span class="num">B</span>Prompts as logged, with the scripted wording</h2>
+<div class="two">
+<div>
+<table>
+  <tr><th>P</th><th>Prompt numbers, seconds after the first prompt logged</th></tr>
+  <tr><td class="k">P1</td><td>1 (0 s) · 4 (5 s) · 3 (102 s) · 8 (111 s)</td></tr>
+  <tr><td class="k">P2</td><td>1 (0 s) · 3 (8 s) · 6 (10 s) · 8 (12 s)</td></tr>
+  <tr><td class="k">P3</td><td>3 (0 s) · 5 (73 s) · 3 (138 s) · 2 (139 s) · 8 (158 s)</td></tr>
+  <tr><td class="k">P4</td><td>1 (0 s) · 2 (1 s) · 6 (219 s) · 8 (230 s)</td></tr>
+  <tr><td class="k">P5</td><td>3, 5, 7, 6, 8 all within 1.5 s (entered afterwards)</td></tr>
+</table>
+<p>Every prompt is stamped phase "task 1" because the phase timers were not started. Gaps of a second or less mean entry after the fact, not delivery.</p>
+</div>
+<div>
+<table>
+  <tr><th>#</th><th>Scripted prompt (only after ~20 s stuck)</th></tr>
+  <tr><td class="k">1</td><td>"The floor and sofa are staying — everything else can change."</td></tr>
+  <tr><td class="k">2</td><td>"Move your hand close to the floor or the sofa."</td></tr>
+  <tr><td class="k">3</td><td>"Press the trigger on the little colour tab."</td></tr>
+  <tr><td class="k">4</td><td>"Try holding it near a wall."</td></tr>
+  <tr><td class="k">5</td><td>"Try twisting your wrist while holding it."</td></tr>
+  <tr><td class="k">6</td><td>"Point at the floor and press the trigger." (opens the menu)</td></tr>
+  <tr><td class="k">7</td><td>"Squeeze the grip to hold the furniture; let go to place it. Push the thumbstick to turn it."</td></tr>
+  <tr><td class="k">8</td><td>"Touch the clock by the window."</td></tr>
+</table>
+</div>
+</div>
+
+<h2><span class="num">C</span>Data-quality and transcription notes</h2>
+<ul>
+  <li><b>Prompt timing and order are unreliable</b> (Appendix B). Which prompts were used is reliable; when, and in which phase, is not.</li>
+  <li><b>Row 3 against prompt 3.</b> P1, P2, P3 and P5 are logged "unprompted" in row 3, and each also has prompt 3 ("press the trigger on the little colour tab") in their list. Since Task 1 begins with a sample placed in the hand, prompt 3 may have been used later to pull a second sample, but the log cannot show this. A1′ is reported as provisional for this reason.</li>
+  <li><b>Prompt 8 for all five.</b> Clock use (row 12) followed both the Task 2 instruction and, at some point, prompt 8, so it is not a discovery measure.</li>
+  <li><b>Prompt 6 for P2, P4, P5</b> reveals the menu, so for those three the menu was shown at some point although row 14 (Task 2) logs it opened unprompted. P1 and P3 reached the menu without prompt 6. <b>Prompt 7 for P5</b> names the thumbstick, although row 11 logs rotate as unprompted.</li>
+  <li><b>Row 5</b> was typed in whole minutes, not read off the stopwatch. P4 and P5's 4 min exceed the 2-minute task: either the task ran long or "4" means "not within the task".</li>
+  <li><b>Row 17a was never asked.</b> It branched on row 8 = hold-up or both; row 8 was menu for all five. This is an instrument design error, not a missing entry.</li>
+  <li><b>Blanks are blanks</b>, not "no": P4 row 3, P3 row 9, P2 row 12 (yes/no), and several of rows 17–21.</li>
+  <li>The logger's prompt wording had been reworded for desktop mode; on the headset the facilitator spoke the controller versions above.</li>
+  <li>P1 and P2's records were created on Thu 24 Sep (dry-run entries) and overwritten on the day; all values shown were entered on 25 Sep.</li>
+  <li>Observer notes in §2 are lightly tidied for spelling; the raw text is: P1 "different iteraction with the lamp (fisical interaction) · Gaming interaction like ballon trough in the wall and change the colour"; P2 "Other types of room"; P4 "Too sensitive the fortitude moving · Swap for the menu" ("fortitude" read as an autocorrect of "furniture").</li>
+</ul>
+
+<h2><span class="num">D</span>Session and device notes</h2>
+<table>
+  <tr><th style="width:24%">Item</th><th>Note</th></tr>
+  <tr><td>Hardware</td><td>Meta Quest 3S (borrowed), controllers. APK sideloaded over USB on the day. Performance 72 fps held (logcat <code>VrApi FPS=72/72</code>; log in <code>testing-data/ip2a/device/</code>, last minutes only).</td></tr>
+  <tr><td>Session times (logger)</td><td>P1 ≈ 14:37 · P2 ≈ 14:59 · P3 ≈ 15:21 · P4 ≈ 15:40 · P5 ≈ 15:50.</td></tr>
+  <tr><td>Interruptions</td><td>Meta button pressed twice ≈ 15:19, during P3's session (system-reserved, can't be blocked). Headset slept 15:31–15:37 between P3 and P4 (proximity sensor); disabled from 15:38, so P4 and P5 ran without it.</td></tr>
+  <tr><td>Fix on the day, before sessions</td><td>Lamp, clock and preset frames only responded to physical touch on the headset; point + trigger was added so they can also be pressed with the ray (commit <code>edd1d07</code>).</td></tr>
+  <tr><td>Preset at start</td><td>Scandi living room for everyone, so the kept floor and sofa were identical across participants. App restarted between participants.</td></tr>
+</table>
+
+</body>
+</html>
