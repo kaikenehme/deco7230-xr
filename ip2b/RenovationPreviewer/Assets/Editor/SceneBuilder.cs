@@ -24,7 +24,8 @@ public static class SceneBuilder
     public static readonly Vector3 MenuOffset = new(0f, 0.16f, 0.40f);   // controller menu, left-hand local
     const int TeleportLayer = RoomSpec.TeleportLayer;
     // Window in Wall_S: centre offset along the wall, sill height, width, height (metres).
-    public const float WindowX = 0.8f, WindowSill = 1.0f, WindowW = 2.0f, WindowH = 1.2f;
+    public const float WindowX = 0.3f, WindowSill = 0.6f, WindowW = 2.2f, WindowH = 1.7f;
+    public const float StartYaw = 235f;   // start pose looks at the sofa corner: sofa, arc lamp, window
 
     public static void Build()
     {
@@ -34,7 +35,9 @@ public static class SceneBuilder
         Directory.CreateDirectory("Assets/Prefabs");
 
         var timber = MakeMat("Timber", new Color(0.545f, 0.353f, 0.169f));
-        var offwhite = MakeMat("OffWhite", new Color(0.93f, 0.91f, 0.87f));
+        var offwhite = MakeMat("OffWhite", Hex("#DCD1BF"));   // warm white walls (IP2b)
+        var ceilingMat = MakeMat("Ceiling", Hex("#EBE6DC"));
+        var oak = MakeMat("Oak", Hex("#8C6239"));
         var sofaGrey = MakeMat("SofaGrey", new Color(0.45f, 0.45f, 0.48f));
         var trimWhite = MakeMat("TrimWhite", new Color(0.98f, 0.98f, 0.96f));
         var tableWood = MakeMat("TableWood", new Color(0.35f, 0.24f, 0.15f));
@@ -62,7 +65,7 @@ public static class SceneBuilder
         ground.GetComponent<Renderer>().sharedMaterial = MakeMat("Ground", new Color(0.30f, 0.36f, 0.26f));
         MakeSurface("Wall_E", new Vector3(hw + T / 2f, hh, 0), new Vector3(T, RoomH, RoomD + 2 * T), offwhite, SurfaceState.Change, SurfaceKind.Wall);
         MakeSurface("Wall_W", new Vector3(-(hw + T / 2f), hh, 0), new Vector3(T, RoomH, RoomD + 2 * T), offwhite, SurfaceState.Change, SurfaceKind.Wall);
-        MakeSurface("Ceiling", new Vector3(0, RoomH + T / 2f, 0), new Vector3(RoomW + 2 * T, T, RoomD + 2 * T), offwhite, SurfaceState.Change, SurfaceKind.Ceiling);
+        MakeSurface("Ceiling", new Vector3(0, RoomH + T / 2f, 0), new Vector3(RoomW + 2 * T, T, RoomD + 2 * T), ceilingMat, SurfaceState.Change, SurfaceKind.Ceiling);
         MakeSurface("Door", new Vector3(hw - 0.8f, 1.05f, hd - 0.02f), new Vector3(0.9f, 2.1f, 0.06f), trimWhite, SurfaceState.Change, SurfaceKind.Trim);
         MakeSurface("Trim", new Vector3(-hw + 1.2f, 0.075f, hd - 0.02f), new Vector3(2.4f, 0.15f, 0.06f), trimWhite, SurfaceState.Change, SurfaceKind.Trim);
 
@@ -73,17 +76,26 @@ public static class SceneBuilder
 
         var floorBounds = new Bounds(Vector3.zero, new Vector3(RoomW, T, RoomD));
 
-        // --- Lamp on side table (diegetic light control, spec §7) ---
-        var table = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        table.name = "SideTable";
-        table.transform.position = new Vector3(hw - 0.5f, 0.25f, -hd + 0.4f);
-        table.transform.localScale = new Vector3(0.4f, 0.5f, 0.4f);
-        table.GetComponent<Renderer>().sharedMaterial = tableWood;
+        // --- Arc floor lamp in the SW corner beside the sofa (diegetic light control, spec §7) ---
+        var catalogueForShell = AssetDatabase.LoadAssetAtPath<Catalogue>("Assets/Catalogue/Catalogue.asset");
+        var arcRoot = new GameObject("ArcLamp");
+        arcRoot.transform.position = new Vector3(-2.35f, 0f, -2.05f);
+        var shadePos = arcRoot.transform.position + new Vector3(0f, 1.6f, 0f);
+        var arcPrefab = catalogueForShell != null ? catalogueForShell.Furniture("arc_floor_lamp")?.prefab : null;
+        if (arcPrefab != null)
+        {
+            var arc = (GameObject)PrefabUtility.InstantiatePrefab(arcPrefab, arcRoot.transform);
+            arc.name = "arc_floor_lamp";
+            var ab = Bounds(arc);
+            shadePos = new Vector3(ab.center.x, ab.max.y - 0.2f, ab.max.z - 0.17f);   // shade hangs at the +Z end of the arc
+        }
+        else Debug.LogWarning("SceneBuilder: arc_floor_lamp not in catalogue — run Import Catalogue");
 
         var lamp = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         lamp.name = "Lamp";
-        lamp.transform.position = new Vector3(hw - 0.5f, 0.75f, -hd + 0.4f);
-        lamp.transform.localScale = Vector3.one * 0.25f;
+        lamp.transform.SetParent(arcRoot.transform, false);
+        lamp.transform.position = shadePos;            // glowing bulb inside the brass shade
+        lamp.transform.localScale = Vector3.one * 0.2f;
         var lampCol = (SphereCollider)lamp.GetComponent<Collider>();
         lampCol.isTrigger = true;
         lampCol.center = new Vector3(0f, -0.4f, 0f);   // local; reaches down over the pull cord
@@ -118,7 +130,8 @@ public static class SceneBuilder
         lampCtrl.shade = lamp.GetComponent<Renderer>();
 
         // --- Wall clock beside the window: touch = next time of day (T7) ---
-        var clock = MakeClock(new Vector3(-1.4f, 1.9f, -hd + 0.04f), trimWhite, tableWood);
+        var clock = MakeClock(new Vector3(-2.15f, 1.9f, -hd + 0.04f), trimWhite, tableWood);   // left of the curtains
+        BuildDressing(catalogueForShell, hw, hd, oak, trimWhite);
 
         // --- Sky + ambient. TimeOfDayController is the only runtime writer; these are the 10:00 defaults
         //     so the saved scene and the first frame agree. ---
@@ -144,7 +157,7 @@ public static class SceneBuilder
             .Select(n => AssetDatabase.LoadAssetAtPath<RoomPreset>(PresetAuthoring.AssetPath(n)))
             .Where(x => x != null).ToArray();
         if (applier.presets.Length == 0) Debug.LogWarning("SceneBuilder: no presets — run Renovation → Build Presets first");
-        MakePresetFrames(applier, new Vector3(-hw + 0.03f, 1.5f, 0f), trimWhite);
+        MakePresetFrames(applier, new Vector3(-0.5f, 1.5f, hd - 0.03f), trimWhite);   // Wall_N, behind the start pose's right shoulder
         var tod = managers.AddComponent<TimeOfDayController>();
         tod.sun = sun;
         tod.sky = sky;
@@ -166,8 +179,8 @@ public static class SceneBuilder
         if (rigPath != null)
         {
             rig = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(rigPath));
-            rig.transform.position = new Vector3(0.3f, 0, 0.8f);
-            rig.transform.rotation = Quaternion.Euler(0f, 180f, 0f);   // start facing the kept sofa + floor
+            rig.transform.position = new Vector3(0.9f, 0, 1.3f);
+            rig.transform.rotation = Quaternion.Euler(0f, StartYaw, 0f);
             WireControllers(rig, samplePrefab, schemeMgr, floorBounds);
 
             var onboarding = managers.AddComponent<OnboardingSequence>();
@@ -372,14 +385,15 @@ public static class SceneBuilder
 
     /// <summary>One logical wall (Surface on the root) built from four cubes around an opening.
     /// opening.x = centre offset along the wall, opening.y = sill height above the floor.</summary>
-    /// <summary>Three framed pictures on Wall_W (a left head-turn from the start pose); touch one to dress the room.</summary>
+    /// <summary>One framed picture per preset on Wall_N; touch one to dress the room.</summary>
     static void MakePresetFrames(PresetApplier applier, Vector3 wallInside, Material frameMat)
     {
         for (int i = 0; i < applier.presets.Length; i++)
         {
             var preset = applier.presets[i];
             var root = new GameObject($"PresetFrame_{i}");
-            root.transform.position = wallInside + new Vector3(0f, 0f, (i - (applier.presets.Length - 1) / 2f) * 1.5f);
+            root.transform.rotation = Quaternion.Euler(0f, 90f, 0f);   // built facing +X, turned to face into the room from Wall_N (-Z)
+            root.transform.position = wallInside + new Vector3((i - (applier.presets.Length - 1) / 2f) * 1.5f, 0f, 0f);
             var backing = MakePart(root, "Frame", new Vector3(0f, 0f, 0f), new Vector3(0.05f, 0.50f, 0.60f), frameMat, keepCollider: true);
             var picture = MakePart(root, "Picture", new Vector3(0.03f, 0f, 0f), new Vector3(0.01f, 0.40f, 0.50f), frameMat);
             var cardName = System.IO.Path.GetFileNameWithoutExtension(AssetDatabase.GetAssetPath(preset));
@@ -521,5 +535,89 @@ public static class SceneBuilder
         m.SetFloat("_AtmosphereThickness", 1.0f);
         AssetDatabase.CreateAsset(m, path);
         return m;
+    }
+
+    static Color Hex(string h) { ColorUtility.TryParseHtmlString(h, out var c); return c; }
+
+    static Bounds Bounds(GameObject go)
+    {
+        var rends = go.GetComponentsInChildren<Renderer>();
+        var b = rends[0].bounds; foreach (var r in rends) b.Encapsulate(r.bounds);
+        return b;
+    }
+
+    static GameObject Place(Catalogue cat, string id, string name, Vector3 pos, float yaw)
+    {
+        var prefab = cat != null ? cat.Furniture(id)?.prefab : null;
+        if (prefab == null) { Debug.LogWarning($"SceneBuilder: {id} not in catalogue — run Import Catalogue"); return new GameObject(name); }
+        var go = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
+        go.name = name;
+        go.transform.SetPositionAndRotation(pos, Quaternion.Euler(0f, yaw, 0f));
+        return go;
+    }
+
+    /// <summary>IP2b dressing that belongs to the room, not a preset: garden view, beam, art, curtains, pendant.</summary>
+    static void BuildDressing(Catalogue cat, float hw, float hd, Material oak, Material trim)
+    {
+        // Garden photo (Poly Haven "ballawley_park", CC0, tonemapped + cropped) outside the window.
+        var view = GameObject.CreatePrimitive(PrimitiveType.Quad);
+        view.name = "WindowView";
+        Object.DestroyImmediate(view.GetComponent<Collider>());
+        view.transform.position = new Vector3(WindowX, WindowSill + WindowH / 2f + 0.2f, -hd - 2.5f);
+        view.transform.rotation = Quaternion.Euler(0f, 180f, 0f);   // quad faces -Z by default; turn it to face the room
+        view.transform.localScale = new Vector3(7f, 3.5f, 1f);
+        var viewMat = AssetDatabase.LoadAssetAtPath<Material>("Assets/Materials/WindowView.mat");
+        if (viewMat == null) { viewMat = new Material(Shader.Find("Universal Render Pipeline/Unlit")); AssetDatabase.CreateAsset(viewMat, "Assets/Materials/WindowView.mat"); }
+        viewMat.SetTexture("_BaseMap", AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Materials/WindowView.jpg"));
+        viewMat.mainTexture = viewMat.GetTexture("_BaseMap");
+        EditorUtility.SetDirty(viewMat);
+        view.GetComponent<Renderer>().sharedMaterial = viewMat;
+
+        // Oak ceiling beam across the room (the timber warmth of reference F).
+        var beam = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        beam.name = "Beam";
+        Object.DestroyImmediate(beam.GetComponent<Collider>());
+        beam.transform.position = new Vector3(0f, RoomH - 0.11f, 0.2f);
+        beam.transform.localScale = new Vector3(RoomW, 0.22f, 0.18f);
+        beam.GetComponent<Renderer>().sharedMaterial = oak;
+
+        // Two abstract prints above the sofa on Wall_W (room side faces +X).
+        MakeArt("Art_0", new Vector3(-hw + 0.03f, 1.65f, -0.35f), oak, Hex("#EEE7DA"), Hex("#B5603F"), Hex("#8E9A7B"));
+        MakeArt("Art_1", new Vector3(-hw + 0.03f, 1.65f, 0.75f), oak, Hex("#E9E1D2"), Hex("#C9A06A"), Hex("#5A4E45"));
+
+        // Curtains either side of the window, on a brass rail.
+        float left = WindowX - WindowW / 2f, right = WindowX + WindowW / 2f, cz = -hd + 0.14f;
+        Place(cat, "linen_curtain", "Curtain_L", new Vector3(left - 0.4f, 0f, cz), 0f);
+        Place(cat, "linen_curtain", "Curtain_R", new Vector3(right + 0.4f, 0f, cz), 0f);
+        var rail = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+        rail.name = "CurtainRail";
+        Object.DestroyImmediate(rail.GetComponent<Collider>());
+        rail.transform.position = new Vector3(WindowX, 2.55f, cz);
+        rail.transform.rotation = Quaternion.Euler(0f, 0f, 90f);
+        rail.transform.localScale = new Vector3(0.025f, (right - left) / 2f + 0.9f, 0.025f);
+        rail.GetComponent<Renderer>().sharedMaterial = MakeMat("Brass", Hex("#B8913F"));
+
+        // Woven pendant over the coffee table, cord to the ceiling.
+        var pendant = Place(cat, "woven_pendant", "Pendant", new Vector3(-0.9f, 1.75f, 0.2f), 0f);
+        float top = 1.75f + 0.31f;
+        var cord = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+        cord.name = "Cord";
+        Object.DestroyImmediate(cord.GetComponent<Collider>());
+        cord.transform.SetParent(pendant.transform, false);
+        cord.transform.position = new Vector3(-0.9f, (top + RoomH) / 2f, 0.2f);
+        cord.transform.localScale = new Vector3(0.008f, (RoomH - top) / 2f, 0.008f);
+        cord.GetComponent<Renderer>().sharedMaterial = MakeMat("Cord", Hex("#1E1E1E"));
+    }
+
+    /// <summary>Framed abstract print facing +X: oak frame, canvas, a circle and a block.</summary>
+    static void MakeArt(string name, Vector3 pos, Material frame, Color canvas, Color circle, Color block)
+    {
+        var root = new GameObject(name);
+        root.transform.position = pos;
+        MakePart(root, "Frame", Vector3.zero, new Vector3(0.03f, 1.1f, 0.9f), frame);
+        MakePart(root, "Canvas", new Vector3(0.016f, 0f, 0f), new Vector3(0.005f, 1.02f, 0.82f), MakeMat(name + "_Canvas", canvas));
+        var c = MakePart(root, "Circle", new Vector3(0.02f, 0.15f, -0.08f), new Vector3(0.5f, 0.004f, 0.5f), MakeMat(name + "_Circle", circle), PrimitiveType.Cylinder);
+        c.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
+        MakePart(root, "Block", new Vector3(0.022f, -0.25f, 0.08f), new Vector3(0.005f, 0.28f, 0.5f), MakeMat(name + "_Block", block));
     }
 }

@@ -37,25 +37,26 @@ public class SceneWiringTests
     }
 
     [UnityTest]
-    public IEnumerator PresetFrames_ThreeOnWallW_Wired()
+    public IEnumerator PresetFrames_OnWallN_Wired()
     {
         yield return null; yield return null;
         var frames = Object.FindObjectsByType<PresetFrame>(FindObjectsSortMode.None).OrderBy(f => f.index).ToList();
-        Assert.AreEqual(3, frames.Count);
         var applier = Object.FindObjectsByType<PresetApplier>(FindObjectsSortMode.None).Single();
-        for (int i = 0; i < 3; i++)
+        Assert.AreEqual(applier.presets.Length, frames.Count);
+        for (int i = 0; i < frames.Count; i++)
         {
             Assert.AreSame(applier, frames[i].applier);
             Assert.AreEqual(i, frames[i].index);
             Assert.IsNotNull(frames[i].frame);
-            Assert.Less(frames[i].transform.position.x, -RoomSpec.W / 2f + 0.1f, "on Wall_W");
+            Assert.Greater(frames[i].transform.position.z, RoomSpec.D / 2f - 0.2f, "on Wall_N");
             Assert.IsTrue(frames[i].GetComponent<SphereCollider>().isTrigger);
         }
         Assert.IsTrue(frames[0].IsCurrent);
-        applier.Apply(2);
+        int last = frames.Count - 1;
+        applier.Apply(last);
         yield return null;
-        Assert.IsTrue(frames[2].IsCurrent);
-        Assert.AreEqual(applier.presets[2].furniture.Count, Object.FindObjectsByType<FurnitureSlot>(FindObjectsSortMode.None).Length, "old pieces gone, new ones in");
+        Assert.IsTrue(frames[last].IsCurrent);
+        Assert.AreEqual(applier.presets[last].furniture.Count, Object.FindObjectsByType<FurnitureSlot>(FindObjectsSortMode.None).Length, "old pieces gone, new ones in");
     }
 
     [UnityTest]
@@ -257,7 +258,7 @@ public class SceneWiringTests
         Assert.IsNotNull(tele, "floor is a teleport area");
         Assert.AreEqual(1 << RoomSpec.TeleportLayer, tele.interactionLayers.value, "teleport layer only");
         var rig = GameObject.Find("XR Origin (XR Rig)");
-        Assert.AreEqual(180f, rig.transform.eulerAngles.y, 0.5f, "rig faces the sofa");
+        Assert.AreEqual(SceneBuilder_StartYaw, rig.transform.eulerAngles.y, 0.5f, "rig faces the sofa corner");
     }
     [UnityTest]
     public IEnumerator EverySurface_HasPullAffordance_AndControllersGlow()
@@ -433,5 +434,66 @@ public class SceneWiringTests
         Assert.AreSame(desk, EditorDesktopRig.Current);
         Assert.AreEqual(CursorLockMode.None, Cursor.lockState, "cursor free to aim");
         Assert.IsFalse(desk.head.GetComponent<UnityEngine.InputSystem.XR.TrackedPoseDriver>().enabled, "head driven by the mouse, not the simulator");
+    }
+
+    const float SceneBuilder_StartYaw = 235f;   // mirrors SceneBuilder.StartYaw (Editor assembly not visible here)
+
+    [UnityTest]
+    public IEnumerator Room_IsLivingRoomSized()
+    {
+        yield return null;
+        Assert.AreEqual(5.5f, RoomSpec.W, 1e-4f);
+        Assert.AreEqual(5.0f, RoomSpec.D, 1e-4f);
+        Assert.AreEqual(2.7f, RoomSpec.H, 1e-4f);
+        var ceiling = Surface.All.Single(s => s != null && s.name == "Ceiling");
+        Assert.AreEqual(RoomSpec.H, ceiling.WorldBounds.min.y, 0.01f, "ceiling underside at H");
+    }
+
+    [UnityTest]
+    public IEnumerator Window_HasGardenView_AndTwoCurtains()
+    {
+        yield return null;
+        var view = GameObject.Find("WindowView");
+        Assert.IsNotNull(view, "garden backdrop outside the window");
+        Assert.Less(view.transform.position.z, -RoomSpec.D / 2f - 1f, "outside Wall_S");
+        Assert.IsNotNull(view.GetComponent<Renderer>().sharedMaterial.mainTexture, "textured with the garden photo");
+        foreach (var n in new[] { "Curtain_L", "Curtain_R" })
+        {
+            var c = GameObject.Find(n);
+            Assert.IsNotNull(c, n);
+            Assert.Less(c.transform.position.z, -RoomSpec.D / 2f + 0.3f, n + " on Wall_S");
+        }
+        Assert.Less(GameObject.Find("Curtain_L").transform.position.x, GameObject.Find("Curtain_R").transform.position.x);
+    }
+
+    [UnityTest]
+    public IEnumerator Shell_HasBeamArtAndPendant()
+    {
+        yield return null;
+        var beam = GameObject.Find("Beam");
+        Assert.IsNotNull(beam);
+        Assert.AreEqual(RoomSpec.H - 0.11f, beam.transform.position.y, 0.02f, "under the ceiling");
+        foreach (var n in new[] { "Art_0", "Art_1" })
+        {
+            var a = GameObject.Find(n);
+            Assert.IsNotNull(a, n);
+            Assert.Less(a.transform.position.x, -RoomSpec.W / 2f + 0.1f, n + " on Wall_W");
+        }
+        var pendant = GameObject.Find("Pendant");
+        Assert.IsNotNull(pendant);
+        Assert.IsNotNull(pendant.transform.Find("Cord"), "cord up to the ceiling");
+        Assert.Greater(pendant.transform.position.y, 1.6f, "head clearance");
+    }
+
+    [UnityTest]
+    public IEnumerator Lamp_IsArcLamp_InSouthWestCorner()
+    {
+        yield return null;
+        var lamp = Object.FindObjectsByType<LampController>(FindObjectsSortMode.None).Single();
+        var root = lamp.transform.parent;
+        Assert.IsNotNull(root, "lamp controller sits inside the arc lamp");
+        Assert.AreEqual(-2.35f, root.position.x, 0.05f);
+        Assert.AreEqual(-2.05f, root.position.z, 0.05f);
+        Assert.IsNotNull(root.Find("arc_floor_lamp"), "arc lamp visual");
     }
 }

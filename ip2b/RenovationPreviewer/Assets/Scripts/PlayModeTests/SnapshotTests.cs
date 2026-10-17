@@ -41,13 +41,21 @@ public class SnapshotTests
         Object.Destroy(tex); cam.targetTexture = null; rt.Release(); Object.Destroy(go);
     }
 
-    static readonly Vector3 Eye = new(0.3f, 1.5f, 0.8f);   // rig start, standing height
+    static readonly Vector3 Eye = new(0.9f, 1.5f, 1.3f);   // rig start (IP2b), standing height
 
     [UnityTest]
     public IEnumerator Snapshots()
     {
         var tod = Object.FindObjectsByType<TimeOfDayController>(FindObjectsSortMode.None).Single();
         var applier = Object.FindObjectsByType<PresetApplier>(FindObjectsSortMode.None).Single();
+
+        // IP2b views of the 5.5 x 5 m living room
+        Shoot("20_start_view", Eye, new Vector3(-2.2f, 1.0f, -1.2f));
+        Shoot("21_living_sofa", new Vector3(1.9f, 1.6f, -1.4f), new Vector3(-2.2f, 1.0f, 0.4f), 75f);
+        Shoot("22_tv_wall", new Vector3(-1.8f, 1.5f, 0.2f), new Vector3(2.7f, 1.0f, 0.2f), 75f);
+        Shoot("23_window_curtains", new Vector3(0.4f, 1.6f, 2.0f), new Vector3(0.3f, 1.3f, -2.5f), 75f);
+        Shoot("24_frames_wallN", new Vector3(-0.4f, 1.5f, -0.8f), new Vector3(-0.5f, 1.5f, 2.5f), 70f);
+        Shoot("25_overview", new Vector3(2.5f, 2.5f, 2.3f), new Vector3(-1.0f, 0.5f, -0.8f), 85f);
 
         yield return new WaitForSeconds(0.6f);   // mid-pulse
         Shoot("00_onboarding_pulse", Eye, new Vector3(0f, 1.2f, -3.5f));
