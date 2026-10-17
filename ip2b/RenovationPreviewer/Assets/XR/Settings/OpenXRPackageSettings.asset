@@ -33,17 +33,7 @@ MonoBehaviour:
   m_Name: Standalone
   m_EditorClassIdentifier: 
   features:
-  - {fileID: -765441191410621552}
-  - {fileID: -4319720044416718866}
-  - {fileID: -704621706896526391}
-  - {fileID: -5088545818664734183}
-  - {fileID: -5435163742665224256}
-  - {fileID: -6312021966032808569}
-  - {fileID: -7675840813436883817}
-  - {fileID: 4735769411170359082}
   - {fileID: 7074133942214358121}
-  - {fileID: -1821043362655648715}
-  - {fileID: 9055025521156973220}
   - {fileID: 4711742014668333735}
   - {fileID: 3857582195823065637}
   - {fileID: -2895948582583054943}
@@ -55,6 +45,16 @@ MonoBehaviour:
   - {fileID: 4104819461564494243}
   - {fileID: 4414446528245877394}
   - {fileID: -1507466588858323798}
+  - {fileID: -704621706896526391}
+  - {fileID: -1821043362655648715}
+  - {fileID: -4319720044416718866}
+  - {fileID: -7675840813436883817}
+  - {fileID: 4735769411170359082}
+  - {fileID: 9055025521156973220}
+  - {fileID: -5435163742665224256}
+  - {fileID: -5088545818664734183}
+  - {fileID: -765441191410621552}
+  - {fileID: -6312021966032808569}
   - {fileID: -3488149951121957605}
   - {fileID: -6794240707337090922}
   - {fileID: 2036585836187596724}
@@ -126,7 +126,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 076937beb8763d94790d2e9cc1248ac8, type: 3}
   m_Name: ARSessionFeature Android
   m_EditorClassIdentifier: 
-  m_enabled: 0
+  m_enabled: 1
   nameUi: 'Meta Quest: Session'
   version: 0.1.0
   featureIdInternal: com.unity.openxr.feature.arfoundation-meta-session
@@ -455,7 +455,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d00bb9c182ae8406ca03773119fa07ea, type: 3}
   m_Name: ARPlaneFeature Android
   m_EditorClassIdentifier: 
-  m_enabled: 0
+  m_enabled: 1
   nameUi: 'Meta Quest: Planes'
   version: 0.1.0
   featureIdInternal: com.unity.openxr.feature.arfoundation-meta-plane
@@ -496,17 +496,7 @@ MonoBehaviour:
   m_Name: Android
   m_EditorClassIdentifier: 
   features:
-  - {fileID: -7800129600468067154}
-  - {fileID: 3031447504308987854}
-  - {fileID: 8055885090128928405}
-  - {fileID: -4132417004604437423}
-  - {fileID: -4740325433740744147}
-  - {fileID: -8109402953016033474}
-  - {fileID: -2735208144997273008}
-  - {fileID: -4104188958787532651}
   - {fileID: -2105759718649553382}
-  - {fileID: -8706513105658862173}
-  - {fileID: -2253256938265957803}
   - {fileID: -8969732775939180159}
   - {fileID: 7322222203474974744}
   - {fileID: 6688400628339069697}
@@ -517,6 +507,16 @@ MonoBehaviour:
   - {fileID: -7046136267140487922}
   - {fileID: 1066014767743378590}
   - {fileID: 804105020113319185}
+  - {fileID: 8055885090128928405}
+  - {fileID: -8706513105658862173}
+  - {fileID: 3031447504308987854}
+  - {fileID: -2735208144997273008}
+  - {fileID: -4104188958787532651}
+  - {fileID: -2253256938265957803}
+  - {fileID: -4740325433740744147}
+  - {fileID: -4132417004604437423}
+  - {fileID: -7800129600468067154}
+  - {fileID: -8109402953016033474}
   - {fileID: 3036395462302811721}
   - {fileID: 5067457755991470820}
   - {fileID: -2752588599629141655}
@@ -607,7 +607,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e567abbf4d944210acb6315178bb015, type: 3}
   m_Name: ARCameraFeature Android
   m_EditorClassIdentifier: 
-  m_enabled: 0
+  m_enabled: 1
   nameUi: 'Meta Quest: Camera (Passthrough)'
   version: 0.1.0
   featureIdInternal: com.unity.openxr.feature.arfoundation-meta-camera
@@ -668,7 +668,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 323d71788dcf5ca4b9cb3c4a90e38335, type: 3}
   m_Name: OpenXRLifeCycleFeature Android
   m_EditorClassIdentifier: 
-  m_enabled: 0
+  m_enabled: 1
   nameUi: 
   version: 0.1.0
   featureIdInternal: MetaOpenXR-OpenXRLifeCycle

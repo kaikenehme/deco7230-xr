@@ -3,6 +3,8 @@
     "rootNamespace": "",
     "references": [
         "Renovation.Runtime",
+        "Renovation.MR",
+        "Unity.XR.ARFoundation",
         "UnityEngine.TestRunner",
         "Unity.XR.Interaction.Toolkit",
         "Unity.InputSystem",

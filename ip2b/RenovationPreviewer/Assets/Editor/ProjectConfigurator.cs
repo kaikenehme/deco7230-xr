@@ -21,6 +21,7 @@ public static class ProjectConfigurator
         SetupXr(BuildTargetGroup.Standalone);
         ImportXriSamples();
         SetupInputForSimulator();
+        EnableMetaMr();
         AssetDatabase.SaveAssets();
         Debug.Log("ProjectConfigurator: done");
     }
@@ -136,6 +137,27 @@ public static class ProjectConfigurator
                 }
             }
         }
+    }
+
+    /// <summary>IP2b N7: Meta passthrough + plane detection for the MR showcase (Android only; VR is unaffected —
+    /// the AR session only starts when MrModeController switches MR on). Headless: -executeMethod ProjectConfigurator.EnableMetaMr</summary>
+    public static void EnableMetaMr()
+    {
+        var ids = new[]
+        {
+            "com.unity.openxr.feature.arfoundation-meta-session",
+            "com.unity.openxr.feature.arfoundation-meta-camera",
+            "com.unity.openxr.feature.arfoundation-meta-plane",
+        };
+        FeatureHelpers.RefreshFeatures(BuildTargetGroup.Android);
+        foreach (var id in ids)
+        {
+            var f = FeatureHelpers.GetFeatureWithIdForBuildTarget(BuildTargetGroup.Android, id);
+            if (f == null) { Debug.LogWarning($"ProjectConfigurator: Meta feature {id} not found"); continue; }
+            f.enabled = true;
+            Debug.Log($"ProjectConfigurator: enabled {id} for Android");
+        }
+        AssetDatabase.SaveAssets();
     }
 
     static void ImportXriSamples()
