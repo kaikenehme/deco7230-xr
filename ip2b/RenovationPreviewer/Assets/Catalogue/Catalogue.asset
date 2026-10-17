@@ -353,3 +353,33 @@ MonoBehaviour:
     category: 3
     thumbnail: {fileID: 2800000, guid: 4a97aa1b72bf14b7d8555e99df58f59a, type: 3}
     sampleColor: {r: 0.30980393, g: 0.47843137, b: 0.27058825, a: 1}
+  - name: TV on slatted unit
+    sourceId: tv_unit
+    prefab: {fileID: 7527841963075757286, guid: f4e284545946b495f906d0f46360cf62, type: 3}
+    category: 2
+    thumbnail: {fileID: 2800000, guid: 7e47d48e450b74fdb8082d11e3c46101, type: 3}
+    sampleColor: {r: 0.7882353, g: 0.64705884, b: 0.47843137, a: 1}
+  - name: Platform bed
+    sourceId: bed_platform
+    prefab: {fileID: 7214103181878286790, guid: f69f706228d5e4cc5ba5fc85f5ad5787, type: 3}
+    category: 5
+    thumbnail: {fileID: 2800000, guid: 0ac0e2669890d4d0abe23fba9d2ac1a3, type: 3}
+    sampleColor: {r: 0.7882353, g: 0.6313726, b: 0.23137255, a: 1}
+  - name: Walnut bedside table
+    sourceId: bed_nightstand
+    prefab: {fileID: 2278527064333780007, guid: 1b19480a0d9b6488f9a9209a51082570, type: 3}
+    category: 1
+    thumbnail: {fileID: 2800000, guid: cddcd2d7988354af0987a0ada3cfa7e1, type: 3}
+    sampleColor: {r: 0.36078432, g: 0.22745098, b: 0.12941177, a: 1}
+  - name: Bedside table + lamp
+    sourceId: bed_nightstand_lamp
+    prefab: {fileID: 1476159288853669841, guid: 3395df2c24ca74cdead514c24d60fd4f, type: 3}
+    category: 1
+    thumbnail: {fileID: 2800000, guid: a8c7df46e571a4da79c16c0822fa4cd0, type: 3}
+    sampleColor: {r: 0.36078432, g: 0.22745098, b: 0.12941177, a: 1}
+  - name: Vanity
+    sourceId: bed_vanity
+    prefab: {fileID: 2321544318952816601, guid: baea79031e84a4d2eb794d7879078259, type: 3}
+    category: 2
+    thumbnail: {fileID: 2800000, guid: 572cdb79c1d3a4c7c9bed878629c008c, type: 3}
+    sampleColor: {r: 0.36078432, g: 0.22745098, b: 0.12941177, a: 1}

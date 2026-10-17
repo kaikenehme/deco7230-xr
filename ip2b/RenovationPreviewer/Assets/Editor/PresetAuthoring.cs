@@ -4,14 +4,14 @@ using UnityEditor;
 using UnityEngine;
 
 /// <summary>
-/// Writes the three RoomPreset assets (+ card textures and frame materials) from code,
+/// Writes the two IP2b RoomPreset assets (Living, Bedroom) (+ card textures and frame materials) from code,
 /// resolving materials, paints and furniture through Catalogue.asset. Re-runnable.
 /// Menu: Renovation → Build Presets. Headless: -executeMethod PresetAuthoring.Build.
 /// </summary>
 public static class PresetAuthoring
 {
     const string Root = "Assets/Presets";
-    public static readonly string[] Names = { "Scandi", "MidCentury", "Bedroom" };
+    public static readonly string[] Names = { "Living", "Bedroom" };
     static readonly string[] Walls = { "Wall_N", "Wall_S", "Wall_E", "Wall_W" };
     static readonly string[] Trims = { "Door", "Trim", "WindowFrame" };
 
@@ -22,77 +22,51 @@ public static class PresetAuthoring
         if (cat == null) { Debug.LogError("PresetAuthoring: run Renovation → Import Catalogue first"); return; }
         if (!AssetDatabase.IsValidFolder(Root)) AssetDatabase.CreateFolder("Assets", "Presets");
 
-        // ---- Scandi: light oak kept, white walls, grey sofa ----
-        var scandi = Preset(cat, "Scandi", "Scandi");
-        Floor(cat, scandi, "WoodFloor051");
-        Paint(cat, scandi, Walls, "Whisper White");
-        Paint(cat, scandi, new[] { "Ceiling" }, "Vivid White");
-        Paint(cat, scandi, Trims, "Vivid White");
-        // Layout (all three): 9 x 7 m room, lounge on the window wall, reading nook by the lamp (SE),
-        // storage on the walls, plants in corners. Coffee table 40 cm off the sofa, 76 cm+ walkways,
-        // Wall_W (preset frames), the start spot, the door and the lamp kept clear (SceneWiringTests).
-        Place(cat, scandi, "Sofa_01", -1.4f, -3.07f, 0f, keep: true);            // under the clock
-        Place(cat, scandi, "coffee_table_round_01", -1.4f, -1.67f, 0f);
-        Place(cat, scandi, "modern_arm_chair_01", 0.45f, -1.85f, -105f);        // pair angled in on the table
-        Place(cat, scandi, "ArmChair_01", -3.2f, -1.85f, 105f);
-        Place(cat, scandi, "side_table_01", -2.65f, -3.15f, 0f);
-        Place(cat, scandi, "potted_plant_01", -3.95f, -3.0f, 0f);
-        Place(cat, scandi, "GreenChair_01", 3.1f, -2.1f, -45f);                 // reading nook, lamp at its shoulder
-        Place(cat, scandi, "side_table_tall_01", 3.85f, -1.75f, 0f);
-        Place(cat, scandi, "Shelf_01", 4.2f, 0.3f, -90f);                       // bookcase on Wall_E
-        Place(cat, scandi, "round_wooden_table_01", -2.0f, 2.1f, 0f);           // small table + two chairs, north side
-        Place(cat, scandi, "GreenChair_01", -2.0f, 1.05f, 0f);
-        Place(cat, scandi, "GreenChair_01", -0.95f, 2.1f, -90f);
-        Place(cat, scandi, "painted_wooden_shelves", -1.2f, 3.2f, 180f);
-        Swatches(cat, scandi, "WoodFloor051", "Whisper White", "Sofa_01");
+        // IP2b layouts for the 5.5 x 5 m room (x east, z north; yaw = the way the piece faces, 0 = +Z).
+        // Kept clear (SceneWiringTests): start spot (0.9, 1.3), preset frames on Wall_N (x -1.4..0.5),
+        // door (NE), arc lamp (SW corner). Mock-ups: ip2b/art/room_v2_*.png, ip2b/art/bedroom_v1.png.
 
-        // ---- Mid-century: walnut kept, terracotta accent wall behind the sofa ----
-        var mid = Preset(cat, "MidCentury", "Mid-century");
-        Floor(cat, mid, "WoodFloor043");
-        Paint(cat, mid, new[] { "Wall_N", "Wall_E", "Wall_W" }, "Antique White U.S.A.");
-        Paint(cat, mid, new[] { "Wall_S" }, "Terracotta", userColour: true);
-        Paint(cat, mid, new[] { "Ceiling" }, "Antique White U.S.A.");
-        Paint(cat, mid, Trims, "Natural White");
-        Place(cat, mid, "sofa_02", -1.4f, -2.99f, 0f, keep: true);
-        Place(cat, mid, "modern_coffee_table_01", -1.4f, -1.86f, 0f);
-        Place(cat, mid, "mid_century_lounge_chair", 0.5f, -1.9f, -110f);
-        Place(cat, mid, "modern_arm_chair_01", -3.2f, -1.85f, 105f);
-        Place(cat, mid, "side_table_tall_01", -2.65f, -3.15f, 0f);
-        Place(cat, mid, "potted_plant_01", -3.95f, -3.0f, 0f);
-        Place(cat, mid, "ArmChair_01", 3.0f, -2.0f, -45f);                      // reading nook
-        Place(cat, mid, "side_table_01", 3.85f, -1.55f, -90f);
-        Place(cat, mid, "wooden_display_shelves_01", 4.2f, 0.3f, -90f);
-        Place(cat, mid, "ClassicConsole_01", -1.4f, 3.15f, 180f);               // console on Wall_N, vase beside
-        Place(cat, mid, "ceramic_vase_01", -0.35f, 3.2f, 0f);
-        Place(cat, mid, "potted_plant_01", -4.0f, 3.15f, 0f);
-        Swatches(cat, mid, "WoodFloor043", "Antique White U.S.A.", "Terracotta");
+        // ---- Living: warm contemporary (references A + F) ----
+        var living = Preset(cat, "Living", "Living");
+        Floor(cat, living, "WoodFloor051");
+        Paint(cat, living, Walls, "Sandy Day");   // the mock-up's warm white (#DCD1BF)
+        Paint(cat, living, new[] { "Ceiling" }, "Whisper White");
+        Paint(cat, living, Trims, "Antique White U.S.A.");
+        Place(cat, living, "curved_sofa", -2.12f, 0.2f, 90f, keep: true);         // back to Wall_W, under the prints
+        Place(cat, living, "oval_marble_table", -0.9f, 0.2f, 90f);                // long axis along z, on the rug
+        Place(cat, living, "tv_unit", 2.53f, 0.2f, -90f);                         // against Wall_E, facing the sofa
+        Place(cat, living, "round_armchair", 0.9f, -1.6f, -45f);                  // by the window, angled to the table
+        Place(cat, living, "pouf", -0.9f, -1.25f, 0f);
+        Place(cat, living, "pouf", 2.05f, -1.65f, 0f);
+        Place(cat, living, "monstera_stand", -2.3f, 2.05f, 0f);                   // NW corner
+        Swatches(cat, living, "WoodFloor051", "Sandy Day", "round_armchair");
 
-        // ---- Bedroom: carpet and bed kept, warm walls, soft blue-grey behind the bed ----
-        // Headboard on the window wall under the clock (where the living rooms keep the sofa), so the
-        // kept bed is in view from the start spot. Nightstands either side, bench at the foot.
+        // ---- Bedroom: mid-century — walnut, teal wall behind the bed, mustard duvet ----
         var bed = Preset(cat, "Bedroom", "Bedroom");
-        Floor(cat, bed, "Carpet016");
-        Paint(cat, bed, new[] { "Wall_N", "Wall_E", "Wall_W" }, "Warm Neutral");
-        Paint(cat, bed, new[] { "Wall_S" }, "Tranquil Retreat", userColour: true);
-        Paint(cat, bed, new[] { "Ceiling" }, "Vivid White");
-        Paint(cat, bed, Trims, "Vivid White");
-        Place(cat, bed, "GothicBed_01", -1.4f, -2.45f, 0f, keep: true);         // 1.5 x 2.0 m, head to Wall_S
-        Place(cat, bed, "ClassicNightstand_01", -2.5f, -3.26f, 0f);
-        Place(cat, bed, "ClassicNightstand_01", -0.3f, -3.26f, 0f);
-        Place(cat, bed, "painted_wooden_bench", -1.4f, -1.05f, 0f);              // foot of the bed
-        Place(cat, bed, "GreenChair_01", 3.1f, -2.1f, -45f);                     // reading corner, lamp at its shoulder
-        Place(cat, bed, "side_table_tall_01", 3.85f, -1.75f, 0f);
-        Place(cat, bed, "drawer_cabinet", 4.22f, 0.4f, -90f);                    // chest of drawers on Wall_E
-        Place(cat, bed, "painted_wooden_cabinet", -1.5f, 3.15f, 180f);          // wardrobe on Wall_N
-        Place(cat, bed, "painted_wooden_shelves", 0.6f, 3.2f, 180f);
-        Place(cat, bed, "potted_plant_01", -3.95f, -3.0f, 0f);
-        Place(cat, bed, "potted_plant_04", 4.05f, 2.1f, 0f);
-        Swatches(cat, bed, "Carpet016", "Warm Neutral", "GothicBed_01");
+        Floor(cat, bed, "WoodFloor043");
+        Paint(cat, bed, new[] { "Wall_N", "Wall_S", "Wall_E" }, "Antique White U.S.A.");
+        PaintHex(p: bed, surfaces: new[] { "Wall_W" }, hex: "#2F6B6A", userColour: true);   // mid-century teal (no teal in the 24 Dulux set)
+        Paint(cat, bed, new[] { "Ceiling" }, "Whisper White");
+        Paint(cat, bed, Trims, "Antique White U.S.A.");
+        Place(cat, bed, "bed_platform", -1.75f, 0.2f, 90f, keep: true);           // headboard to Wall_W
+        Place(cat, bed, "bed_nightstand_lamp", -2.45f, -1.25f, 90f);
+        Place(cat, bed, "bed_nightstand", -2.45f, 1.65f, 90f);
+        Place(cat, bed, "bed_vanity", 2.38f, 0.0f, -90f);                         // against Wall_E
+        Place(cat, bed, "mid_century_lounge_chair", 1.0f, -1.6f, -45f);           // reading spot by the window
+        Place(cat, bed, "monstera_stand", 2.3f, -2.05f, 0f);
+        Place(cat, bed, "potted_plant_01", 2.35f, 1.15f, 0f);
+        Swatches(cat, bed, "WoodFloor043", "Antique White U.S.A.", "bed_platform");
 
-        foreach (var p in new[] { scandi, mid, bed }) { WriteCard(p); EditorUtility.SetDirty(p); }
+        foreach (var p in new[] { living, bed }) { WriteCard(p); EditorUtility.SetDirty(p); }
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
-        Debug.Log("PresetAuthoring: 3 presets written");
+        foreach (var old in new[] { "Scandi", "MidCentury" })   // retired in IP2b
+        {
+            AssetDatabase.DeleteAsset(AssetPath(old));
+            AssetDatabase.DeleteAsset(CardMaterialPath(old));
+            AssetDatabase.DeleteAsset($"{Root}/Card_{old}.png");
+        }
+        Debug.Log("PresetAuthoring: 2 presets written (Living, Bedroom)");
     }
 
     public static string AssetPath(string name) => $"{Root}/{name}.asset";
@@ -112,12 +86,20 @@ public static class PresetAuthoring
     {
         var m = cat.Material(materialId);
         if (m == null) { Debug.LogWarning($"PresetAuthoring: material {materialId} missing"); return; }
-        p.looks.Add(new SurfaceLookSpec { surfaceName = "Floor", state = SurfaceState.Keep, material = m.material, color = Color.white, sampleColor = m.sampleColor });
+        p.looks.Add(new SurfaceLookSpec { surfaceName = "Floor", state = SurfaceState.Change,   // IP2b N3: the floor takes paint
+            material = m.material, color = Color.white, sampleColor = m.sampleColor });
     }
 
     static void Paint(Catalogue cat, RoomPreset p, IEnumerable<string> surfaces, string paintName, bool userColour = false)
     {
         var c = PaintColour(cat, paintName);
+        foreach (var s in surfaces)
+            p.looks.Add(new SurfaceLookSpec { surfaceName = s, state = SurfaceState.Change, material = null, color = c, userColour = userColour, sampleColor = c });
+    }
+
+    static void PaintHex(RoomPreset p, IEnumerable<string> surfaces, string hex, bool userColour = false)
+    {
+        ColorUtility.TryParseHtmlString(hex, out var c);
         foreach (var s in surfaces)
             p.looks.Add(new SurfaceLookSpec { surfaceName = s, state = SurfaceState.Change, material = null, color = c, userColour = userColour, sampleColor = c });
     }

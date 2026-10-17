@@ -56,4 +56,9 @@ Poly Haven and ambientCG models and textures are CC0 (public domain); Sketchfab 
 - woven_pendant — Woven Bamboo Sphere Pendant Light · AT_DariusIulian · CC-BY · https://sketchfab.com/3d-models/fbe65646f78d449ca5d30314b396f535
 - linen_curtain — Curtain Flannel · lugsserg · CC-BY · https://sketchfab.com/3d-models/8fef4b925af84a658f95f2fc484d092c
 - monstera_stand — Monstera Deliciosa Potted Mid-Century plant · ChubbyPanda · CC-BY · https://sketchfab.com/3d-models/1ab9bf841df04c07b1819be596327629
+- tv_unit — Modern Slatted Wooden TV Stand · SaretiX · Free Standard · https://sketchfab.com/3d-models/f0e5b2882c864a4b9aec1266115a13a4 + PSX Flat Screen TV · Tomitos_ · CC-BY · https://sketchfab.com/3d-models/1a6db811760344f6a8e64be01e4d8f09
+- bed_platform — Bed FORSSA · leonardgraylar · CC-BY · https://sketchfab.com/3d-models/0e4ec2bb5aff42d8a324b3f8ab9ac9de (recoloured)
+- bed_nightstand — Bedside Table · Melonpolygons · CC-BY · https://sketchfab.com/3d-models/b25de0eb97c64a00a538f09fc7072f67
+- bed_nightstand_lamp — Bedside Table · Melonpolygons · CC-BY · https://sketchfab.com/3d-models/b25de0eb97c64a00a538f09fc7072f67 + Table Lamp 01 · nickhavas · CC-BY · https://sketchfab.com/3d-models/6c395859886f405fb065b31b3e41d680
+- bed_vanity — Wooden Dresser · FreakyCrab · CC-BY · https://sketchfab.com/3d-models/e887858c3a55439a809af72dd611f6c0 (recoloured)
 

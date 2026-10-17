@@ -56,6 +56,10 @@ public class SnapshotTests
         Shoot("23_window_curtains", new Vector3(0.4f, 1.6f, 2.0f), new Vector3(0.3f, 1.3f, -2.5f), 75f);
         Shoot("24_frames_wallN", new Vector3(-0.4f, 1.5f, -0.8f), new Vector3(-0.5f, 1.5f, 2.5f), 70f);
         Shoot("25_overview", new Vector3(2.5f, 2.5f, 2.3f), new Vector3(-1.0f, 0.5f, -0.8f), 85f);
+        applier.Apply(1); yield return null; yield return null;
+        Shoot("26_bedroom", new Vector3(1.9f, 1.6f, -1.4f), new Vector3(-2.2f, 0.8f, 0.4f), 75f);
+        Shoot("27_bedroom_vanity", new Vector3(-0.6f, 1.5f, -1.2f), new Vector3(2.7f, 1.0f, 0.3f), 75f);
+        applier.Apply(0); yield return null; yield return null;
 
         yield return new WaitForSeconds(0.6f);   // mid-pulse
         Shoot("00_onboarding_pulse", Eye, new Vector3(0f, 1.2f, -3.5f));

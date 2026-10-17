@@ -1,0 +1,109 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 401a185d182cf4d1aafd3032c7ba135e, type: 3}
+  m_Name: Living
+  m_EditorClassIdentifier: 
+  displayName: Living
+  floorSwatch: {r: 0.59295726, g: 0.46466073, b: 0.34829125, a: 1}
+  wallSwatch: {r: 0.84313726, g: 0.80784315, b: 0.75686276, a: 1}
+  accentSwatch: {r: 0.70980394, g: 0.3764706, b: 0.24705882, a: 1}
+  looks:
+  - surfaceName: Floor
+    state: 1
+    material: {fileID: 2100000, guid: 0fd9ca2da3791455ea176ba2d5735d93, type: 2}
+    color: {r: 1, g: 1, b: 1, a: 1}
+    userColour: 0
+    sampleColor: {r: 0.59295726, g: 0.46466073, b: 0.34829125, a: 1}
+  - surfaceName: Wall_N
+    state: 1
+    material: {fileID: 0}
+    color: {r: 0.84313726, g: 0.80784315, b: 0.75686276, a: 1}
+    userColour: 0
+    sampleColor: {r: 0.84313726, g: 0.80784315, b: 0.75686276, a: 1}
+  - surfaceName: Wall_S
+    state: 1
+    material: {fileID: 0}
+    color: {r: 0.84313726, g: 0.80784315, b: 0.75686276, a: 1}
+    userColour: 0
+    sampleColor: {r: 0.84313726, g: 0.80784315, b: 0.75686276, a: 1}
+  - surfaceName: Wall_E
+    state: 1
+    material: {fileID: 0}
+    color: {r: 0.84313726, g: 0.80784315, b: 0.75686276, a: 1}
+    userColour: 0
+    sampleColor: {r: 0.84313726, g: 0.80784315, b: 0.75686276, a: 1}
+  - surfaceName: Wall_W
+    state: 1
+    material: {fileID: 0}
+    color: {r: 0.84313726, g: 0.80784315, b: 0.75686276, a: 1}
+    userColour: 0
+    sampleColor: {r: 0.84313726, g: 0.80784315, b: 0.75686276, a: 1}
+  - surfaceName: Ceiling
+    state: 1
+    material: {fileID: 0}
+    color: {r: 0.92156863, g: 0.9137255, b: 0.8784314, a: 1}
+    userColour: 0
+    sampleColor: {r: 0.92156863, g: 0.9137255, b: 0.8784314, a: 1}
+  - surfaceName: Door
+    state: 1
+    material: {fileID: 0}
+    color: {r: 0.9372549, g: 0.91764706, b: 0.8784314, a: 1}
+    userColour: 0
+    sampleColor: {r: 0.9372549, g: 0.91764706, b: 0.8784314, a: 1}
+  - surfaceName: Trim
+    state: 1
+    material: {fileID: 0}
+    color: {r: 0.9372549, g: 0.91764706, b: 0.8784314, a: 1}
+    userColour: 0
+    sampleColor: {r: 0.9372549, g: 0.91764706, b: 0.8784314, a: 1}
+  - surfaceName: WindowFrame
+    state: 1
+    material: {fileID: 0}
+    color: {r: 0.9372549, g: 0.91764706, b: 0.8784314, a: 1}
+    userColour: 0
+    sampleColor: {r: 0.9372549, g: 0.91764706, b: 0.8784314, a: 1}
+  furniture:
+  - sourceId: curved_sofa
+    position: {x: -2.12, y: 0, z: 0.2}
+    yaw: 90
+    keep: 1
+    sampleColor: {r: 0.9137255, g: 0.8901961, b: 0.84705883, a: 1}
+  - sourceId: oval_marble_table
+    position: {x: -0.9, y: 0, z: 0.2}
+    yaw: 90
+    keep: 0
+    sampleColor: {r: 0.9098039, g: 0.9019608, b: 0.88235295, a: 1}
+  - sourceId: tv_unit
+    position: {x: 2.53, y: 0, z: 0.2}
+    yaw: -90
+    keep: 0
+    sampleColor: {r: 0.7882353, g: 0.64705884, b: 0.47843137, a: 1}
+  - sourceId: round_armchair
+    position: {x: 0.9, y: 0, z: -1.6}
+    yaw: -45
+    keep: 0
+    sampleColor: {r: 0.70980394, g: 0.3764706, b: 0.24705882, a: 1}
+  - sourceId: pouf
+    position: {x: -0.9, y: 0, z: -1.25}
+    yaw: 0
+    keep: 0
+    sampleColor: {r: 0.9137255, g: 0.8901961, b: 0.84705883, a: 1}
+  - sourceId: pouf
+    position: {x: 2.05, y: 0, z: -1.65}
+    yaw: 0
+    keep: 0
+    sampleColor: {r: 0.9137255, g: 0.8901961, b: 0.84705883, a: 1}
+  - sourceId: monstera_stand
+    position: {x: -2.3, y: 0, z: 2.05}
+    yaw: 0
+    keep: 0
+    sampleColor: {r: 0.30980393, g: 0.47843137, b: 0.27058825, a: 1}

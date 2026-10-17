@@ -18,21 +18,21 @@ public class SceneWiringTests
         yield return null; // let Awake/OnEnable run
     }
 
-    static readonly string[] Shell = { "Floor", "Wall_N", "Wall_S", "Wall_E", "Wall_W", "Ceiling", "Door", "Trim", "WindowFrame" };
+    static readonly string[] Shell = { "Floor", "Wall_N", "Wall_S", "Wall_E", "Wall_W", "Ceiling", "Door", "Trim", "WindowFrame", "Rug" };
 
     [UnityTest]
     public IEnumerator Room_StartsInPreset0_ShellNineSurfaces_PlusPresetKeeps()
     {
         yield return null; yield return null;   // PresetApplier.Start ran
         var applier = Object.FindObjectsByType<PresetApplier>(FindObjectsSortMode.None).Single();
-        Assert.AreEqual(3, applier.presets.Length, "three presets wired");
+        Assert.AreEqual(2, applier.presets.Length, "Living + Bedroom wired");
         Assert.AreEqual(0, applier.Current, "preset 0 applied at Start");
         var surfaces = Surface.All.Where(s => s != null).ToList();
         var shell = surfaces.Where(s => s.GetComponent<FurnitureSlot>() == null).Select(s => s.name).OrderBy(n => n).ToList();
         CollectionAssert.AreEquivalent(Shell, shell);
         int keptSlots = surfaces.Count(s => s.GetComponent<FurnitureSlot>() != null && s.State == SurfaceState.Keep);
         Assert.AreEqual(applier.presets[0].furniture.Count(f => f.keep), keptSlots, "kept furniture from the preset");
-        Assert.AreEqual(SurfaceState.Keep, surfaces.Single(s => s.name == "Floor").State);
+        Assert.AreEqual(SurfaceState.Change, surfaces.Single(s => s.name == "Floor").State, "floor takes paint (IP2b N3)");
         Assert.AreEqual(applier.presets[0].furniture.Count, Object.FindObjectsByType<FurnitureSlot>(FindObjectsSortMode.None).Length, "every placement spawned");
     }
 
@@ -69,7 +69,7 @@ public class SceneWiringTests
             foreach (var f in p.furniture) Assert.IsNotNull(applier.catalogue.Furniture(f.sourceId)?.prefab, $"{p.displayName}: {f.sourceId}");
             foreach (var l in p.looks) CollectionAssert.Contains(Shell, l.surfaceName, $"{p.displayName}: look {l.surfaceName}");
             Assert.IsTrue(p.furniture.Any(f => f.keep), $"{p.displayName}: has a kept piece to pull from");
-            Assert.IsTrue(p.looks.Any(l => l.surfaceName == "Floor" && l.state == SurfaceState.Keep), $"{p.displayName}: floor kept");
+            Assert.IsTrue(p.looks.Any(l => l.surfaceName == "Floor" && l.state == SurfaceState.Change), $"{p.displayName}: floor takes paint (IP2b N3)");
         }
         // The kept floor really wears each preset's material at runtime.
         var floor = Surface.All.Single(x => x != null && x.name == "Floor");
@@ -225,7 +225,7 @@ public class SceneWiringTests
         foreach (var s in Surface.All.Where(s => s != null))
         {
             Assert.IsNotNull(s.GetComponent<MenuTarget>(), $"{s.name}: MenuTarget");
-            if (s.GetComponent<FurnitureSlot>() == null) Assert.AreNotEqual(SurfaceKind.None, s.Kind, $"{s.name}: kind set");
+            if (s.GetComponent<FurnitureSlot>() == null && s.State != SurfaceState.Keep) Assert.AreNotEqual(SurfaceKind.None, s.Kind, $"{s.name}: kind set");   // pull-only sources (rug) have no paint kind
         }
         var kept = Surface.All.First(s => s != null && s.GetComponent<FurnitureSlot>() != null && s.State == SurfaceState.Keep);
         Assert.IsNotNull(kept.GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>(), "kept furniture grabbable");
@@ -367,15 +367,15 @@ public class SceneWiringTests
         yield return null; yield return null;
         var applier = Object.FindObjectsByType<PresetApplier>(FindObjectsSortMode.None).Single();
         float hw = RoomSpec.W / 2f, hd = RoomSpec.D / 2f;
-        var start = new Vector3(0.3f, 0f, 0.8f);
-        var lamp = GameObject.Find("Lamp").transform.position;
+        var start = new Vector3(0.9f, 0f, 1.3f);
+        var lamp = GameObject.Find("ArcLamp").transform.position;
         // Floor rectangles (xz) that must stay empty.
         var keepClear = new (string what, Rect r)[]
         {
-            ("start spot", Rect.MinMaxRect(start.x - 0.7f, start.z - 0.7f, start.x + 0.7f, start.z + 0.7f)),
-            ("preset frames", Rect.MinMaxRect(-hw, -1.2f, -hw + 1.2f, 2.8f)),
+            ("start spot", Rect.MinMaxRect(start.x - 0.5f, start.z - 0.5f, start.x + 0.5f, start.z + 0.5f)),
+            ("preset frames", Rect.MinMaxRect(-1.4f, hd - 0.8f, 0.5f, hd)),
             ("door", Rect.MinMaxRect(hw - 1.4f, hd - 1.0f, hw, hd)),
-            ("lamp", Rect.MinMaxRect(lamp.x - 0.45f, lamp.z - 0.45f, lamp.x + 0.45f, lamp.z + 0.45f)),
+            ("lamp", Rect.MinMaxRect(lamp.x - 0.3f, lamp.z - 0.3f, lamp.x + 0.3f, lamp.z + 0.3f)),
         };
         var problems = new System.Collections.Generic.List<string>();
         void Check(bool bad, string msg) { if (bad) problems.Add(msg); }

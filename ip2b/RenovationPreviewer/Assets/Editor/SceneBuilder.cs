@@ -46,7 +46,7 @@ public static class SceneBuilder
         float hw = RoomW / 2f, hd = RoomD / 2f, hh = RoomH / 2f;
         // Floor and ceiling slabs run under/over the walls to their outer faces: flush W x D slabs left an
         // open 10 cm notch along every edge and the sun drew bright lines through the seams.
-        var floor = MakeSurface("Floor", new Vector3(0, -T / 2f, 0), new Vector3(RoomW + 2 * T, T, RoomD + 2 * T), timber, SurfaceState.Keep, SurfaceKind.Floor);
+        var floor = MakeSurface("Floor", new Vector3(0, -T / 2f, 0), new Vector3(RoomW + 2 * T, T, RoomD + 2 * T), timber, SurfaceState.Change, SurfaceKind.Floor);
         MakeSurface("Wall_N", new Vector3(0, hh, hd + T / 2f), new Vector3(RoomW, RoomH, T), offwhite, SurfaceState.Change, SurfaceKind.Wall);
         // Wall_S carries the window: one logical Surface made of four cubes around the opening.
         var window = new Rect(WindowX, WindowSill, WindowW, WindowH);   // x = centre offset, y = sill height
@@ -572,6 +572,21 @@ public static class SceneBuilder
         viewMat.mainTexture = viewMat.GetTexture("_BaseMap");
         EditorUtility.SetDirty(viewMat);
         view.GetComponent<Renderer>().sharedMaterial = viewMat;
+
+        // Round jute rug between sofa and table (a pull-only source: furniture-like, never painted).
+        var rug = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+        rug.name = "Rug";
+        rug.transform.position = new Vector3(-0.9f, 0.006f, 0.2f);
+        rug.transform.localScale = new Vector3(2.4f, 0.006f, 3.0f);   // 2.4 x 3.0 m oval, long axis along the sofa
+        rug.GetComponent<Renderer>().sharedMaterial = MakeMat("Jute", Hex("#B79A6E"));
+        Object.DestroyImmediate(rug.GetComponent<Collider>());
+        rug.AddComponent<BoxCollider>();   // flat box: the hand finds it, the floor ray isn't blocked by a capsule
+        var rugSurface = rug.AddComponent<Surface>();
+        rugSurface.SetState(SurfaceState.Keep);
+        rugSurface.SetKind(SurfaceKind.None);
+        rugSurface.SetBaseSampleColor(Hex("#B79A6E"));
+        rug.AddComponent<MenuTarget>();
+        rug.AddComponent<PullAffordance>();
 
         // Oak ceiling beam across the room (the timber warmth of reference F).
         var beam = GameObject.CreatePrimitive(PrimitiveType.Cube);

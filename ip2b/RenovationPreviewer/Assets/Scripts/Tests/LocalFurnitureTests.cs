@@ -10,6 +10,7 @@ public class LocalFurnitureTests
     {
         "curved_sofa", "round_armchair", "pouf", "oval_marble_table", "slatted_tv_stand",
         "flat_tv", "arc_floor_lamp", "woven_pendant", "linen_curtain", "monstera_stand",
+        "tv_unit", "bed_platform", "bed_nightstand", "bed_nightstand_lamp", "bed_vanity",
     };
 
     public static Catalogue Cat => AssetDatabase.LoadAssetAtPath<Catalogue>("Assets/Catalogue/Catalogue.asset");
