@@ -38,7 +38,7 @@ public class SamplePuller : MonoBehaviour
 
     void Update()
     {
-        Pullable = touching != null && touching.State == SurfaceState.Keep
+        Pullable = touching != null
             ? touching
             : PullAffordance.NearestPullable(transform.position, out _);
         if (Pullable == null || samplePrefab == null || interactor == null) return;

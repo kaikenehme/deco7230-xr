@@ -75,7 +75,7 @@ MonoBehaviour:
   - sourceId: bed_platform
     position: {x: -1.75, y: 0, z: 0.2}
     yaw: 90
-    keep: 1
+    keep: 0
     sampleColor: {r: 0.7882353, g: 0.6313726, b: 0.23137255, a: 1}
   - sourceId: bed_nightstand_lamp
     position: {x: -2.45, y: 0, z: -1.25}

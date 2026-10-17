@@ -47,7 +47,7 @@ public class HoldUpPreviewer : MonoBehaviour
         float best = PreviewRadius;
         foreach (var s in Surface.All)
         {
-            if (s == null || s.State != SurfaceState.Change) continue;
+            if (s == null || !s.IsPaintTarget) continue;
             float d = Vector3.Distance(s.ClosestPoint(transform.position), transform.position);
             if (d < best) { best = d; nearest = s; }
         }

@@ -75,7 +75,7 @@ MonoBehaviour:
   - sourceId: curved_sofa
     position: {x: -2.12, y: 0, z: 0.2}
     yaw: 90
-    keep: 1
+    keep: 0
     sampleColor: {r: 0.9137255, g: 0.8901961, b: 0.84705883, a: 1}
   - sourceId: oval_marble_table
     position: {x: -0.9, y: 0, z: 0.2}

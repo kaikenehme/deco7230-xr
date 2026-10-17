@@ -92,7 +92,7 @@ public class PresetApplierTests
         Assert.AreEqual(SurfaceState.Keep, sofa.GetComponent<Surface>().State);
         Assert.AreEqual(Color.cyan, sofa.GetComponent<Surface>().SampleColor);
         Assert.AreEqual(45f, sofa.transform.eulerAngles.y, 0.01f);
-        Assert.IsNull(slots.Single(s => s.Current.sourceId == "chair").GetComponent<Surface>(), "not kept → not a source");
+        Assert.AreEqual(SurfaceState.Keep, slots.Single(s => s.Current.sourceId == "chair").GetComponent<Surface>().State, "IP2b N1: every piece is a pull-only source");
     }
 
     [Test]

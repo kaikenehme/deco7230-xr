@@ -32,7 +32,7 @@ public static class PresetAuthoring
         Paint(cat, living, Walls, "Sandy Day");   // the mock-up's warm white (#DCD1BF)
         Paint(cat, living, new[] { "Ceiling" }, "Whisper White");
         Paint(cat, living, Trims, "Antique White U.S.A.");
-        Place(cat, living, "curved_sofa", -2.12f, 0.2f, 90f, keep: true);         // back to Wall_W, under the prints
+        Place(cat, living, "curved_sofa", -2.12f, 0.2f, 90f);         // back to Wall_W, under the prints
         Place(cat, living, "oval_marble_table", -0.9f, 0.2f, 90f);                // long axis along z, on the rug
         Place(cat, living, "tv_unit", 2.53f, 0.2f, -90f);                         // against Wall_E, facing the sofa
         Place(cat, living, "round_armchair", 0.9f, -1.6f, -45f);                  // by the window, angled to the table
@@ -48,7 +48,7 @@ public static class PresetAuthoring
         PaintHex(p: bed, surfaces: new[] { "Wall_W" }, hex: "#2F6B6A", userColour: true);   // mid-century teal (no teal in the 24 Dulux set)
         Paint(cat, bed, new[] { "Ceiling" }, "Whisper White");
         Paint(cat, bed, Trims, "Antique White U.S.A.");
-        Place(cat, bed, "bed_platform", -1.75f, 0.2f, 90f, keep: true);           // headboard to Wall_W
+        Place(cat, bed, "bed_platform", -1.75f, 0.2f, 90f);           // headboard to Wall_W
         Place(cat, bed, "bed_nightstand_lamp", -2.45f, -1.25f, 90f);
         Place(cat, bed, "bed_nightstand", -2.45f, 1.65f, 90f);
         Place(cat, bed, "bed_vanity", 2.38f, 0.0f, -90f);                         // against Wall_E

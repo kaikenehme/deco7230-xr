@@ -81,4 +81,13 @@ public class SurfaceTests
             Assert.IsFalse(w.IsPreviewing);
         }
     }
+
+    [Test]
+    public void IsPaintTarget_OnlyChangeSurfaces()
+    {
+        var a = new GameObject("a").AddComponent<Surface>(); a.SetState(SurfaceState.Change);
+        var b = new GameObject("b").AddComponent<Surface>(); b.SetState(SurfaceState.Keep);
+        Assert.IsTrue(a.IsPaintTarget); Assert.IsFalse(b.IsPaintTarget);
+        Object.DestroyImmediate(a.gameObject); Object.DestroyImmediate(b.gameObject);
+    }
 }

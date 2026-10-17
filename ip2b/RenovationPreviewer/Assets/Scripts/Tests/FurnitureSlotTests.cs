@@ -191,6 +191,20 @@ public class FurnitureSlotTests
     }
 
     [Test]
+    public void Spawn_WithoutKeepFlag_IsStillSourceOnly()
+    {
+        // IP2b: every piece gives colour (N1) and never takes paint (furniture is pull-only).
+        var bounds = new Bounds(Vector3.zero, new Vector3(9, 0.1f, 7));
+        var slot = FurnitureSlot.Spawn(Option("Pouf"), Vector3.zero, 0f, bounds, false, Color.red, SlotOrigin.Preset);
+        var surf = slot.GetComponent<Surface>();
+        Assert.IsNotNull(surf, "every piece is a sample source");
+        Assert.AreEqual(SurfaceState.Keep, surf.State);
+        Assert.IsFalse(surf.IsPaintTarget);
+        Assert.AreEqual(Color.red, surf.SampleColor);
+        Assert.IsNotNull(slot.GetComponent<PullAffordance>());
+    }
+
+    [Test]
     public void Spawn_DisablesXriPoseTracking_AndDefaultsToUser()
     {
         var slot = FurnitureSlot.Spawn(Option("A"), Vector3.zero, new Bounds(Vector3.zero, new Vector3(4, 0.1f, 3)));

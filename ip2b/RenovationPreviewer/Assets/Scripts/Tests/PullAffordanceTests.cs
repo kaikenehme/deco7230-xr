@@ -55,14 +55,6 @@ public class PullAffordanceTests
     }
 
     [Test]
-    public void Tick_ChangeSurface_AlwaysHidden()
-    {
-        var a = Slab(SurfaceState.Change);
-        a.Tick(Hands(new Vector3(0f, 0.1f, 0f)), 0f);
-        Assert.IsFalse(a.IsVisible);
-    }
-
-    [Test]
     public void Tick_UsesNearestOfSeveralHands()
     {
         var a = Slab(SurfaceState.Keep);
@@ -93,15 +85,19 @@ public class PullAffordanceTests
     }
 
     [Test]
-    public void NearestPullable_IgnoresChangeSurfaces_AndBeyondRadius()
+    public void NearestPullable_IncludesWalls_ButNotBeyondRadius()
     {
-        Slab(SurfaceState.Change);
-        Assert.IsNull(PullAffordance.NearestPullable(new Vector3(0f, 0.1f, 0f), out _), "Change is never a source");
-        var keep = Slab(SurfaceState.Keep);
-        keep.transform.position = new Vector3(10f, 0f, 0f);
-        Physics.SyncTransforms();
-        Assert.IsNull(PullAffordance.NearestPullable(new Vector3(0f, 0.1f, 0f), out _), "10 m away");
-        Assert.AreSame(keep.GetComponent<Surface>(), PullAffordance.NearestPullable(new Vector3(10f, 0.2f, 0f), out var d));
-        Assert.AreEqual(0.15f, d, 0.01f);
+        // IP2b N1: nothing is "staying" — walls and floor are sources too.
+        var wall = Slab(SurfaceState.Change);
+        Assert.AreSame(wall.GetComponent<Surface>(), PullAffordance.NearestPullable(new Vector3(0f, 0.1f, 0f), out _), "a Change surface is a source");
+        Assert.IsNull(PullAffordance.NearestPullable(new Vector3(0f, 5f, 0f), out _), "5 m away");
+    }
+
+    [Test]
+    public void Tick_ShowsTabOnChangeSurface()
+    {
+        var a = Slab(SurfaceState.Change);
+        a.Tick(Hands(new Vector3(0f, 0.2f, 0f)), 0f);
+        Assert.IsTrue(a.IsVisible);
     }
 }

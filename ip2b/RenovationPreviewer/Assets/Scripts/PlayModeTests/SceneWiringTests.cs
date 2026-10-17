@@ -30,8 +30,9 @@ public class SceneWiringTests
         var surfaces = Surface.All.Where(s => s != null).ToList();
         var shell = surfaces.Where(s => s.GetComponent<FurnitureSlot>() == null).Select(s => s.name).OrderBy(n => n).ToList();
         CollectionAssert.AreEquivalent(Shell, shell);
-        int keptSlots = surfaces.Count(s => s.GetComponent<FurnitureSlot>() != null && s.State == SurfaceState.Keep);
-        Assert.AreEqual(applier.presets[0].furniture.Count(f => f.keep), keptSlots, "kept furniture from the preset");
+        int sourceSlots = surfaces.Count(s => s.GetComponent<FurnitureSlot>() != null && s.State == SurfaceState.Keep);
+        Assert.AreEqual(applier.presets[0].furniture.Count, sourceSlots, "every piece is a pull-only source (IP2b N1)");
+        Assert.IsEmpty(Object.FindObjectsByType<TextMesh>(FindObjectsSortMode.None).Where(m => m.text == "staying"), "no 'staying' labels in IP2b");
         Assert.AreEqual(SurfaceState.Change, surfaces.Single(s => s.name == "Floor").State, "floor takes paint (IP2b N3)");
         Assert.AreEqual(applier.presets[0].furniture.Count, Object.FindObjectsByType<FurnitureSlot>(FindObjectsSortMode.None).Length, "every placement spawned");
     }
@@ -68,7 +69,6 @@ public class SceneWiringTests
         {
             foreach (var f in p.furniture) Assert.IsNotNull(applier.catalogue.Furniture(f.sourceId)?.prefab, $"{p.displayName}: {f.sourceId}");
             foreach (var l in p.looks) CollectionAssert.Contains(Shell, l.surfaceName, $"{p.displayName}: look {l.surfaceName}");
-            Assert.IsTrue(p.furniture.Any(f => f.keep), $"{p.displayName}: has a kept piece to pull from");
             Assert.IsTrue(p.looks.Any(l => l.surfaceName == "Floor" && l.state == SurfaceState.Change), $"{p.displayName}: floor takes paint (IP2b N3)");
         }
         // The kept floor really wears each preset's material at runtime.

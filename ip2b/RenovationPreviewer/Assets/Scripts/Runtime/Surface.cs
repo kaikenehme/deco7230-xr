@@ -26,6 +26,8 @@ public class Surface : MonoBehaviour
     [SerializeField] Material baseOverride;
 
     public SurfaceState State => state;
+    /// <summary>IP2b: every Surface is a sample source; only Change surfaces (walls, floor, trim) take paint. Keep = pull-only (furniture, rug).</summary>
+    public bool IsPaintTarget => state == SurfaceState.Change;
     public SurfaceKind Kind => kind;
 
     public Color CommittedColor { get; private set; } = Color.white;

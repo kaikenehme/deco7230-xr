@@ -86,7 +86,8 @@ public class FurnitureSlot : MonoBehaviour
     public static FurnitureSlot Spawn(FurnitureOption option, Vector3 floorPoint, Bounds floorBounds) =>
         Spawn(option, floorPoint, 0f, floorBounds, false, Color.grey, SlotOrigin.User);
 
-    /// <summary>Full form: yaw in degrees; keep = also a Keep sample source with an authored colour.</summary>
+    /// <summary>Full form: yaw in degrees. Every piece is a pull-only sample source with an authored colour (IP2b N1);
+    /// keep is ignored (kept for asset/test compatibility).</summary>
     public static FurnitureSlot Spawn(FurnitureOption option, Vector3 floorPoint, float yaw, Bounds floorBounds, bool keep, Color sampleColor, SlotOrigin origin)
     {
         var go = new GameObject($"Furniture_{option.sourceId}");
@@ -108,10 +109,9 @@ public class FurnitureSlot : MonoBehaviour
         slot.BindGrab(floorBounds);
         go.AddComponent<MenuTarget>();
 
-        if (keep)
         {
             var surf = go.AddComponent<Surface>();
-            surf.SetState(SurfaceState.Keep);
+            surf.SetState(SurfaceState.Keep);   // source-only: furniture never takes paint
             surf.SetBaseSampleColor(sampleColor);
             go.AddComponent<PullAffordance>();
         }

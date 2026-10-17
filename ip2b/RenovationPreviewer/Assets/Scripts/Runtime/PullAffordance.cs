@@ -50,13 +50,13 @@ public class PullAffordance : MonoBehaviour
         go.SetActive(false);
     }
 
-    /// <summary>The kept surface a hand at p could pull from: nearest within ShowRadius, else null.</summary>
+    /// <summary>The surface a hand at p could pull from (any surface, IP2b N1): nearest within ShowRadius, else null.</summary>
     public static Surface NearestPullable(Vector3 p, out float distance)
     {
         Surface best = null; distance = ShowRadius;
         foreach (var s in Surface.All)
         {
-            if (s == null || s.State != SurfaceState.Keep) continue;
+            if (s == null) continue;
             float d = Vector3.Distance(s.ClosestPoint(p), p);
             if (d < distance) { distance = d; best = s; }
         }
@@ -67,7 +67,7 @@ public class PullAffordance : MonoBehaviour
     public void Tick(IReadOnlyList<Vector3> hands, float now)
     {
         IsVisible = false; IsLifted = false;
-        if (Surface == null || Surface.State != SurfaceState.Keep || now < hiddenUntil || hands == null) return;
+        if (Surface == null || now < hiddenUntil || hands == null) return;
 
         float best = ShowRadius; Vector3 bestPt = default, bestHand = default; bool any = false;
         foreach (var h in hands)

@@ -5,34 +5,35 @@ using UnityEngine;
 public class OnboardingSequenceTests
 {
     [TearDown]
-    public void Cleanup() { foreach (var s in Surface.All.ToArray()) if (s != null) Object.DestroyImmediate(s.gameObject); }
-
-    static Surface Make(SurfaceState st) { var go = new GameObject("s"); var s = go.AddComponent<Surface>(); s.SetState(st); return s; }
-
-    [Test]
-    public void Targets_OnlyKeepSurfaces()
+    public void Cleanup()
     {
-        var keep = Make(SurfaceState.Keep); Make(SurfaceState.Change); Make(SurfaceState.Change);
-        var t = OnboardingSequence.Targets(Surface.All).ToList();
-        Assert.AreEqual(1, t.Count);
-        Assert.AreSame(keep, t[0]);
+        foreach (var s in Surface.All.ToArray()) if (s != null) Object.DestroyImmediate(s.gameObject);
+        foreach (var f in Object.FindObjectsByType<FurnitureSlot>(FindObjectsInactive.Include, FindObjectsSortMode.None)) Object.DestroyImmediate(f.gameObject);
+    }
+
+    static Surface Make(SurfaceState st, Vector3 size, bool furniture)
+    {
+        var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        go.transform.localScale = size;
+        if (furniture) go.AddComponent<FurnitureSlot>();
+        var s = go.AddComponent<Surface>(); s.SetState(st); return s;
     }
 
     [Test]
-    public void LabelAnchor_AboveFurniture()
+    public void Hero_IsTheLargestFurniturePiece_NotTheRoomOrRug()
     {
-        var b = new Bounds(new Vector3(1f, 0.4f, 2f), new Vector3(1.8f, 0.8f, 0.9f));
-        var p = OnboardingSequence.LabelAnchor(b, new Vector3(0f, 1.6f, 0f));
-        Assert.AreEqual(1f, p.x, 1e-4f); Assert.AreEqual(2f, p.z, 1e-4f);
-        Assert.Greater(p.y, b.max.y);
+        // IP2b: no kept/change split, so onboarding points at one big piece (sofa / bed), then the lamp.
+        Make(SurfaceState.Change, new Vector3(5, 0.1f, 5), false);     // floor
+        Make(SurfaceState.Keep, new Vector3(3, 0.01f, 2.4f), false);   // rug: a source, but not furniture
+        var sofa = Make(SurfaceState.Keep, new Vector3(2.6f, 0.75f, 1.2f), true);
+        Make(SurfaceState.Keep, new Vector3(0.6f, 0.3f, 0.6f), true);  // pouf
+        Assert.AreSame(sofa, OnboardingSequence.Hero(Surface.All));
     }
 
     [Test]
-    public void Labelled_FloorPulsesWithoutLabel_FurnitureKeepsIt()
+    public void Hero_NullWhenNoFurniture()
     {
-        // The floor's label floated mid-room over the coffee table (23 Sep renders); the pulse alone reads as "the floor".
-        Assert.IsFalse(OnboardingSequence.Labelled(SurfaceKind.Floor));
-        Assert.IsTrue(OnboardingSequence.Labelled(SurfaceKind.None));
-        Assert.IsTrue(OnboardingSequence.Labelled(SurfaceKind.Wall));
+        Make(SurfaceState.Change, new Vector3(5, 0.1f, 5), false);
+        Assert.IsNull(OnboardingSequence.Hero(Surface.All));
     }
 }
