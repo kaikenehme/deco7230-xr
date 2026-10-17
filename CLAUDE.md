@@ -107,7 +107,7 @@ Print CSS gotchas already solved in `lowfi-plan-print.html`: `page-break-after:a
 
 ## Current state — 17 Oct 2026, Week 11 — **IP2b built, not yet run on a headset** (test Fri 23 Oct, Studio)
 
-Eval 2 submitted 7 Oct. IP2b design: `docs/superpowers/specs/2026-10-17-ip2b-design.md`; plan + STATUS: `docs/superpowers/plans/2026-10-17-ip2b-build.md`; branch **`ip2b`** (not merged). EditMode 242/242, PlayMode 42/42 (after final-review fixes; rulings + deferred minors in `docs/superpowers/plans/2026-10-17-ip2b-build-ledger.md`).
+Eval 2 submitted 7 Oct. IP2b design: `docs/superpowers/specs/2026-10-17-ip2b-design.md`; plan + STATUS: `docs/superpowers/plans/2026-10-17-ip2b-build.md`; branch **`ip2b`** (not merged). EditMode 246/246, PlayMode 44/44 (after final-review fixes + Kaike's first lap; rulings + deferred minors in `docs/superpowers/plans/2026-10-17-ip2b-build-ledger.md`).
 
 **What changed (Kaike's calls, 17 Oct):** nothing is "staying" — pull from any surface, furniture is pull-only, walls + floor take paint · two dressed rooms: **Living** (warm contemporary, Sketchfab CC-BY pieces) and **Bedroom** (mid-century) in a **5.5 × 5 m** room · **fan deck** (7 cards light → dark, two off-whites) replaces twist-to-tune · floor tint over material · **curtains** fade daylight over 1 s · smoother furniture (45°/s) · **toss** alongside hold-up · **MR showcase**: "Your room" frame → passthrough, real walls/floor paintable (`Renovation.MR` assembly; AR Foundation 6.1.1 + Unity OpenXR: Meta 2.1.1). IP2a features kept (clock, lamp, menu, schemes, presets).
 
@@ -118,6 +118,10 @@ Eval 2 submitted 7 Oct. IP2b design: `docs/superpowers/specs/2026-10-17-ip2b-des
 **Desktop controls added:** `M` = MR on/off (facilitator). Scroll no longer twists (fan cards are clicked). F1–F2 rooms.
 
 **Headless gotcha (17 Oct):** a killed batchmode run left `bee_backend`/`netcorerun` orphans that wedged every later compile at "Compiling Scripts". Fix: kill all Unity processes by PID, `rm -rf Library/Bee Library/ScriptAssemblies`, rerun.
+
+**17 Oct, Kaike's first lap in the editor:** looks good. Fixed: garden view now follows the clock (`TimeOfDay.WindowTint`), ceiling pendant is a touchable switch (`PendantLight`). Unity editor was left open on `Room.unity`, stopped.
+
+**Next session (Sun 18 Oct):** carry on Kaike's lap (pull → fan → hold-up → floor → curtains → furniture → Bedroom → `M`) · voice pass on testing plan + research paragraph · publish iPad logger artifact · decide merge/PR for `ip2b` · deferred minors in the ledger if time.
 
 **Still to do:** desktop lap by Kaike (pull → fan → hold-up/toss → floor → curtains → furniture → Bedroom → `M`) · XR Simulation check of MR in the GUI editor (optional) · plan PDF · merge `ip2b` → main.
 
