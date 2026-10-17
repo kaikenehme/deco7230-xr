@@ -162,6 +162,8 @@ public static class SceneBuilder
         var tod = managers.AddComponent<TimeOfDayController>();
         tod.sun = sun;
         tod.sky = sky;
+        var viewGo = GameObject.Find("WindowView");
+        if (viewGo != null) tod.windowView = viewGo.GetComponent<Renderer>();
         var curtainsGo = GameObject.Find("Curtains");
         if (curtainsGo != null) curtainsGo.GetComponent<CurtainController>().timeOfDay = tod;
         clock.controller = tod;
@@ -646,6 +648,12 @@ public static class SceneBuilder
         pl.transform.SetParent(pendant.transform, false);
         pl.transform.position = new Vector3(-0.9f, 1.85f, 0.2f);
         pl.type = LightType.Point; pl.color = LampController.WarmColor; pl.intensity = 0.8f; pl.range = 4f;
+        // Touchable switch (Kaike's lap): a trigger sphere round the shade.
+        var pcol = pendant.AddComponent<SphereCollider>();
+        pcol.isTrigger = true;
+        pcol.center = pendant.transform.InverseTransformPoint(new Vector3(-0.9f, 1.9f, 0.2f));
+        pcol.radius = 0.3f;
+        pendant.AddComponent<PendantLight>().bulb = pl;
     }
 
     /// <summary>Framed abstract print facing +X: oak frame, canvas, a circle and a block.</summary>

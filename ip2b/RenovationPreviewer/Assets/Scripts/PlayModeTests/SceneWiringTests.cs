@@ -596,4 +596,35 @@ public class SceneWiringTests
         Assert.AreEqual(0, Object.FindObjectsByType<FanDeck>(FindObjectsSortMode.None).Length, "fan gone");
         Object.FindAnyObjectByType<PresetApplier>().Apply(0);
     }
+
+    // ---- 17 Oct lap: window follows the clock; the pendant is a switch ----
+    [UnityTest]
+    public IEnumerator WindowView_DarkensAtNight()
+    {
+        yield return null;
+        var tod = Object.FindAnyObjectByType<TimeOfDayController>();
+        var view = GameObject.Find("WindowView").GetComponent<Renderer>();
+        tod.Apply(2); yield return null;
+        var noon = view.material.GetColor("_BaseColor");
+        tod.Apply(5); yield return null;
+        var night = view.material.GetColor("_BaseColor");
+        Assert.Less(night.grayscale, noon.grayscale * 0.3f, "the garden goes dark at 22:00");
+        tod.Apply(1);
+    }
+
+    [UnityTest]
+    public IEnumerator Pendant_IsTouchable_AndSwitchesItsLight()
+    {
+        yield return null;
+        var p = GameObject.Find("Pendant").GetComponent<PendantLight>();
+        Assert.IsNotNull(p, "pendant is a switch");
+        Assert.IsNotNull(p.bulb);
+        var col = p.GetComponent<SphereCollider>();
+        Assert.IsNotNull(col); Assert.IsTrue(col.isTrigger, "ray/cue can find it");
+        p.Touch();
+        Assert.IsFalse(p.bulb.enabled);
+        yield return new WaitForSeconds(0.7f);
+        p.Touch();
+        Assert.IsTrue(p.bulb.enabled);
+    }
 }

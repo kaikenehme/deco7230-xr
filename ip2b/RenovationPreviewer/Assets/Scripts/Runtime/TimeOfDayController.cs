@@ -12,6 +12,7 @@ public class TimeOfDayController : MonoBehaviour
 {
     public Light sun;
     public Material sky;
+    public Renderer windowView;   // the garden photo outside the window; tinted to the time of day
     public int Index { get; private set; } = 1;
     public TimeOfDay.Stop Current => TimeOfDay.Stops[Index];
     public event Action<int> Changed;
@@ -28,6 +29,7 @@ public class TimeOfDayController : MonoBehaviour
 
     static readonly int ExposureId = Shader.PropertyToID("_Exposure");
     static readonly int TintId = Shader.PropertyToID("_SkyTint");
+    static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
 
     void Awake()
     {
@@ -62,6 +64,7 @@ public class TimeOfDayController : MonoBehaviour
             RenderSettings.ambientMode = AmbientMode.Flat;
             RenderSettings.ambientLight = s.ambient * k;
             if (sky != null) { sky.SetFloat(ExposureId, s.skyExposure * k); sky.SetColor(TintId, s.skyTint); }
+            if (windowView != null) windowView.material.SetColor(BaseColorId, TimeOfDay.WindowTint(s));
             DynamicGI.UpdateEnvironment();
         }
     }

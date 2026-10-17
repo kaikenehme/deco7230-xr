@@ -28,6 +28,25 @@ public static class TimeOfDay
         new() { hour = 22, elevation = -20f, azimuth = 90f,  sunColor = Color.black,           sunIntensity = 0f,   ambient = new(0.06f, 0.07f, 0.10f), skyExposure = 0.05f, skyTint = new(0.20f, 0.25f, 0.40f) },
     };
 
+    // What the garden photo outside the window is multiplied by at each stop (07 … 22). The photo is a
+    // sunny noon; without this it stayed bright at 22:00 (Kaike's lap, 17 Oct).
+    static readonly Color[] WindowTints =
+    {
+        new(0.80f, 0.74f, 0.72f),   // 07:00 low morning light
+        Color.white,                // 10:00
+        Color.white,                // 13:00
+        new(1f, 0.94f, 0.86f),      // 16:00
+        new(0.78f, 0.50f, 0.38f),   // 19:00 dusk
+        new(0.07f, 0.09f, 0.17f),   // 22:00 night
+    };
+
+    /// <summary>Tint for the window view at a stop (matched by hour).</summary>
+    public static Color WindowTint(Stop s)
+    {
+        for (int i = 0; i < Stops.Length; i++) if (Stops[i].hour == s.hour) return WindowTints[i];
+        return Color.white;
+    }
+
     public static int Next(int i) => (i + 1) % Stops.Length;
     public static Quaternion SunRotation(Stop s) => Quaternion.Euler(s.elevation, s.azimuth, 0f);
     /// <summary>Clockwise hour-hand angle from 12 o'clock, degrees.</summary>
