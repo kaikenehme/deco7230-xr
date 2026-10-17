@@ -14,7 +14,7 @@
 ```bash
 ADB="/Applications/Unity/Hub/Editor/6000.0.80f1/PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb"
 "$ADB" devices
-"$ADB" install -r ip2a/RenovationPreviewer/Builds/ip2a.apk
+"$ADB" install -r ip2b/RenovationPreviewer/Builds/ip2a.apk
 "$ADB" shell monkey -p com.kaikenehme.renovationpreviewer 1     # launch
 "$ADB" logcat -s Unity VrApi | head -50                           # FPS + errors
 ```
@@ -23,7 +23,7 @@ ADB="/Applications/Unity/Hub/Editor/6000.0.80f1/PlaybackEngines/AndroidPlayer/SD
 
 ```bash
 UNITY="/Applications/Unity/Hub/Editor/6000.0.80f1/Unity.app/Contents/MacOS/Unity"
-PROJ="$PWD/ip2a/RenovationPreviewer"
+PROJ="$PWD/ip2b/RenovationPreviewer"
 "$UNITY" -batchmode -quit -projectPath "$PROJ" -buildTarget Android -executeMethod BuildScript.BuildAndroid -logFile /tmp/apk.log
 ```
 ~7 min. Only build for a device session; the simulator needs nothing.

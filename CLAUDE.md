@@ -65,7 +65,7 @@ Submit every 12:00 item by **10:00**. ⚠️ The three Evaluation dates come onl
 ## Environment
 
 - **Unity 6000.0.80f1** — `/Applications/Unity/Hub/Editor/6000.0.80f1`. Android Build Support, SDK (platforms 34/35/36), NDK r27c, OpenJDK 17 all installed. `adb` at `PlaybackEngines/AndroidPlayer/SDK/platform-tools/adb`.
-- **Unity project: `ip2a/RenovationPreviewer`** (moved from `ip1/` on 3 Sep 2026; IP1 as tested = tag `ip1-submitted`). The scene is **generated** by `Assets/Editor/SceneBuilder.cs` — edit the builder, never `Room.unity`. Headless: `$UNITY -batchmode -quit -projectPath <proj> -executeMethod SceneBuilder.Build`; tests `-runTests -testPlatform EditMode|PlayMode` (no `-quit`).
+- **Unity project: `ip2b/RenovationPreviewer`** (moved from `ip2a/` on 17 Oct 2026; IP2a as tested = tag `ip2a-tested`; from `ip1/` on 3 Sep, IP1 = tag `ip1-submitted`). The scene is **generated** by `Assets/Editor/SceneBuilder.cs` — edit the builder, never `Room.unity`. Headless: `$UNITY -batchmode -quit -projectPath <proj> -executeMethod SceneBuilder.Build`; tests `-runTests -testPlatform EditMode|PlayMode` (no `-quit`).
 - **URP is mandatory** — built-in pipeline won't hold framerate on Quest.
 - **XR Interaction Toolkit 3.x**, Android build target.
 - Unity licence needs a one-time Hub sign-in (GUI, user-side).
@@ -121,7 +121,7 @@ Print CSS gotchas already solved in `lowfi-plan-print.html`: `page-break-after:a
 
 **Live-editor workflow:** `unity open <proj>`; global flags **before** `command` (`unity --no-banner --non-interactive --format json command <name> ...`), `--timeout` after `command`. `console_status` for compile state (old `error CS` lines stay in `Editor.log` — trust `compilationFailed`), `run_tests --mode EditMode` (sync), **PlayMode: `run_tests --mode PlayMode --async_tests true`, then poll `test_status`**. `eval` statements only; `run_script --file --entry` for classes (in-memory probes during Play work). Long `eval`s time out at 5 s main-thread (the work may still finish — check files). `capture_game_view --source screen --save_path` lands under `Assets/Builds/` — delete after. Synthetic key events don't reach Play — real presses only. **Rule: check `isPlaying` and `editor_stop` before any Refresh/compile** (23 Sep wedge). No batchmode while the GUI editor has the project open.
 
-**Headless visual check:** PlayMode `SnapshotTests` renders 14 views to `ip2a/RenovationPreviewer/Builds/snapshots/*.png` (gitignored).
+**Headless visual check:** PlayMode `SnapshotTests` renders 14 views to `ip2b/RenovationPreviewer/Builds/snapshots/*.png` (gitignored).
 
 **Next:** Evaluation 2 from `testing-data/ip2a/` (3 pages + appendices, same template as Eval 1) · the plan PDF describes desktop mode — note the platform change in Eval 2 rather than rewriting the plan after the fact · IP2b (Fri 23 Oct, MR passthrough on Quest, ≥5 academic refs) can now build on a working device pipeline.
 
