@@ -90,3 +90,4 @@ crashlytics-build.properties
 testing-data/**/raw-private/
 .utmp/
 ip2b/art/*.blend
+ip2b/art/*.blend1
