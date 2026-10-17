@@ -40,6 +40,8 @@
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0",
-    "com.unity.pipeline": "0.7.0-exp.1"
+    "com.unity.pipeline": "0.7.0-exp.1",
+    "com.unity.xr.arfoundation": "6.1.1",
+    "com.unity.xr.meta-openxr": "2.1.1"
   }
 }
