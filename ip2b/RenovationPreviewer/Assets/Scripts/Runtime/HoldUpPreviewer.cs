@@ -6,7 +6,7 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 /// The sole coupling point between samples and surfaces (spec §8).
 /// While held: nearest Change surface in range previews the sample's colour;
 /// leaving range reverts (a preview must never stick — spec §9); release in
-/// range commits; release mid-air discards. The colour is the FanDeck pick (IP2b; twist-to-tune is gone).
+/// range commits; a fast release away from any surface throws it (TossDetector, N5); a slow release mid-air discards. The colour is the FanDeck pick (IP2b; twist-to-tune is gone).
 /// </summary>
 [RequireComponent(typeof(Sample), typeof(XRGrabInteractable))]
 public class HoldUpPreviewer : MonoBehaviour
@@ -26,14 +26,22 @@ public class HoldUpPreviewer : MonoBehaviour
         grab.selectExited.AddListener(OnReleased);
     }
 
+    // Last few positions/times of the held chip, for the release velocity (N5 toss).
+    readonly System.Collections.Generic.List<Vector3> trail = new();
+    readonly System.Collections.Generic.List<float> trailT = new();
+
     void OnGrabbed(SelectEnterEventArgs args)
     {
         holdingHand = args.interactorObject.GetAttachTransform(grab);
+        trail.Clear(); trailT.Clear();
     }
 
     void Update()
     {
         if (holdingHand == null) return;
+
+        trail.Add(transform.position); trailT.Add(Time.time);
+        if (trail.Count > TossDetector.Window) { trail.RemoveAt(0); trailT.RemoveAt(0); }
 
         Surface nearest = null;
         float best = PreviewRadius;
@@ -55,11 +63,17 @@ public class HoldUpPreviewer : MonoBehaviour
     void OnReleased(SelectExitEventArgs args)
     {
         holdingHand = null;
-        if (previewing != null)
+        switch (TossDetector.Decide(previewing != null, TossDetector.Velocity(trail, trailT)))
         {
-            previewing.Commit(sample.CurrentColor);
-            previewing = null;
+            case ReleaseOutcome.CommitHoldUp:
+                previewing.Commit(sample.CurrentColor);
+                Debug.Log("[IP2b] commit holdup " + previewing.name);
+                break;
+            case ReleaseOutcome.Toss:
+                TossedChip.Launch(transform.position, TossDetector.Velocity(trail, trailT), sample.CurrentColor);
+                break;
         }
-        Destroy(gameObject); // mid-air release = discard; either way the sample is gone
+        previewing = null;
+        Destroy(gameObject); // the sample is gone either way: committed, thrown, or discarded mid-air
     }
 }
