@@ -496,4 +496,53 @@ public class SceneWiringTests
         Assert.AreEqual(-2.05f, root.position.z, 0.05f);
         Assert.IsNotNull(root.Find("arc_floor_lamp"), "arc lamp visual");
     }
+
+    // ---- IP2b Task 6: the floor takes paint as a tint over its material (spec N3) ----
+    static Color Tint(Surface s) => s.Renderers[0].material.GetColor("_BaseColor");
+
+    [UnityTest]
+    public IEnumerator Floor_TakesTintOverMaterial()
+    {
+        yield return null; yield return null;   // preset applied
+        var floor = Surface.All.Single(s => s != null && s.name == "Floor");
+        var tex = floor.Renderers[0].material.GetTexture("_BaseMap");
+        Assert.IsNotNull(tex, "preset gave the floor a textured catalogue material (oak)");
+        var c = new Color(0.6f, 0.3f, 0.2f);
+        floor.Commit(c);
+        yield return null;
+        Assert.AreSame(tex, floor.Renderers[0].material.GetTexture("_BaseMap"), "oak texture kept under the paint");
+        Assert.IsTrue(floor.HasUserColour);
+        var got = Tint(floor);
+        Assert.AreEqual(c.r, got.r, 0.01f); Assert.AreEqual(c.g, got.g, 0.01f); Assert.AreEqual(c.b, got.b, 0.01f);
+    }
+
+    [UnityTest]
+    public IEnumerator Floor_MaterialSwapKeepsTint()
+    {
+        yield return null; yield return null;
+        var applier = Object.FindObjectsByType<PresetApplier>(FindObjectsSortMode.None).Single();
+        var floor = Surface.All.Single(s => s != null && s.name == "Floor");
+        floor.Commit(Color.green);
+        floor.CommitMaterial(applier.catalogue.Material("Tiles107").material);
+        yield return null;
+        var g = Tint(floor);
+        Assert.AreEqual(0f, g.r, 0.01f); Assert.AreEqual(1f, g.g, 0.01f); Assert.AreEqual(0f, g.b, 0.01f);
+    }
+
+    [UnityTest]
+    public IEnumerator HoldUp_NearFloor_PreviewsFloor()
+    {
+        yield return null; yield return null;
+        var floor = Surface.All.Single(s => s != null && s.name == "Floor");
+        var prefab = Object.FindObjectsByType<SamplePuller>(FindObjectsInactive.Include, FindObjectsSortMode.None)[0].samplePrefab;
+        var go = Object.Instantiate(prefab, new Vector3(0.6f, 0.3f, -0.4f), Quaternion.identity);   // open floor, 30 cm up
+        go.GetComponent<Sample>().Init(OnboardingSequence.Hero(Surface.All));
+        var hand = new GameObject("hand"); hand.transform.position = go.transform.position;
+        var grab = go.GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>();
+        var holdUp = go.GetComponent<HoldUpPreviewer>();
+        typeof(HoldUpPreviewer).GetField("holdingHand", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(holdUp, hand.transform);
+        yield return null; yield return null;
+        Assert.IsTrue(floor.IsPreviewing, "a chip held 30 cm over the floor previews it");
+        Object.Destroy(go); Object.Destroy(hand);
+    }
 }
