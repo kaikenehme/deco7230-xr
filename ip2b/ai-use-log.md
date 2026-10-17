@@ -1,0 +1,18 @@
+# IP2b — Running AI-use log
+
+**Purpose:** IP2b is a secure assessment (35 %, hurdle). Every AI use is logged as it happens, then
+consolidated into the UQ Library acknowledgement table before submission. Under-declaring is the risk.
+
+**Tools:** Claude Code (Anthropic, Claude Opus 5.5), driven interactively by Kaike Nehme. Blender 5.2
+driven by Claude through the MCP for Blender add-on. No generative 3D (Meshy was considered, not used).
+Sketchfab and Poly Haven models are human-made assets under CC-BY / Free Standard / CC0 — credited in
+`RenovationPreviewer/Assets/Catalogue/CREDITS.md`, not AI.
+
+| Date | What AI did | Files touched | Human role |
+|---|---|---|---|
+| 2026-10-17 | Worked out the IP2b deliverables from the task sheet, rubric and Week 6 slides (five principles = slide 21; questionnaires slides 23–36); flagged the simulator grade cap and the no-headset-until-Friday constraint | — (chat) | Kaike supplied the slides, confirmed no headset until test day |
+| 2026-10-17 | Brainstormed the IP2b design with Kaike; searched the web for contemporary living-room references (France & Son, Genroom, House Designer, Architectural Designs, ArchiPro, Castlery) and built a moodboard; searched Sketchfab/Poly Haven for free models | `ip2b/art/moodboard.html`, `ip2b/art/r*.jpg` | Kaike chose references A + F, "nothing stays", walls + floor + furniture, a mid-century bedroom, keep IP2a features, add curtains that darken the room, cut toss first |
+| 2026-10-17 | Assembled and rendered room mock-ups in Blender (living room ×2, bedroom); recoloured the bedroom pieces (teal, mustard, walnut) | `ip2b/art/room_v2_*.png`, `ip2b/art/bedroom_v1.png`, `room_mock_v2.blend` (local) | Kaike reviewed: "furniture stuck in the middle", "add a TV" → re-laid out; approved v2 |
+| 2026-10-17 | Wrote the design spec and the 13-task build plan; ran an independent builder check (subagent) and brought back three questions | `docs/superpowers/specs/2026-10-17-ip2b-design.md`, `docs/superpowers/plans/2026-10-17-ip2b-build.md` | Kaike answered: furniture pull-only, toss + hold-up both live, participant runs MR with one question; approved spec and plan |
+| 2026-10-17 | Built T0–T10 in Unity with tests first: project move to `ip2b/`; Sketchfab furniture decimated in Blender and imported; 5.5 × 5 m room with garden view, beam, art, curtains, pendant, arc lamp; Living + mid-century Bedroom presets; pull from any surface; fan deck (LightnessLadder, FanDeck, FanChip); floor tint; calmer furniture; curtains fading daylight; MR showcase (AR Foundation + Meta OpenXR, Renovation.MR assembly); toss. EditMode 234/234, PlayMode 42/42 | `ip2b/RenovationPreviewer/**` | Kaike approved the plan and asked AI to build it; device test pending (Friday) |
+| 2026-10-17 | Verified 7 academic references through Crossref/publisher pages and drafted the research paragraph; drafted the testing plan (B1–B6, five-principles table, UEQ-S + VRSQ) and the IP2b iPad logger | `ip2b/research-references.md`, `ip2b/2026-10-23-ip2b-testing-plan.md`, `ip2b/ipad-logger.html` | **Kaike to read every reference, rewrite the paragraph in their own voice, and check the plan's wording** |

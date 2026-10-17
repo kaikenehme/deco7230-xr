@@ -105,7 +105,25 @@ Print CSS gotchas already solved in `lowfi-plan-print.html`: `page-break-after:a
 - Scope discipline is the top risk — zero Unity experience against a 35% hurdle with no extension.
 - Caveman mode is usually active in these sessions (terse, fragments OK). Code, commits and security warnings still get written normally.
 
-## Current state — 25 Sep 2026, Week 9 — **IP2a tested** (next: Evaluation 2, Wed 7 Oct 12:00)
+## Current state — 17 Oct 2026, Week 11 — **IP2b built, not yet run on a headset** (test Fri 23 Oct, Studio)
+
+Eval 2 submitted 7 Oct. IP2b design: `docs/superpowers/specs/2026-10-17-ip2b-design.md`; plan + STATUS: `docs/superpowers/plans/2026-10-17-ip2b-build.md`; branch **`ip2b`** (not merged). EditMode 234/234, PlayMode 42/42.
+
+**What changed (Kaike's calls, 17 Oct):** nothing is "staying" — pull from any surface, furniture is pull-only, walls + floor take paint · two dressed rooms: **Living** (warm contemporary, Sketchfab CC-BY pieces) and **Bedroom** (mid-century) in a **5.5 × 5 m** room · **fan deck** (7 cards light → dark, two off-whites) replaces twist-to-tune · floor tint over material · **curtains** fade daylight over 1 s · smoother furniture (45°/s) · **toss** alongside hold-up · **MR showcase**: "Your room" frame → passthrough, real walls/floor paintable (`Renovation.MR` assembly; AR Foundation 6.1.1 + Unity OpenXR: Meta 2.1.1). IP2a features kept (clock, lamp, menu, schemes, presets).
+
+**No headset until Fri 23 Oct** — studio Quest on the day; Unity-only testing = grade cap. Friday AM: Space Setup in the studio, USB "Always allow", build APK (**only on Kaike's go**), install, check MR; if MR fails, test VR only and say so.
+
+**Test-day docs (drafts — Kaike's voice pass needed):** `ip2b/2026-10-23-ip2b-testing-plan.md` (B1–B6, five principles = Week 6 slide 21, UEQ-S + VRSQ) · research paragraph with 7 verified refs (`ip2b/research-references.md`) — **submit to Blackboard at the end of the session** · iPad logger `ip2b/ipad-logger.html` (not yet published as an artifact) · `ip2b/ai-use-log.md`.
+
+**Desktop controls added:** `M` = MR on/off (facilitator). Scroll no longer twists (fan cards are clicked). F1–F2 rooms.
+
+**Headless gotcha (17 Oct):** a killed batchmode run left `bee_backend`/`netcorerun` orphans that wedged every later compile at "Compiling Scripts". Fix: kill all Unity processes by PID, `rm -rf Library/Bee Library/ScriptAssemblies`, rerun.
+
+**Still to do:** desktop lap by Kaike (pull → fan → hold-up/toss → floor → curtains → furniture → Bedroom → `M`) · XR Simulation check of MR in the GUI editor (optional) · plan PDF · merge `ip2b` → main.
+
+---
+
+## IP2a state — 25 Sep 2026, Week 9 — **IP2a tested**
 
 **25 Sep:** IP2a ran **on the Quest 3S, not desktop mode** (Kaike switched on the day; Quest now authorised over USB — tick "Always allow"). n = 5, all headset. Results: `testing-data/ip2a/README.md` (table generated from the logger JSON in `testing-data/ip2a/logger-export/`, raw counts per assumption, data-quality notes — read them before quoting). Headline raw counts: pulled a sample unprompted in free look **4/5** (IP1 0/5, simulator); kept colour from the **menu 5/5**, so the A2 helpful/restrictive question never fired; confidence 5,4,4,4,5. Fixes on the day: point + trigger presses lamp/clock/frames on device (`edd1d07`). Quest notes (pauses = Meta button / proximity sleep; `prox_close` / `automation_disable`; battery drains on the Mac's USB; scrcpy mirror + `ip2a/record-session.sh`): `ip2a/quest-sideload.md`. HEAD `b7d476f`.
 
