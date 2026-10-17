@@ -1,6 +1,6 @@
 # Catalogue credits
 
-All 3D models and textures are CC0 (public domain). Colour data is public Dulux Australia colour information used for display names only.
+Poly Haven and ambientCG models and textures are CC0 (public domain); Sketchfab models are CC-BY or Sketchfab Free Standard, credited per item below. Colour data is public Dulux Australia colour information used for display names only.
 
 ## Paint
 - Dulux Australia colour names/RGB via https://github.com/shanmoorthy/dulux-paint-colour-data (24 colours)
@@ -44,4 +44,16 @@ All 3D models and textures are CC0 (public domain). Colour data is public Dulux 
 - ceramic_vase_01 — https://polyhaven.com/a/ceramic_vase_01
 - vintage_oil_lamp — https://polyhaven.com/a/vintage_oil_lamp
 - GothicBed_01 — https://polyhaven.com/a/GothicBed_01
+
+## Furniture (Sketchfab, CC-BY / Free Standard — decimated in Blender for Quest)
+- curved_sofa — Curved Sofa Set – White · nghihuutr · CC-BY · https://sketchfab.com/3d-models/ff69c42b0ec24dfcb1ff05a4f0d1f3a8
+- round_armchair — Curved Sofa Set – White · nghihuutr · CC-BY · https://sketchfab.com/3d-models/ff69c42b0ec24dfcb1ff05a4f0d1f3a8
+- pouf — Curved Sofa Set – White · nghihuutr · CC-BY · https://sketchfab.com/3d-models/ff69c42b0ec24dfcb1ff05a4f0d1f3a8
+- oval_marble_table — Curved Sofa Set – White · nghihuutr · CC-BY · https://sketchfab.com/3d-models/ff69c42b0ec24dfcb1ff05a4f0d1f3a8
+- slatted_tv_stand — Modern Slatted Wooden TV Stand · SaretiX · Free Standard · https://sketchfab.com/3d-models/f0e5b2882c864a4b9aec1266115a13a4
+- flat_tv — PSX Flat Screen TV · Tomitos_ · CC-BY · https://sketchfab.com/3d-models/1a6db811760344f6a8e64be01e4d8f09
+- arc_floor_lamp — Floor Lamp 3-Color CCT Arc Gold · ceohive · CC-BY · https://sketchfab.com/3d-models/fad285f48b1042aca4b4f421115280d4
+- woven_pendant — Woven Bamboo Sphere Pendant Light · AT_DariusIulian · CC-BY · https://sketchfab.com/3d-models/fbe65646f78d449ca5d30314b396f535
+- linen_curtain — Curtain Flannel · lugsserg · CC-BY · https://sketchfab.com/3d-models/8fef4b925af84a658f95f2fc484d092c
+- monstera_stand — Monstera Deliciosa Potted Mid-Century plant · ChubbyPanda · CC-BY · https://sketchfab.com/3d-models/1ab9bf841df04c07b1819be596327629
 

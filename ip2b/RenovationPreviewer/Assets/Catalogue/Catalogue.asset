@@ -293,3 +293,63 @@ MonoBehaviour:
     category: 5
     thumbnail: {fileID: 2800000, guid: b66f7e56e1f814abd8ad49294739bd65, type: 3}
     sampleColor: {r: 0.7442024, g: 0.72676, b: 0.70570445, a: 1}
+  - name: Curved sofa
+    sourceId: curved_sofa
+    prefab: {fileID: 6128798891302641488, guid: 33b713ccca2e549e4a0b21923b38832d, type: 3}
+    category: 0
+    thumbnail: {fileID: 2800000, guid: 352f51c3ad550404d8317299fa699398, type: 3}
+    sampleColor: {r: 0.9137255, g: 0.8901961, b: 0.84705883, a: 1}
+  - name: Round armchair
+    sourceId: round_armchair
+    prefab: {fileID: 555831195122384241, guid: 60ad4077214414850bd1a43c80ed152f, type: 3}
+    category: 0
+    thumbnail: {fileID: 2800000, guid: 764867dfb719f48669787e20987d6064, type: 3}
+    sampleColor: {r: 0.70980394, g: 0.3764706, b: 0.24705882, a: 1}
+  - name: Pouf
+    sourceId: pouf
+    prefab: {fileID: 7094472041703821705, guid: 3cab26f1e3ae14e2880e22688d9d1f37, type: 3}
+    category: 0
+    thumbnail: {fileID: 2800000, guid: a9a0a52987f9a44ba862eb5f681a5310, type: 3}
+    sampleColor: {r: 0.9137255, g: 0.8901961, b: 0.84705883, a: 1}
+  - name: Oval marble table
+    sourceId: oval_marble_table
+    prefab: {fileID: 7161475869931867244, guid: 07e111e8a237d467faf461b4e2cf556d, type: 3}
+    category: 1
+    thumbnail: {fileID: 2800000, guid: 049971f09da02402aa602ebf62da53dc, type: 3}
+    sampleColor: {r: 0.9098039, g: 0.9019608, b: 0.88235295, a: 1}
+  - name: Slatted TV unit
+    sourceId: slatted_tv_stand
+    prefab: {fileID: 8683116475541301395, guid: d0ce1cbd43ca74707b35407ec74b8e40, type: 3}
+    category: 2
+    thumbnail: {fileID: 2800000, guid: e17a09556df39440ba0028cb27bd2902, type: 3}
+    sampleColor: {r: 0.7882353, g: 0.64705884, b: 0.47843137, a: 1}
+  - name: TV
+    sourceId: flat_tv
+    prefab: {fileID: 3154523115426063213, guid: e3679a36c7fb84253af4408ed1f3eeef, type: 3}
+    category: 3
+    thumbnail: {fileID: 2800000, guid: 57631f7d00d6442bea3168bb8ff49c37, type: 3}
+    sampleColor: {r: 0.101960786, g: 0.101960786, b: 0.101960786, a: 1}
+  - name: Arc floor lamp
+    sourceId: arc_floor_lamp
+    prefab: {fileID: 5423728170344486087, guid: 470f3f194f4fc4d46be10c6afe9bca6b, type: 3}
+    category: 4
+    thumbnail: {fileID: 2800000, guid: 7dea61ddf0ebb430498b87a6f1a57475, type: 3}
+    sampleColor: {r: 0.72156864, g: 0.5686275, b: 0.24705882, a: 1}
+  - name: Woven pendant
+    sourceId: woven_pendant
+    prefab: {fileID: 4930081823797971797, guid: bcba0d0cd1b5f4906802ca23154e0799, type: 3}
+    category: 4
+    thumbnail: {fileID: 2800000, guid: 324bcddff0e3048449f80381a11724be, type: 3}
+    sampleColor: {r: 0.78039217, g: 0.6039216, b: 0.35686275, a: 1}
+  - name: Linen curtain
+    sourceId: linen_curtain
+    prefab: {fileID: 7383549504145623230, guid: 9d1775b7181f14f4685e7dfff1d9002a, type: 3}
+    category: 3
+    thumbnail: {fileID: 2800000, guid: 1a76dd0af464b4797970849e5ecef0f8, type: 3}
+    sampleColor: {r: 0.9019608, g: 0.8627451, b: 0.79607844, a: 1}
+  - name: Monstera
+    sourceId: monstera_stand
+    prefab: {fileID: 4395246652855871583, guid: be79c76b08a6047aebacd6f60611e957, type: 3}
+    category: 3
+    thumbnail: {fileID: 2800000, guid: 4a97aa1b72bf14b7d8555e99df58f59a, type: 3}
+    sampleColor: {r: 0.30980393, g: 0.47843137, b: 0.27058825, a: 1}

@@ -56,6 +56,24 @@ public static class CatalogueImporter
         ("GothicBed_01", "Bed", FurnitureCategory.Bed),
     };
 
+    // IP2b: Sketchfab pieces decimated + exported from Blender into Catalogue/Local/<id>/<id>.fbx
+    // (ip2b/art/room_mock_v2.blend). sampleColor = what a pulled sample starts from.
+    public static readonly (string id, string label, FurnitureCategory cat, string hex, string credit)[] LocalFurniture =
+    {
+        ("curved_sofa", "Curved sofa", FurnitureCategory.Seating, "#E9E3D8", "Curved Sofa Set – White · nghihuutr · CC-BY · https://sketchfab.com/3d-models/ff69c42b0ec24dfcb1ff05a4f0d1f3a8"),
+        ("round_armchair", "Round armchair", FurnitureCategory.Seating, "#B5603F", "Curved Sofa Set – White · nghihuutr · CC-BY · https://sketchfab.com/3d-models/ff69c42b0ec24dfcb1ff05a4f0d1f3a8"),
+        ("pouf", "Pouf", FurnitureCategory.Seating, "#E9E3D8", "Curved Sofa Set – White · nghihuutr · CC-BY · https://sketchfab.com/3d-models/ff69c42b0ec24dfcb1ff05a4f0d1f3a8"),
+        ("oval_marble_table", "Oval marble table", FurnitureCategory.Table, "#E8E6E1", "Curved Sofa Set – White · nghihuutr · CC-BY · https://sketchfab.com/3d-models/ff69c42b0ec24dfcb1ff05a4f0d1f3a8"),
+        ("slatted_tv_stand", "Slatted TV unit", FurnitureCategory.Storage, "#C9A57A", "Modern Slatted Wooden TV Stand · SaretiX · Free Standard · https://sketchfab.com/3d-models/f0e5b2882c864a4b9aec1266115a13a4"),
+        ("flat_tv", "TV", FurnitureCategory.Decor, "#1A1A1A", "PSX Flat Screen TV · Tomitos_ · CC-BY · https://sketchfab.com/3d-models/1a6db811760344f6a8e64be01e4d8f09"),
+        ("arc_floor_lamp", "Arc floor lamp", FurnitureCategory.Lighting, "#B8913F", "Floor Lamp 3-Color CCT Arc Gold · ceohive · CC-BY · https://sketchfab.com/3d-models/fad285f48b1042aca4b4f421115280d4"),
+        ("woven_pendant", "Woven pendant", FurnitureCategory.Lighting, "#C79A5B", "Woven Bamboo Sphere Pendant Light · AT_DariusIulian · CC-BY · https://sketchfab.com/3d-models/fbe65646f78d449ca5d30314b396f535"),
+        ("linen_curtain", "Linen curtain", FurnitureCategory.Decor, "#E6DCCB", "Curtain Flannel · lugsserg · CC-BY · https://sketchfab.com/3d-models/8fef4b925af84a658f95f2fc484d092c"),
+        ("monstera_stand", "Monstera", FurnitureCategory.Decor, "#4F7A45", "Monstera Deliciosa Potted Mid-Century plant · ChubbyPanda · CC-BY · https://sketchfab.com/3d-models/1ab9bf841df04c07b1819be596327629"),
+    };
+
+    static readonly HashSet<string> TwoSided = new() { "linen_curtain" };
+
     // tile = metres per texture repeat (ambientCG textures are authored at roughly 1–2 m per repeat)
     static readonly (string id, string label, SurfaceKind targets, float tile)[] Materials =
     {
@@ -84,7 +102,7 @@ public static class CatalogueImporter
     public static void Import()
     {
         EnsureFolder(Root);
-        var credits = new StringBuilder("# Catalogue credits\n\nAll 3D models and textures are CC0 (public domain). Colour data is public Dulux Australia colour information used for display names only.\n\n");
+        var credits = new StringBuilder("# Catalogue credits\n\nPoly Haven and ambientCG models and textures are CC0 (public domain); Sketchfab models are CC-BY or Sketchfab Free Standard, credited per item below. Colour data is public Dulux Australia colour information used for display names only.\n\n");
         var cat = AssetDatabase.LoadAssetAtPath<Catalogue>($"{Root}/Catalogue.asset");
         if (cat == null)
         {
@@ -98,6 +116,7 @@ public static class CatalogueImporter
             ImportPaints(cat, credits);
             ImportMaterials(cat, credits);
             ImportFurniture(cat, credits);
+            ImportLocalFurniture(cat, credits);
         }
         finally
         {
@@ -252,6 +271,56 @@ public static class CatalogueImporter
     }
 
     /// <summary>
+    /// IP2b local pieces: FBX with embedded textures from Blender. Extract the textures to
+    /// real assets (capped at 2048 px for Quest), bake the prefab, then drop the FBX.
+    /// </summary>
+    static void ImportLocalFurniture(Catalogue cat, StringBuilder credits)
+    {
+        credits.AppendLine("## Furniture (Sketchfab, CC-BY / Free Standard — decimated in Blender for Quest)");
+        foreach (var (id, label, category, hex, credit) in LocalFurniture)
+        {
+            try
+            {
+                var dir = $"{Root}/Local/{id}";
+                var fbxPath = $"{dir}/{id}.fbx";
+                var prefabPath = $"{Root}/Prefabs/{id}.prefab";
+                var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
+                if (prefab == null)
+                {
+                    if (!File.Exists(fbxPath)) throw new Exception($"no prefab and no {fbxPath} — export it from Blender (ip2b/art)");
+                    AssetDatabase.ImportAsset(fbxPath, ImportAssetOptions.ForceSynchronousImport);
+                    var importer = (ModelImporter)AssetImporter.GetAtPath(fbxPath);
+                    var texDir = $"{dir}/textures"; EnsureFolder(texDir);
+                    importer.ExtractTextures(texDir);
+                    AssetDatabase.Refresh();
+                    foreach (var guid in AssetDatabase.FindAssets("t:Texture2D", new[] { texDir }))
+                    {
+                        var ti = (TextureImporter)AssetImporter.GetAtPath(AssetDatabase.GUIDToAssetPath(guid));
+                        if (ti.maxTextureSize > 2048) { ti.maxTextureSize = 2048; ti.SaveAndReimport(); }
+                    }
+                    AssetDatabase.ImportAsset(fbxPath, ImportAssetOptions.ForceUpdate | ImportAssetOptions.ForceSynchronousImport);
+                    var model = AssetDatabase.LoadAssetAtPath<GameObject>(fbxPath);
+                    if (model == null) { Debug.LogWarning($"CatalogueImporter: FBX import produced no GameObject for {id}"); continue; }
+                    prefab = BakePrefab(id, model, dir, prefabPath);
+                    AssetDatabase.DeleteAsset(fbxPath);
+                }
+                ColorUtility.TryParseHtmlString(hex, out var sample);
+                if (TwoSided.Contains(id))   // single-sheet meshes (curtain) vanish edge-on with back-face culling
+                    foreach (var r in prefab.GetComponentsInChildren<Renderer>())
+                        foreach (var m in r.sharedMaterials) { m.SetFloat("_Cull", 0f); m.doubleSidedGI = true; if (m.GetTexture("_BaseMap") == null) m.color = sample; EditorUtility.SetDirty(m); }
+                var thumb = EnsureThumbnail(id, prefab);
+                cat.furniture.Add(new FurnitureOption { name = label, sourceId = id, prefab = prefab, category = category, thumbnail = thumb, sampleColor = sample });
+                credits.AppendLine($"- {id} — {credit}");
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning($"CatalogueImporter: skipped {id}: {ex.Message}");
+            }
+        }
+        credits.AppendLine();
+    }
+
+    /// <summary>
     /// Copy meshes + materials out of the FBX-imported model into standalone assets
     /// (Mesh .asset, URP/Lit .mat reusing the downloaded jpgs) and save a prefab whose
     /// pivot sits at the floor. Nothing in the prefab references the .fbx afterwards.
@@ -295,6 +364,8 @@ public static class CatalogueImporter
                     baseTex = sm.HasProperty("baseColorTexture") ? sm.GetTexture("baseColorTexture") : sm.mainTexture;
                     normalTex = sm.HasProperty("normalTexture") ? sm.GetTexture("normalTexture") : null;
                     if (sm.HasProperty("baseColorFactor")) tint = sm.GetColor("baseColorFactor");
+                    else if (baseTex == null && sm.HasProperty("_BaseColor")) tint = sm.GetColor("_BaseColor");   // untextured (e.g. terracotta armchair)
+                    else if (baseTex == null && sm.HasProperty("_Color")) tint = sm.GetColor("_Color");
                 }
                 // Fallback: the jpgs Poly Haven shipped alongside the model.
                 if (baseTex == null) baseTex = FindTexture(dir, "_diff_");
