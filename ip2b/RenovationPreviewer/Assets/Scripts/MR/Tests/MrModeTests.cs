@@ -51,6 +51,7 @@ public class MrModeTests
         mr.head = head.transform;
         mr.SetMr(true);
         Assert.Less(Vector3.Distance(frame.transform.position, head.transform.position), 1.2f, "floats in front of the user");
+        Assert.Greater(Vector3.Dot(frame.transform.right, head.transform.position - frame.transform.position), 0f, "I3: picture side (+X) faces the user");
         mr.SetMr(false);
         Assert.AreEqual(new Vector3(1f, 1.5f, 2.47f), frame.transform.position);
         Object.DestroyImmediate(head);
@@ -74,4 +75,31 @@ public class MrModeTests
         Assert.AreEqual(MrPlaneSurface.PreviewAlpha, MrPlaneSurface.AlphaFor(true, true), "preview wins while hovering");
         Assert.AreEqual(MrPlaneSurface.CommittedAlpha, MrPlaneSurface.AlphaFor(false, true));
     }
+
+    // C2 — a non-convex MeshCollider's ClosestPoint returns the query point; planes use a thin box
+    [Test]
+    public void PlaneBox_ClosestPointLiesOnThePlane()
+    {
+        var go = new GameObject("plane");
+        var box = go.AddComponent<BoxCollider>();
+        MrPlaneSurface.FitBox(box, Vector2.zero, new Vector2(1f, 0.5f));
+        Physics.SyncTransforms();
+        var q = box.ClosestPoint(new Vector3(0f, 1f, 0f));
+        Assert.Less(q.y, 0.05f, "on the plane, not the query point");
+        Assert.AreEqual(2f, box.size.x, 1e-4f); Assert.AreEqual(1f, box.size.z, 1e-4f);
+        Object.DestroyImmediate(go);
+    }
+
+    [Test]
+    public void PlanePrefab_UsesBox_NotMeshCollider()
+    {
+        var prefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/MrPlane.prefab");
+        Assert.IsNotNull(prefab);
+        Assert.IsNull(prefab.GetComponent<MeshCollider>());
+        Assert.IsNotNull(prefab.GetComponent<BoxCollider>());
+    }
+
+    // C1 — Meta scene permission must be asked for, or no planes arrive
+    [Test]
+    public void ScenePermission_IsMetaUseScene() => Assert.AreEqual("com.oculus.permission.USE_SCENE", MrModeController.ScenePermission);
 }

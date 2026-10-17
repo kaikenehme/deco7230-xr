@@ -19,6 +19,9 @@ public class SamplePuller : MonoBehaviour
     Surface touching;
 
     public Surface Touching => touching;
+
+    /// <summary>Trigger pulls only when it isn't aimed at a touchable (fan card, lamp, clock, curtains, frame) — the ray wins.</summary>
+    public static bool ShouldPull(bool pressed, bool hasPullable, bool rayOnTouchable) => pressed && hasPullable && !rayOnTouchable;
     /// <summary>The sample this hand last pulled (null once committed/discarded).</summary>
     public Sample Held { get; private set; }
 
@@ -51,7 +54,10 @@ public class SamplePuller : MonoBehaviour
             ? touching
             : PullAffordance.NearestPullable(transform.position, out _);
         if (Pullable == null || samplePrefab == null || interactor == null) return;
-        if (triggerAction.action == null || !triggerAction.action.WasPressedThisFrame()) return;
+        bool pressed = triggerAction.action != null && triggerAction.action.WasPressedThisFrame();
+        if (!pressed) return;
+        bool onTouchable = RayUtil.PickTouchable(new Ray(transform.position, transform.forward), transform.root, MenuSelectRelay.PropReach) != null;
+        if (!ShouldPull(pressed, true, onTouchable)) return;
 
         var aff = Pullable.GetComponent<PullAffordance>();
         var at = aff != null && aff.IsVisible ? aff.TabPosition : transform.position;

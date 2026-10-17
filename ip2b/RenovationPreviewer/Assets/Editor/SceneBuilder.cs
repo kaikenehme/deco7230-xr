@@ -726,7 +726,7 @@ public static class SceneBuilder
         paint.color = new Color(1f, 1f, 1f, 0f);
         paint.SetFloat("_Smoothness", 0.1f);
         r.sharedMaterial = paint;
-        go.AddComponent<MeshCollider>();
+        go.AddComponent<BoxCollider>();   // MrPlaneSurface fits it to the plane (MeshCollider.ClosestPoint fails on non-convex)
         go.AddComponent<UnityEngine.XR.ARFoundation.ARPlaneMeshVisualizer>();
         go.AddComponent<MrPlaneSurface>();
         var prefab = PrefabUtility.SaveAsPrefabAsset(go, "Assets/Prefabs/MrPlane.prefab");

@@ -12,6 +12,8 @@ using UnityEngine.XR.ARSubsystems;
 public class MrModeController : MonoBehaviour, ITouchable
 {
     const float Debounce = 0.5f;
+    /// <summary>Meta's runtime permission for Space Setup data; without it no planes arrive (meta-openxr scene-setup.md).</summary>
+    public const string ScenePermission = "com.oculus.permission.USE_SCENE";
 
     public PresetApplier presets;
     public GameObject roomShell;                 // everything virtual that hides in MR
@@ -84,9 +86,10 @@ public class MrModeController : MonoBehaviour, ITouchable
         if (cameraManager != null) cameraManager.enabled = on;
         if (planeManager != null)
         {
-            planeManager.enabled = on;
+            planeManager.enabled = on && HasScenePermission();   // Update enables it once the permission arrives
             foreach (var p in planeManager.trackables) p.gameObject.SetActive(on);
         }
+        if (on && !HasScenePermission()) RequestScenePermission();
         Debug.Log($"[IP2b] mr {(on ? "on" : "off")}");
     }
 
@@ -98,14 +101,35 @@ public class MrModeController : MonoBehaviour, ITouchable
         if (fwd.sqrMagnitude < 1e-4f) fwd = Vector3.forward;
         fwd.Normalize();
         var pos = head.position + fwd * 0.9f; pos.y = Mathf.Max(1.2f, head.position.y - 0.3f);
-        transform.SetPositionAndRotation(pos, Quaternion.LookRotation(-fwd, Vector3.up) * Quaternion.Euler(0f, 90f, 0f));   // frames are built facing +X
+        // Frames are built with the picture on local +X: point +X back at the user (review I3).
+        transform.SetPositionAndRotation(pos, Quaternion.LookRotation(fwd, Vector3.up) * Quaternion.Euler(0f, 90f, 0f));
     }
 
-#if UNITY_EDITOR
+    void Start() => RequestScenePermission();   // ask at launch, so the system dialog never interrupts a session
+
+    static bool HasScenePermission()
+    {
+#if UNITY_ANDROID && !UNITY_EDITOR
+        return UnityEngine.Android.Permission.HasUserAuthorizedPermission(ScenePermission);
+#else
+        return true;
+#endif
+    }
+
+    static void RequestScenePermission()
+    {
+#if UNITY_ANDROID && !UNITY_EDITOR
+        if (!UnityEngine.Android.Permission.HasUserAuthorizedPermission(ScenePermission))
+            UnityEngine.Android.Permission.RequestUserPermission(ScenePermission);
+#endif
+    }
+
     void Update()
     {
+        if (IsOn && planeManager != null && !planeManager.enabled && HasScenePermission()) planeManager.enabled = true;
+#if UNITY_EDITOR
         var kb = UnityEngine.InputSystem.Keyboard.current;
         if (kb != null && kb.mKey.wasPressedThisFrame) Touch();   // facilitator / desktop dry run
-    }
 #endif
+    }
 }

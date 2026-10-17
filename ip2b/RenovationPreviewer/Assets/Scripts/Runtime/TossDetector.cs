@@ -22,8 +22,10 @@ public static class TossDetector
         return dt > 1e-5f ? (positions[last] - positions[0]) / dt : Vector3.zero;
     }
 
-    public static ReleaseOutcome Decide(bool previewing, Vector3 velocity)
+    /// <summary>canceled = the select was cut short (sample replaced by a new pull, room switched): never commit or throw.</summary>
+    public static ReleaseOutcome Decide(bool previewing, Vector3 velocity, bool canceled = false)
     {
+        if (canceled) return ReleaseOutcome.Discard;
         if (previewing) return ReleaseOutcome.CommitHoldUp;
         return velocity.magnitude >= MinSpeed ? ReleaseOutcome.Toss : ReleaseOutcome.Discard;
     }

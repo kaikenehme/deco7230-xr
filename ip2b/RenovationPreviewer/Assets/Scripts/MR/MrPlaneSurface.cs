@@ -19,9 +19,28 @@ public class MrPlaneSurface : MonoBehaviour
     float born;
     bool committedLogged;
 
+    /// <summary>Thin box over the plane (plane space: normal = local Y). MeshCollider.ClosestPoint doesn't work on
+    /// non-convex meshes — it returns the query point, so every plane looked 0 m away (review C2).</summary>
+    public static void FitBox(BoxCollider box, Vector2 centre, Vector2 extents)
+    {
+        box.center = new Vector3(centre.x, 0f, centre.y);
+        box.size = new Vector3(Mathf.Max(0.01f, extents.x * 2f), 0.02f, Mathf.Max(0.01f, extents.y * 2f));
+    }
+
     public static float AlphaFor(bool previewing, bool committed) => previewing ? PreviewAlpha : committed ? CommittedAlpha : 0f;
 
-    void Awake() { plane = GetComponent<ARPlane>(); rend = GetComponent<Renderer>(); born = Time.time; }
+    BoxCollider box;
+
+    void Awake()
+    {
+        plane = GetComponent<ARPlane>(); rend = GetComponent<Renderer>(); born = Time.time;
+        box = GetComponent<BoxCollider>();
+        if (box == null) box = gameObject.AddComponent<BoxCollider>();
+    }
+
+    void OnEnable() { if (plane != null) plane.boundaryChanged += OnBoundary; }
+    void OnDisable() { if (plane != null) plane.boundaryChanged -= OnBoundary; }
+    void OnBoundary(ARPlaneBoundaryChangedEventArgs _) { if (box != null && plane != null) FitBox(box, plane.centerInPlaneSpace, plane.extents); }
 
     void Update()
     {

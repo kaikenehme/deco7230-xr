@@ -107,7 +107,7 @@ Print CSS gotchas already solved in `lowfi-plan-print.html`: `page-break-after:a
 
 ## Current state — 17 Oct 2026, Week 11 — **IP2b built, not yet run on a headset** (test Fri 23 Oct, Studio)
 
-Eval 2 submitted 7 Oct. IP2b design: `docs/superpowers/specs/2026-10-17-ip2b-design.md`; plan + STATUS: `docs/superpowers/plans/2026-10-17-ip2b-build.md`; branch **`ip2b`** (not merged). EditMode 234/234, PlayMode 42/42.
+Eval 2 submitted 7 Oct. IP2b design: `docs/superpowers/specs/2026-10-17-ip2b-design.md`; plan + STATUS: `docs/superpowers/plans/2026-10-17-ip2b-build.md`; branch **`ip2b`** (not merged). EditMode 242/242, PlayMode 42/42 (after final-review fixes; rulings + deferred minors in `docs/superpowers/plans/2026-10-17-ip2b-build-ledger.md`).
 
 **What changed (Kaike's calls, 17 Oct):** nothing is "staying" — pull from any surface, furniture is pull-only, walls + floor take paint · two dressed rooms: **Living** (warm contemporary, Sketchfab CC-BY pieces) and **Bedroom** (mid-century) in a **5.5 × 5 m** room · **fan deck** (7 cards light → dark, two off-whites) replaces twist-to-tune · floor tint over material · **curtains** fade daylight over 1 s · smoother furniture (45°/s) · **toss** alongside hold-up · **MR showcase**: "Your room" frame → passthrough, real walls/floor paintable (`Renovation.MR` assembly; AR Foundation 6.1.1 + Unity OpenXR: Meta 2.1.1). IP2a features kept (clock, lamp, menu, schemes, presets).
 

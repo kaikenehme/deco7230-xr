@@ -63,8 +63,11 @@ public class HoldUpPreviewer : MonoBehaviour
     void OnReleased(SelectExitEventArgs args)
     {
         holdingHand = null;
-        switch (TossDetector.Decide(previewing != null, TossDetector.Velocity(trail, trailT)))
+        switch (TossDetector.Decide(previewing != null, TossDetector.Velocity(trail, trailT), args.isCanceled))
         {
+            case ReleaseOutcome.Discard:
+                if (previewing != null) previewing.Revert();   // a preview must never stick
+                break;
             case ReleaseOutcome.CommitHoldUp:
                 previewing.Commit(sample.CurrentColor);
                 Debug.Log("[IP2b] commit holdup " + previewing.name);

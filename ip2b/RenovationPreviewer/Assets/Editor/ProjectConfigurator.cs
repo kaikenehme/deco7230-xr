@@ -149,6 +149,7 @@ public static class ProjectConfigurator
             "com.unity.openxr.feature.arfoundation-meta-camera",
             "com.unity.openxr.feature.arfoundation-meta-plane",
         };
+        SetupPassthroughGraphics();
         FeatureHelpers.RefreshFeatures(BuildTargetGroup.Android);
         foreach (var id in ids)
         {
@@ -158,6 +159,17 @@ public static class ProjectConfigurator
             Debug.Log($"ProjectConfigurator: enabled {id} for Android");
         }
         AssetDatabase.SaveAssets();
+    }
+
+    /// <summary>Passthrough needs alpha in the eye buffer: HDR off, intermediate texture Auto (meta-openxr graphics-settings.md; review C3).</summary>
+    public static void SetupPassthroughGraphics()
+    {
+        var urp = AssetDatabase.LoadAssetAtPath<UniversalRenderPipelineAsset>("Assets/Settings/URP-Asset.asset");
+        if (urp != null) { urp.supportsHDR = false; EditorUtility.SetDirty(urp); }
+        var data = AssetDatabase.LoadAssetAtPath<UniversalRendererData>("Assets/Settings/URP-Renderer.asset");
+        if (data != null) { data.intermediateTextureMode = IntermediateTextureMode.Auto; EditorUtility.SetDirty(data); }
+        AssetDatabase.SaveAssets();
+        Debug.Log("ProjectConfigurator: passthrough graphics (HDR off, intermediate texture Auto)");
     }
 
     static void ImportXriSamples()

@@ -41,14 +41,17 @@ public class MenuSelectRelay : MonoBehaviour
         return true;
     }
 
+    /// <summary>Pulling takes the trigger only when the ray isn't on a touchable prop (review I2: N1 made almost everything pullable).</summary>
+    public static bool PullTakesTrigger(bool canPull, bool rayOnTouchable) => canPull && !rayOnTouchable;
+
     void Update()
     {
         if (menu == null) return;
         if (ClosePressed()) { menu.Hide(); return; }
         if (selectAction.action == null || !selectAction.action.WasPressedThisFrame()) return;
-        if (puller != null && puller.CanPull) return;
-
         var origin = rayOrigin != null ? rayOrigin : transform;
+        bool onProp = RayUtil.PickTouchable(new Ray(origin.position, origin.forward), ignoreRoot, PropReach) != null;
+        if (puller != null && PullTakesTrigger(puller.CanPull, onProp)) return;
         // Lamp, clock and preset frames: point + trigger presses them (on the headset too, not only by touching
         // them with the controller). Their colliders are triggers, which TryHit skips, so without this the
         // trigger fell through and opened the wall or floor behind them.
