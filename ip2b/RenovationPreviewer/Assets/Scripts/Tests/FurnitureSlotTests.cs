@@ -174,7 +174,37 @@ public class FurnitureSlotTests
     }
 
     [Test] public void YawStep_BelowDeadzone_IsZero() => Assert.AreEqual(0f, FurnitureSlot.YawStep(new Vector2(0.2f, 0.9f), 1f));
-    [Test] public void YawStep_FullDeflection_Is90DegPerSec() => Assert.AreEqual(FurnitureSlot.RotateDegPerSec, FurnitureSlot.YawStep(Vector2.right, 1f), 1e-4f);
+    [Test] public void YawStep_FullDeflection_IsRotateDegPerSec() => Assert.AreEqual(FurnitureSlot.RotateDegPerSec, FurnitureSlot.YawStep(Vector2.right, 1f), 1e-4f);
+    [Test] public void YawStep_IsHalfIP2aSpeed() => Assert.AreEqual(45f / 72f, FurnitureSlot.YawStep(new Vector2(1, 0), 1 / 72f), 1e-4f);   // Eval 2: "too sensitive"
+
+    [Test]
+    public void Follow_ConvergesWithoutOvershoot()
+    {
+        var p = Vector3.zero;
+        for (int i = 0; i < 60; i++) p = FurnitureSlot.Follow(p, Vector3.right, 1 / 72f);
+        Assert.Greater(p.x, 0.99f);
+        Assert.LessOrEqual(p.x, 1f);
+    }
+
+    [Test] public void Follow_FirstFrameMovesLessThanHalf() => Assert.Less(FurnitureSlot.Follow(Vector3.zero, Vector3.right, 1 / 72f).x, 0.5f);
+
+    [Test]
+    public void ClampToFloor_KeepsFootprintInside()
+    {
+        // Review Focus #5: a piece pushed against a wall stays inside the smaller room, footprint and all.
+        var floor = new Bounds(Vector3.zero, new Vector3(5.5f, 0, 5f));
+        var c = FurnitureSlot.ClampToFloor(new Vector3(9, 0, 9), floor, new Vector3(1.3f, 0, 0.5f));
+        Assert.LessOrEqual(c.x + 1.3f, 2.75f - FurnitureSlot.FloorMargin + 1e-4f);
+        Assert.LessOrEqual(c.z + 0.5f, 2.5f - FurnitureSlot.FloorMargin + 1e-4f);
+        Assert.AreEqual(0f, c.y);
+    }
+
+    [Test]
+    public void ClampToFloor_PieceWiderThanRoom_Centres()
+    {
+        var floor = new Bounds(Vector3.zero, new Vector3(2f, 0, 2f));
+        Assert.AreEqual(0f, FurnitureSlot.ClampToFloor(new Vector3(5, 0, 0), floor, new Vector3(3f, 0, 0.2f)).x, 1e-4f);
+    }
 
     [Test]
     public void Spawn_WithYawAndKeep_AddsKeepSurfaceAndSampleColor()

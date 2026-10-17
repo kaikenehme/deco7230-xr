@@ -19,7 +19,9 @@ public enum SlotOrigin { Scene, Preset, User }
 public class FurnitureSlot : MonoBehaviour
 {
     public const float FloorMargin = 0.3f;
-    public const float RotateDegPerSec = 90f, StickDeadzone = 0.3f;
+    public const float RotateDegPerSec = 45f, StickDeadzone = 0.3f;   // IP2b: half IP2a's 90 (Eval 2: "too sensitive")
+    /// <summary>How fast a held piece catches up with the ray/hand target (1/s). Smooths jitter; ~95 % in 0.3 s.</summary>
+    public const float FollowSharpness = 10f;
     /// <summary>Horizontal cap on how far a far grab can push a piece (m). A shallow ray meets the floor
     /// tens of metres out; beyond this it stops, and level/upward rays sit here too, so crossing the horizon never jumps.</summary>
     public const float MaxReach = 6f;
@@ -176,7 +178,8 @@ public class FurnitureSlot : MonoBehaviour
             target = attach != null ? attach.position : transform.position;
         }
         if (offsetRegion != region) { grabOffset = GrabOffset(transform.position, target); offsetRegion = region; }
-        transform.position = Clamp(target + grabOffset);
+        var goal = floorBounds != null ? ClampToFloor(target + grabOffset, floorBounds.Value, FootprintHalfExtents()) : Clamp(target + grabOffset);
+        transform.position = Follow(transform.position, goal, Time.deltaTime);
         yaw += YawStep(StickFor(holder), Time.deltaTime);
         transform.rotation = Quaternion.Euler(0f, yaw, 0f);
     }
@@ -193,6 +196,30 @@ public class FurnitureSlot : MonoBehaviour
         if (flat.sqrMagnitude < 1e-8f) return floorOrigin;   // straight down or up
         float along = dir.y < -1e-4f ? -origin.y / dir.y * flat.magnitude : float.PositiveInfinity;
         return floorOrigin + flat.normalized * Mathf.Min(along, maxReach);
+    }
+
+    /// <summary>Frame-rate independent ease toward target: never overshoots.</summary>
+    public static Vector3 Follow(Vector3 current, Vector3 target, float dt) =>
+        Vector3.Lerp(current, target, 1f - Mathf.Exp(-FollowSharpness * dt));
+
+    /// <summary>Keep the piece's footprint (half extents, XZ) inside the floor shrunk by FloorMargin; y = 0.
+    /// A piece wider than the room is centred on that axis.</summary>
+    public static Vector3 ClampToFloor(Vector3 p, Bounds floor, Vector3 halfExtents)
+    {
+        float Axis(float v, float min, float max, float half)
+        {
+            float lo = min + FloorMargin + half, hi = max - FloorMargin - half;
+            return lo > hi ? (min + max) / 2f : Mathf.Clamp(v, lo, hi);
+        }
+        return new Vector3(Axis(p.x, floor.min.x, floor.max.x, halfExtents.x), 0f, Axis(p.z, floor.min.z, floor.max.z, halfExtents.z));
+    }
+
+    Vector3 FootprintHalfExtents()
+    {
+        var box = GetComponent<BoxCollider>();
+        if (box == null) return Vector3.zero;
+        var e = box.bounds.extents;
+        return new Vector3(e.x, 0f, e.z);
     }
 
     /// <summary>Offset that keeps a piece where it is when the target first takes hold of it (flat, XZ only).</summary>

@@ -77,7 +77,7 @@ public class FurnitureGrabTests
         // Toward the room centre, so the clamp at the walls never decides the result.
         var newAim = aimAt + new Vector3(-Mathf.Sign(aimAt.x) * 0.8f, 0f, -Mathf.Sign(aimAt.z) * 0.5f);
         Pose(controller, from, newAim);
-        for (int i = 0; i < 5; i++) yield return null;
+        yield return new WaitForSeconds(0.6f);   // IP2b: the piece eases toward the target (FollowSharpness), ~95 % in 0.3 s
         var delta = FurnitureSlot.FloorPointOnRay(from, (newAim - from).normalized) - oldFloor;
         var want = before + delta;
         Debug.Log($"[GrabProbe] after re-aim: pos={chair.transform.position} want≈{want} held={chair.IsHeld} region={nf.selectionRegion.Value}");
