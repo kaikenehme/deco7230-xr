@@ -6,8 +6,7 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 /// The sole coupling point between samples and surfaces (spec §8).
 /// While held: nearest Change surface in range previews the sample's colour;
 /// leaving range reverts (a preview must never stick — spec §9); release in
-/// range commits; release mid-air discards. Also feeds controller roll to the
-/// HarmonyTuner so twist-to-tune works while holding up.
+/// range commits; release mid-air discards. The colour is the FanDeck pick (IP2b; twist-to-tune is gone).
 /// </summary>
 [RequireComponent(typeof(Sample), typeof(XRGrabInteractable))]
 public class HoldUpPreviewer : MonoBehaviour
@@ -15,16 +14,13 @@ public class HoldUpPreviewer : MonoBehaviour
     public const float PreviewRadius = 0.45f;
 
     Sample sample;
-    HarmonyTuner tuner;
     XRGrabInteractable grab;
     Surface previewing;
     Transform holdingHand;
-    float grabRollRef;
 
     void Awake()
     {
         sample = GetComponent<Sample>();
-        tuner = GetComponent<HarmonyTuner>();
         grab = GetComponent<XRGrabInteractable>();
         grab.selectEntered.AddListener(OnGrabbed);
         grab.selectExited.AddListener(OnReleased);
@@ -33,15 +29,11 @@ public class HoldUpPreviewer : MonoBehaviour
     void OnGrabbed(SelectEnterEventArgs args)
     {
         holdingHand = args.interactorObject.GetAttachTransform(grab);
-        grabRollRef = holdingHand.eulerAngles.z;
     }
 
     void Update()
     {
         if (holdingHand == null) return;
-
-        if (tuner != null)
-            tuner.Tick(Mathf.DeltaAngle(grabRollRef, holdingHand.eulerAngles.z));
 
         Surface nearest = null;
         float best = PreviewRadius;

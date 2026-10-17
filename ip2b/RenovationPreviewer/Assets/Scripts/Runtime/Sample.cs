@@ -15,9 +15,11 @@ public class Sample : MonoBehaviour
     {
         SourceSurface = source;
         BaseColor = source.SampleColor;   // authored for textured surfaces, else the tint
-        Palette = HarmonyPalette.Generate(BaseColor);
-        CurrentColor = Palette[0];
+        Palette = LightnessLadder.Generate(BaseColor);   // IP2b: fan deck, light → dark
+        CurrentColor = Palette[2];                        // first non-white
+        var deck = GetComponent<FanDeck>();
+        if (deck != null) deck.Build(Palette);
         var rend = GetComponent<Renderer>();
-        if (rend != null) rend.material.color = CurrentColor;
+        if (rend != null && Application.isPlaying) rend.material.color = CurrentColor;
     }
 }

@@ -56,6 +56,16 @@ public class SnapshotTests
         Shoot("23_window_curtains", new Vector3(0.4f, 1.6f, 2.0f), new Vector3(0.3f, 1.3f, -2.5f), 75f);
         Shoot("24_frames_wallN", new Vector3(-0.4f, 1.5f, -0.8f), new Vector3(-0.5f, 1.5f, 2.5f), 70f);
         Shoot("25_overview", new Vector3(2.5f, 2.5f, 2.3f), new Vector3(-1.0f, 0.5f, -0.8f), 85f);
+        {   // IP2b fan deck: a sample pulled off the sofa, held at chest height in front of the prints
+            var puller0 = Object.FindObjectsByType<SamplePuller>(FindObjectsInactive.Include, FindObjectsSortMode.None)[0];
+            var fanGo = Object.Instantiate(puller0.samplePrefab, new Vector3(-1.3f, 1.35f, 0.2f), Quaternion.identity);
+            fanGo.GetComponent<Sample>().Init(OnboardingSequence.Hero(Surface.All));
+            yield return null;
+            fanGo.GetComponent<FanDeck>().Pick(4);
+            Shoot("10_fan_deck", new Vector3(-0.55f, 1.55f, 0.2f), fanGo.transform.position + Vector3.up * 0.08f, 50f);
+            Object.Destroy(fanGo);
+            yield return null;
+        }
         applier.Apply(1); yield return null; yield return null;
         Shoot("26_bedroom", new Vector3(1.9f, 1.6f, -1.4f), new Vector3(-2.2f, 0.8f, 0.4f), 75f);
         Shoot("27_bedroom_vanity", new Vector3(-0.6f, 1.5f, -1.2f), new Vector3(2.7f, 1.0f, 0.3f), 75f);

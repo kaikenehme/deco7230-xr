@@ -211,7 +211,7 @@ public static class SceneBuilder
         grab.throwOnDetach = false;
         grab.attachEaseInTime = 0.15f;   // the peel: sample eases from the tab into the hand
         temp.AddComponent<Sample>();
-        temp.AddComponent<HarmonyTuner>();
+        temp.AddComponent<FanDeck>();   // IP2b: fan deck replaces twist-to-tune
         temp.AddComponent<HoldUpPreviewer>();
         temp.AddComponent<HarmonyThread>();
         var prefab = PrefabUtility.SaveAsPrefabAsset(temp, "Assets/Prefabs/Sample.prefab");

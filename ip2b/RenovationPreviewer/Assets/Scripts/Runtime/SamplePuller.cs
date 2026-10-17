@@ -19,6 +19,15 @@ public class SamplePuller : MonoBehaviour
     Surface touching;
 
     public Surface Touching => touching;
+    /// <summary>The sample this hand last pulled (null once committed/discarded).</summary>
+    public Sample Held { get; private set; }
+
+    /// <summary>One fan per hand (Review Focus #1): a new pull replaces this hand's previous sample.</summary>
+    public void ReplaceHeld(Sample next)
+    {
+        if (Held != null && Held != next) { if (Application.isPlaying) Destroy(Held.gameObject); else DestroyImmediate(Held.gameObject); }
+        Held = next;
+    }
     /// <summary>The kept surface this hand could pull from right now, else null.</summary>
     public Surface Pullable { get; private set; }
     public bool CanPull => Pullable != null;
@@ -57,6 +66,7 @@ public class SamplePuller : MonoBehaviour
         var go = Instantiate(samplePrefab, at, Quaternion.identity);
         var sample = go.GetComponent<Sample>();
         sample.Init(source);
+        ReplaceHeld(sample);
         var grab = go.GetComponent<XRGrabInteractable>();
         interactor.interactionManager.SelectEnter((IXRSelectInteractor)interactor, (IXRSelectInteractable)grab);
         return sample;
