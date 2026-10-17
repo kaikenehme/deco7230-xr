@@ -161,6 +161,8 @@ public static class SceneBuilder
         var tod = managers.AddComponent<TimeOfDayController>();
         tod.sun = sun;
         tod.sky = sky;
+        var curtainsGo = GameObject.Find("Curtains");
+        if (curtainsGo != null) curtainsGo.GetComponent<CurtainController>().timeOfDay = tod;
         clock.controller = tod;
 
         // --- UI event system for the world-space menu (XRI input module) ---
@@ -602,8 +604,21 @@ public static class SceneBuilder
 
         // Curtains either side of the window, on a brass rail.
         float left = WindowX - WindowW / 2f, right = WindowX + WindowW / 2f, cz = -hd + 0.14f;
-        Place(cat, "linen_curtain", "Curtain_L", new Vector3(left - 0.4f, 0f, cz), 0f);
-        Place(cat, "linen_curtain", "Curtain_R", new Vector3(right + 0.4f, 0f, cz), 0f);
+        var curtains = new GameObject("Curtains");
+        var cl = Place(cat, "linen_curtain", "Curtain_L", new Vector3(left - 0.4f, 0f, cz), 0f);
+        var cr = Place(cat, "linen_curtain", "Curtain_R", new Vector3(right + 0.4f, 0f, cz), 0f);
+        var curtainCtl = curtains.AddComponent<CurtainController>();
+        curtainCtl.left = cl.transform; curtainCtl.right = cr.transform; curtainCtl.windowCentreX = WindowX;
+        foreach (var panel in new[] { cl, cr })
+        {
+            panel.transform.SetParent(curtains.transform, true);
+            var box = panel.AddComponent<BoxCollider>();   // touch target: the whole drape
+            var pb = Bounds(panel);
+            box.center = panel.transform.InverseTransformPoint(pb.center);
+            box.size = new Vector3(pb.size.x, pb.size.y, 0.25f);
+            box.isTrigger = true;
+            panel.AddComponent<CurtainPanel>().controller = curtainCtl;
+        }
         var rail = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
         rail.name = "CurtainRail";
         Object.DestroyImmediate(rail.GetComponent<Collider>());
@@ -622,6 +637,11 @@ public static class SceneBuilder
         cord.transform.position = new Vector3(-0.9f, (top + RoomH) / 2f, 0.2f);
         cord.transform.localScale = new Vector3(0.008f, (RoomH - top) / 2f, 0.008f);
         cord.GetComponent<Renderer>().sharedMaterial = MakeMat("Cord", Hex("#1E1E1E"));
+        // Warm light in the shade so a room with the curtains shut is still lit (N4).
+        var pl = new GameObject("PendantLight").AddComponent<Light>();
+        pl.transform.SetParent(pendant.transform, false);
+        pl.transform.position = new Vector3(-0.9f, 1.85f, 0.2f);
+        pl.type = LightType.Point; pl.color = LampController.WarmColor; pl.intensity = 0.8f; pl.range = 4f;
     }
 
     /// <summary>Framed abstract print facing +X: oak frame, canvas, a circle and a block.</summary>

@@ -30,6 +30,14 @@ public class PresetApplier : MonoBehaviour
         var preset = presets[i];
         if (preset == null) return;
 
+        // Review Focus #4: a new room starts clean — curtains open, no sample/fan left in a hand.
+        foreach (var c in FindObjectsByType<CurtainController>(FindObjectsSortMode.None)) c.SetOpen(true, instant: true);
+        foreach (var smp in FindObjectsByType<Sample>(FindObjectsSortMode.None))
+        {
+            smp.gameObject.SetActive(false);
+            if (Application.isPlaying) Destroy(smp.gameObject); else DestroyImmediate(smp.gameObject);
+        }
+
         foreach (var slot in SlotsToClear(FindObjectsByType<FurnitureSlot>(FindObjectsSortMode.None)).ToList())
         {
             slot.gameObject.SetActive(false);   // out of Surface.All and FindObjects this frame

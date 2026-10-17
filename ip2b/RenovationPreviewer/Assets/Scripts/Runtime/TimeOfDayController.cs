@@ -16,6 +16,16 @@ public class TimeOfDayController : MonoBehaviour
     public TimeOfDay.Stop Current => TimeOfDay.Stops[Index];
     public event Action<int> Changed;
 
+    /// <summary>IP2b curtains: 1 = open, 0 = closed. Scales sun, ambient and sky on top of the time of day.</summary>
+    public float DaylightScale
+    {
+        get => daylightScale;
+        set { float v = Mathf.Clamp01(value); if (Mathf.Approximately(v, daylightScale)) return; daylightScale = v; ApplyLighting(); }
+    }
+    float daylightScale = 1f;
+
+    public static float DaylightFactor(float scale) => Mathf.Lerp(CurtainController.ClosedDaylight, 1f, Mathf.Clamp01(scale));
+
     static readonly int ExposureId = Shader.PropertyToID("_Exposure");
     static readonly int TintId = Shader.PropertyToID("_SkyTint");
 
@@ -32,22 +42,28 @@ public class TimeOfDayController : MonoBehaviour
     public void Apply(int i)
     {
         Index = Mathf.Clamp(i, 0, TimeOfDay.Stops.Length - 1);
+        ApplyLighting();
+        Changed?.Invoke(Index);
+    }
+
+    void ApplyLighting()
+    {
         var s = TimeOfDay.Stops[Index];
+        float k = DaylightFactor(daylightScale);
         if (sun != null)
         {
             sun.transform.rotation = TimeOfDay.SunRotation(s);
             sun.color = s.sunColor;
-            sun.intensity = s.sunIntensity;
+            sun.intensity = s.sunIntensity * k;
             sun.enabled = s.SunOn;
         }
         if (Application.isPlaying)
         {
             RenderSettings.ambientMode = AmbientMode.Flat;
-            RenderSettings.ambientLight = s.ambient;
-            if (sky != null) { sky.SetFloat(ExposureId, s.skyExposure); sky.SetColor(TintId, s.skyTint); }
+            RenderSettings.ambientLight = s.ambient * k;
+            if (sky != null) { sky.SetFloat(ExposureId, s.skyExposure * k); sky.SetColor(TintId, s.skyTint); }
             DynamicGI.UpdateEnvironment();
         }
-        Changed?.Invoke(Index);
     }
 
 #if UNITY_EDITOR

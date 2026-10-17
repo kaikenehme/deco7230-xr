@@ -56,6 +56,13 @@ public class SnapshotTests
         Shoot("23_window_curtains", new Vector3(0.4f, 1.6f, 2.0f), new Vector3(0.3f, 1.3f, -2.5f), 75f);
         Shoot("24_frames_wallN", new Vector3(-0.4f, 1.5f, -0.8f), new Vector3(-0.5f, 1.5f, 2.5f), 70f);
         Shoot("25_overview", new Vector3(2.5f, 2.5f, 2.3f), new Vector3(-1.0f, 0.5f, -0.8f), 85f);
+        {   // IP2b curtains: closed (lamp + pendant light the room), then open
+            var curtains = Object.FindAnyObjectByType<CurtainController>();
+            curtains.SetOpen(false, instant: true); yield return null; yield return null;
+            Shoot("11_curtains_closed", new Vector3(1.9f, 1.6f, 1.6f), new Vector3(-1.0f, 1.0f, -1.6f), 80f);
+            curtains.SetOpen(true, instant: true); yield return null; yield return null;
+            Shoot("12_curtains_open", new Vector3(1.9f, 1.6f, 1.6f), new Vector3(-1.0f, 1.0f, -1.6f), 80f);
+        }
         {   // IP2b fan deck: a sample pulled off the sofa, held at chest height in front of the prints
             var puller0 = Object.FindObjectsByType<SamplePuller>(FindObjectsInactive.Include, FindObjectsSortMode.None)[0];
             var fanGo = Object.Instantiate(puller0.samplePrefab, new Vector3(-1.3f, 1.35f, 0.2f), Quaternion.identity);

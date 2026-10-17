@@ -545,4 +545,55 @@ public class SceneWiringTests
         Assert.IsTrue(floor.IsPreviewing, "a chip held 30 cm over the floor previews it");
         Object.Destroy(go); Object.Destroy(hand);
     }
+
+    // ---- IP2b Task 8: curtains ----
+    [UnityTest]
+    public IEnumerator Curtains_TouchClosesAndDimsDaylight_ThenOpens()
+    {
+        yield return null; yield return null;
+        var c = Object.FindAnyObjectByType<CurtainController>();
+        Assert.IsNotNull(c, "curtains are touchable");
+        var tod = Object.FindAnyObjectByType<TimeOfDayController>();
+        float sun0 = tod.sun.intensity;
+        c.Touch();
+        yield return new WaitForSeconds(CurtainController.FadeSeconds + 0.3f);
+        Assert.IsTrue(c.IsClosed);
+        Assert.AreEqual(0f, tod.DaylightScale, 1e-3f);
+        Assert.Less(tod.sun.intensity, sun0 * 0.1f + 1e-3f, "sun dimmed with the curtains shut");
+        var pendant = GameObject.Find("Pendant").GetComponentInChildren<Light>();
+        Assert.IsNotNull(pendant, "the pendant lights a dark room");
+        c.Touch();
+        yield return new WaitForSeconds(CurtainController.FadeSeconds + 0.3f);
+        Assert.IsFalse(c.IsClosed);
+        Assert.AreEqual(sun0, tod.sun.intensity, 1e-3f);
+    }
+
+    [UnityTest]
+    public IEnumerator ClosedCurtains_SurviveTimeOfDayChange()
+    {
+        yield return null; yield return null;
+        var c = Object.FindAnyObjectByType<CurtainController>();
+        c.SetOpen(false, instant: true);
+        var tod = Object.FindAnyObjectByType<TimeOfDayController>();
+        tod.Apply(2);
+        yield return null;
+        Assert.AreEqual(0f, tod.DaylightScale, 1e-4f, "Review Focus #3: clock change keeps the room dark");
+        c.SetOpen(true, instant: true);
+    }
+
+    [UnityTest]
+    public IEnumerator ApplyPreset_ResetsCurtainsAndFan()
+    {
+        yield return null; yield return null;
+        var c = Object.FindAnyObjectByType<CurtainController>();
+        c.SetOpen(false, instant: true);
+        var prefab = Object.FindObjectsByType<SamplePuller>(FindObjectsInactive.Include, FindObjectsSortMode.None)[0].samplePrefab;
+        var go = Object.Instantiate(prefab, new Vector3(0f, 1.3f, 0f), Quaternion.identity);
+        go.GetComponent<Sample>().Init(OnboardingSequence.Hero(Surface.All));
+        Object.FindAnyObjectByType<PresetApplier>().Apply(1);
+        yield return null;
+        Assert.IsFalse(c.IsClosed, "Review Focus #4: new room, curtains open");
+        Assert.AreEqual(0, Object.FindObjectsByType<FanDeck>(FindObjectsSortMode.None).Length, "fan gone");
+        Object.FindAnyObjectByType<PresetApplier>().Apply(0);
+    }
 }
