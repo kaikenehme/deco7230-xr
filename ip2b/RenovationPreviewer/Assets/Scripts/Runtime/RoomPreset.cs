@@ -32,6 +32,8 @@ public class PlacementSpec
 public class RoomPreset : ScriptableObject
 {
     public string displayName;
+    /// <summary>Empty room (20 Oct): the room-level dressing (rug, prints, arc lamp) is hidden and the room opens in daylight.</summary>
+    public bool bare;
     public Color floorSwatch = Color.white, wallSwatch = Color.white, accentSwatch = Color.white;
     public List<SurfaceLookSpec> looks = new();
     public List<PlacementSpec> furniture = new();

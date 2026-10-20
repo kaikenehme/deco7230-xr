@@ -13,7 +13,9 @@ public class TimeOfDayController : MonoBehaviour
     public Light sun;
     public Material sky;
     public Renderer windowView;   // the garden photo outside the window; tinted to the time of day
-    public int Index { get; private set; } = 1;
+    /// <summary>The 10:00 stop the room starts in (and the Empty room opens in).</summary>
+    public const int StartIndex = 1;
+    public int Index { get; private set; } = StartIndex;
     public TimeOfDay.Stop Current => TimeOfDay.Stops[Index];
     public event Action<int> Changed;
 

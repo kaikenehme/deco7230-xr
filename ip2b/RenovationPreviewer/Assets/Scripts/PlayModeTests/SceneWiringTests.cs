@@ -25,7 +25,7 @@ public class SceneWiringTests
     {
         yield return null; yield return null;   // PresetApplier.Start ran
         var applier = Object.FindObjectsByType<PresetApplier>(FindObjectsSortMode.None).Single();
-        Assert.AreEqual(2, applier.presets.Length, "Living + Bedroom wired");
+        Assert.AreEqual(3, applier.presets.Length, "Living + Bedroom + Empty wired");
         Assert.AreEqual(0, applier.Current, "preset 0 applied at Start");
         var surfaces = Surface.All.Where(s => s != null).ToList();
         var shell = surfaces.Where(s => s.GetComponent<FurnitureSlot>() == null).Select(s => s.name).OrderBy(n => n).ToList();
@@ -373,7 +373,7 @@ public class SceneWiringTests
         var keepClear = new (string what, Rect r)[]
         {
             ("start spot", Rect.MinMaxRect(start.x - 0.5f, start.z - 0.5f, start.x + 0.5f, start.z + 0.5f)),
-            ("preset frames", Rect.MinMaxRect(-1.4f, hd - 0.8f, 0.5f, hd)),
+            ("preset frames", Rect.MinMaxRect(-1.8f, hd - 0.8f, 0.8f, hd)),
             ("door", Rect.MinMaxRect(hw - 1.4f, hd - 1.0f, hw, hd)),
             ("lamp", Rect.MinMaxRect(lamp.x - 0.3f, lamp.z - 0.3f, lamp.x + 0.3f, lamp.z + 0.3f)),
         };
@@ -381,6 +381,7 @@ public class SceneWiringTests
         void Check(bool bad, string msg) { if (bad) problems.Add(msg); }
         for (int p = 0; p < applier.presets.Length; p++)
         {
+            if (applier.presets[p].bare) continue;   // the Empty room has no furniture by design
             applier.Apply(p); yield return null;
             var name = applier.presets[p].displayName;
             var slots = Object.FindObjectsByType<FurnitureSlot>(FindObjectsSortMode.None).Where(x => x.Visual != null).ToList();
@@ -626,5 +627,29 @@ public class SceneWiringTests
         yield return new WaitForSeconds(0.7f);
         p.Touch();
         Assert.IsTrue(p.bulb.enabled);
+    }
+
+    /// <summary>20 Oct: the Empty room hides the rug, prints and arc lamp and opens in daylight; Living brings them back.</summary>
+    [UnityTest]
+    public IEnumerator EmptyRoom_HidesDressing_ThenLivingRestoresIt()
+    {
+        yield return null; yield return null;
+        var applier = Object.FindObjectsByType<PresetApplier>(FindObjectsSortMode.None).Single();
+        var tod = Object.FindObjectsByType<TimeOfDayController>(FindObjectsSortMode.None).Single();
+        int empty = System.Array.FindIndex(applier.presets, p => p.bare);
+        Assert.GreaterOrEqual(empty, 0, "a bare preset is wired");
+        var dressing = new[] { "Rug", "Art_0", "Art_1", "ArcLamp" };
+
+        tod.Apply(4); yield return null;   // Phase 3 left it in the evening
+        applier.Apply(empty); yield return null;
+        Assert.AreEqual(0, Object.FindObjectsByType<FurnitureSlot>(FindObjectsSortMode.None).Length, "no furniture");
+        foreach (var n in dressing) Assert.IsNull(GameObject.Find(n), n + " hidden");
+        Assert.IsFalse(Surface.All.Any(s => s != null && s.name == "Rug"), "a hidden rug can't be pulled from");
+        Assert.AreEqual(TimeOfDayController.StartIndex, tod.Index, "opens in daylight");
+
+        applier.Apply(0); yield return null;
+        foreach (var n in dressing) Assert.IsNotNull(GameObject.Find(n), n + " back in Living");
+        Assert.IsTrue(Surface.All.Any(s => s != null && s.name == "Rug"), "rug pullable again");
+        Assert.IsNotNull(Object.FindAnyObjectByType<LampController>(), "lamp back and touchable");
     }
 }

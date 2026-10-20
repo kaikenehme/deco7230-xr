@@ -6,16 +6,30 @@ using UnityEngine;
 /// <summary>IP2b presets as authored by PresetAuthoring (Editor assembly, so read the assets).</summary>
 public class AuthoredPresetTests
 {
-    static readonly string[] Expected = { "Living", "Bedroom" };
+    static readonly string[] Expected = { "Living", "Bedroom", "Empty" };
     static RoomPreset Load(string n) => AssetDatabase.LoadAssetAtPath<RoomPreset>($"Assets/Presets/{n}.asset");
     static RoomPreset[] All() => Expected.Select(Load).ToArray();
 
     [Test]
-    public void Presets_AreLivingThenBedroom()
+    public void Presets_AreLivingBedroomEmpty()
     {
         foreach (var n in Expected) Assert.IsNotNull(Load(n), n);
-        CollectionAssert.AreEqual(new[] { "Living", "Bedroom" }, All().Select(p => p.displayName).ToArray());
+        CollectionAssert.AreEqual(new[] { "Living", "Bedroom", "Empty room" }, All().Select(p => p.displayName).ToArray());
         foreach (var old in new[] { "Scandi", "MidCentury" }) Assert.IsNull(Load(old), old + " retired");
+    }
+
+    [Test]
+    public void Empty_IsBare_NoFurniture_WhiteWalls()
+    {
+        var cat = AssetDatabase.LoadAssetAtPath<Catalogue>("Assets/Catalogue/Catalogue.asset");
+        var empty = Load("Empty");
+        Assert.IsTrue(empty.bare, "bare: dressing hidden, opens in daylight");
+        Assert.AreEqual(0, empty.furniture.Count, "nothing in it");
+        var white = cat.Paint("Whisper White").color;
+        foreach (var w in new[] { "Wall_N", "Wall_S", "Wall_E", "Wall_W" })
+            Assert.AreEqual(white, empty.looks.Single(l => l.surfaceName == w).color, w);
+        Assert.AreEqual(cat.Material("WoodFloor051").material, empty.looks.Single(l => l.surfaceName == "Floor").material, "plain light boards");
+        Assert.IsFalse(Load("Living").bare); Assert.IsFalse(Load("Bedroom").bare);
     }
 
     [Test]

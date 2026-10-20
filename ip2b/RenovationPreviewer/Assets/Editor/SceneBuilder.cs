@@ -149,7 +149,7 @@ public static class SceneBuilder
         var config = managers.AddComponent<RenovationConfig>();
         config.outlineShell = MakeOutlineMat("OutlineShell");
 
-        // Presets: three pre-furnished rooms (Evaluation 1 §05), preset 0 applied at Start.
+        // Presets: Living, Bedroom and the bare Empty room; preset 0 applied at Start.
         var catalogueAsset = AssetDatabase.LoadAssetAtPath<Catalogue>("Assets/Catalogue/Catalogue.asset");
         var applier = managers.AddComponent<PresetApplier>();
         applier.catalogue = catalogueAsset;
@@ -167,6 +167,11 @@ public static class SceneBuilder
         var curtainsGo = GameObject.Find("Curtains");
         if (curtainsGo != null) curtainsGo.GetComponent<CurtainController>().timeOfDay = tod;
         clock.controller = tod;
+        // Empty room (bare preset): these hide, and the room opens in daylight.
+        applier.timeOfDay = tod;
+        applier.dressing = new[] { "Rug", "Art_0", "Art_1", "ArcLamp" }
+            .Select(n => { var g = GameObject.Find(n); if (g == null) Debug.LogWarning($"SceneBuilder: dressing '{n}' not found"); return g; })
+            .Where(g => g != null).ToArray();
 
         // --- UI event system for the world-space menu (XRI input module) ---
         var es = new GameObject("EventSystem");
@@ -401,7 +406,7 @@ public static class SceneBuilder
             var preset = applier.presets[i];
             var root = new GameObject($"PresetFrame_{i}");
             root.transform.rotation = Quaternion.Euler(0f, 90f, 0f);   // built facing +X, turned to face into the room from Wall_N (-Z)
-            root.transform.position = wallInside + new Vector3((i - (applier.presets.Length - 1) / 2f) * 1.5f, 0f, 0f);
+            root.transform.position = wallInside + new Vector3((i - (applier.presets.Length - 1) / 2f) * 0.9f, 0f, 0f);   // three frames: x ≈ -1.4, -0.5, 0.4
             var backing = MakePart(root, "Frame", new Vector3(0f, 0f, 0f), new Vector3(0.05f, 0.50f, 0.60f), frameMat, keepCollider: true);
             var picture = MakePart(root, "Picture", new Vector3(0.03f, 0f, 0f), new Vector3(0.01f, 0.40f, 0.50f), frameMat);
             var cardName = System.IO.Path.GetFileNameWithoutExtension(AssetDatabase.GetAssetPath(preset));

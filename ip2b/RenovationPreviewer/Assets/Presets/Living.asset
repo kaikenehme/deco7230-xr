@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Living
   m_EditorClassIdentifier: 
   displayName: Living
+  bare: 0
   floorSwatch: {r: 0.59295726, g: 0.46466073, b: 0.34829125, a: 1}
   wallSwatch: {r: 0.84313726, g: 0.80784315, b: 0.75686276, a: 1}
   accentSwatch: {r: 0.70980394, g: 0.3764706, b: 0.24705882, a: 1}

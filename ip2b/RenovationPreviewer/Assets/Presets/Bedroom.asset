@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Bedroom
   m_EditorClassIdentifier: 
   displayName: Bedroom
+  bare: 0
   floorSwatch: {r: 0.40905273, g: 0.2802429, b: 0.1456637, a: 1}
   wallSwatch: {r: 0.9372549, g: 0.91764706, b: 0.8784314, a: 1}
   accentSwatch: {r: 0.7882353, g: 0.6313726, b: 0.23137255, a: 1}

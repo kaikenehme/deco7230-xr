@@ -99,6 +99,14 @@ public class SnapshotTests
             applier.Apply(p); yield return null; yield return null;
             Shoot($"06_preset_{p}_{applier.presets[p].displayName}", new Vector3(2.5f, 2.3f, 3.2f), new Vector3(-0.5f, 0.6f, -1.0f), 80f);
         }
+        // Empty room (20 Oct) at eye level: bare, lit, frames on Wall_N.
+        int empty = System.Array.FindIndex(applier.presets, x => x.bare);
+        if (empty >= 0)
+        {
+            applier.Apply(empty); yield return null; yield return null;
+            Shoot("07_empty_from_start", new Vector3(0.9f, 1.6f, 1.3f), new Vector3(-0.5f, 1.2f, -1.0f), 80f);
+            Shoot("07_empty_wallN_frames", new Vector3(-0.5f, 1.6f, 0.2f), new Vector3(-0.5f, 1.5f, 2.5f), 80f);
+        }
         applier.Apply(0); yield return null; yield return null;
 
         // A fake hand near the kept sofa and floor: the affordance tab + a held sample with its thread.

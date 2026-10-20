@@ -7,13 +7,17 @@ using UnityEngine;
 /// Dresses the room in one of the presets: clears every non-scene furniture slot, gives
 /// each shell surface its baseline look by name, spawns the preset's furniture. Preset 0
 /// applies at Start. Frames on the wall (PresetFrame) call Apply; the editor also takes
-/// F1–F3 for the facilitator.
+/// F1–F3 for the facilitator. A bare preset (the Empty room) hides the room-level dressing
+/// and resets the time of day to the start stop; other presets show the dressing and keep the time.
 /// </summary>
 public class PresetApplier : MonoBehaviour
 {
     public Catalogue catalogue;
     public RoomPreset[] presets;
     public Bounds floorBounds;
+    /// <summary>Room-level dressing built by SceneBuilder (rug, prints, arc lamp): hidden in a bare preset.</summary>
+    public GameObject[] dressing = Array.Empty<GameObject>();
+    public TimeOfDayController timeOfDay;
 
     public int Current { get; private set; } = -1;
     public event Action<int> Applied;
@@ -47,6 +51,10 @@ public class PresetApplier : MonoBehaviour
             if (Application.isPlaying) Destroy(slot.gameObject); else DestroyImmediate(slot.gameObject);
         }
 
+        // Empty room: rug, prints and arc lamp go (a hidden rug also leaves Surface.All, so it can't be pulled from).
+        if (dressing != null)
+            foreach (var d in dressing) if (d != null) d.SetActive(!preset.bare);
+
         foreach (var look in preset.looks)
         {
             var s = Surface.All.FirstOrDefault(x => x != null && x.name == look.surfaceName);
@@ -54,6 +62,9 @@ public class PresetApplier : MonoBehaviour
             s.SetBaseLook(look.material, look.color, look.sampleColor, look.state);
             if (look.userColour && look.state == SurfaceState.Change) s.Commit(look.color);
         }
+
+        // Only the Empty room resets the light: without the arc lamp it would otherwise open in Phase 3's evening.
+        if (preset.bare && timeOfDay != null) timeOfDay.Apply(TimeOfDayController.StartIndex);
 
         foreach (var pl in preset.furniture)
         {

@@ -125,4 +125,68 @@ public class PresetApplierTests
         Assert.AreEqual(1, got);
         Assert.AreEqual(1, Slots().Length);
     }
+
+    // --- 20 Oct: Empty room (bare preset) ---
+
+    RoomPreset Bare()
+    {
+        var e = Preset("Empty", null, Color.white);
+        e.bare = true;
+        applier.presets = new[] { a, b, e };
+        return e;
+    }
+
+    TimeOfDayController TimeOfDay()
+    {
+        var sun = new GameObject("Sun").AddComponent<Light>();
+        sun.type = LightType.Directional;
+        var tod = managers.AddComponent<TimeOfDayController>();
+        tod.sun = sun;
+        applier.timeOfDay = tod;
+        return tod;
+    }
+
+    [Test]
+    public void Apply_BarePreset_HidesDressing_ThenNonBareShowsIt()
+    {
+        var e = Bare();
+        var rug = new GameObject("Rug"); var lamp = new GameObject("ArcLamp");
+        applier.dressing = new[] { rug, lamp };
+        applier.Apply(2);
+        Assert.IsFalse(rug.activeSelf, "rug hidden in the empty room");
+        Assert.IsFalse(lamp.activeSelf, "lamp hidden in the empty room");
+        applier.Apply(0);
+        Assert.IsTrue(rug.activeSelf && lamp.activeSelf, "back in a dressed room");
+        Object.DestroyImmediate(rug); Object.DestroyImmediate(lamp); Object.DestroyImmediate(e);
+    }
+
+    [Test]
+    public void Apply_BarePreset_ResetsToDaylight()
+    {
+        var e = Bare(); var tod = TimeOfDay();
+        tod.Apply(4);
+        applier.Apply(2);
+        Assert.AreEqual(TimeOfDayController.StartIndex, tod.Index, "empty room opens in daylight");
+        Object.DestroyImmediate(tod.sun.gameObject); Object.DestroyImmediate(e);
+    }
+
+    [Test]
+    public void Apply_NonBare_KeepsTimeOfDay()
+    {
+        var tod = TimeOfDay();
+        tod.Apply(4);
+        applier.Apply(1);
+        Assert.AreEqual(4, tod.Index, "Living ↔ Bedroom keep the evening");
+        Object.DestroyImmediate(tod.sun.gameObject);
+    }
+
+    [Test]
+    public void Apply_NullDressingEntries_AndNoTimeOfDay_DoNotThrow()
+    {
+        var e = Bare();
+        applier.dressing = new GameObject[] { null };
+        applier.timeOfDay = null;
+        Assert.DoesNotThrow(() => applier.Apply(2));
+        Object.DestroyImmediate(e);
+    }
 }

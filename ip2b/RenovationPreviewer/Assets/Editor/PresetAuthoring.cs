@@ -4,14 +4,14 @@ using UnityEditor;
 using UnityEngine;
 
 /// <summary>
-/// Writes the two IP2b RoomPreset assets (Living, Bedroom) (+ card textures and frame materials) from code,
+/// Writes the three IP2b RoomPreset assets (Living, Bedroom, Empty) (+ card textures and frame materials) from code,
 /// resolving materials, paints and furniture through Catalogue.asset. Re-runnable.
 /// Menu: Renovation → Build Presets. Headless: -executeMethod PresetAuthoring.Build.
 /// </summary>
 public static class PresetAuthoring
 {
     const string Root = "Assets/Presets";
-    public static readonly string[] Names = { "Living", "Bedroom" };
+    public static readonly string[] Names = { "Living", "Bedroom", "Empty" };
     static readonly string[] Walls = { "Wall_N", "Wall_S", "Wall_E", "Wall_W" };
     static readonly string[] Trims = { "Door", "Trim", "WindowFrame" };
 
@@ -57,7 +57,16 @@ public static class PresetAuthoring
         Place(cat, bed, "potted_plant_01", 2.35f, 1.15f, 0f);
         Swatches(cat, bed, "WoodFloor043", "Antique White U.S.A.", "bed_platform");
 
-        foreach (var p in new[] { living, bed }) { WriteCard(p); EditorUtility.SetDirty(p); }
+        // ---- Empty room (20 Oct, replaces the MR showcase): bare white walls, plain light boards, nothing else ----
+        var empty = Preset(cat, "Empty", "Empty room");
+        empty.bare = true;
+        Floor(cat, empty, "WoodFloor051");
+        Paint(cat, empty, Walls, "Whisper White");
+        Paint(cat, empty, new[] { "Ceiling" }, "Whisper White");
+        Paint(cat, empty, Trims, "Antique White U.S.A.");
+        Swatches(cat, empty, "WoodFloor051", "Whisper White", "Whisper White");
+
+        foreach (var p in new[] { living, bed, empty }) { WriteCard(p); EditorUtility.SetDirty(p); }
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
         foreach (var old in new[] { "Scandi", "MidCentury" })   // retired in IP2b
@@ -66,7 +75,7 @@ public static class PresetAuthoring
             AssetDatabase.DeleteAsset(CardMaterialPath(old));
             AssetDatabase.DeleteAsset($"{Root}/Card_{old}.png");
         }
-        Debug.Log("PresetAuthoring: 2 presets written (Living, Bedroom)");
+        Debug.Log("PresetAuthoring: 3 presets written (Living, Bedroom, Empty)");
     }
 
     public static string AssetPath(string name) => $"{Root}/{name}.asset";
