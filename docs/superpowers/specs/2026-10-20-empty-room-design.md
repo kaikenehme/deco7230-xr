@@ -24,7 +24,7 @@ MR cannot be tried before Friday: there is no headset until the test, and the ed
 
 ## Non-goals
 
-- Adding furniture to the empty room (no "add a piece" interaction exists; not building one).
+- Building a new way to add furniture. **Correction (final review, 20 Oct):** the floor menu's Add tab (from IP2a) already adds furniture and works in the Empty room. It stays available, which fits "as free as possible", and Phase 4 logs whether it was used.
 - Any new interaction.
 - The arc lamp in the empty room (light control there = curtains, clock, pendant).
 

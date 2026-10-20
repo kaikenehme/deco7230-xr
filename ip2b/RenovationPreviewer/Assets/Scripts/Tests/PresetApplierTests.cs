@@ -181,6 +181,26 @@ public class PresetApplierTests
     }
 
     [Test]
+    public void PresetFrame_TouchOnCurrentRoom_DoesNotWipeIt()
+    {
+        // Final review #1: brushing the current room's frame while painting Wall_N re-applied the preset and wiped the paint.
+        applier.Apply(1);
+        var wall = Surface.All.Single(s => s.name == "Wall_N");
+        wall.Commit(Color.red);
+        var current = new GameObject("PresetFrame_1").AddComponent<PresetFrame>();
+        current.applier = applier; current.index = 1;
+        int applied = 0; applier.Applied += _ => applied++;
+        current.Touch();
+        Assert.AreEqual(0, applied, "current room not re-applied");
+        Assert.IsTrue(wall.HasUserColour, "paint survives");
+        var other = new GameObject("PresetFrame_0").AddComponent<PresetFrame>();
+        other.applier = applier; other.index = 0;
+        other.Touch();
+        Assert.AreEqual(1, applied, "another room's frame still switches");
+        Object.DestroyImmediate(current.gameObject); Object.DestroyImmediate(other.gameObject);
+    }
+
+    [Test]
     public void Apply_NullDressingEntries_AndNoTimeOfDay_DoNotThrow()
     {
         var e = Bare();

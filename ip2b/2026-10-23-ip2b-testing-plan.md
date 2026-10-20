@@ -9,7 +9,7 @@ A phone paint-visualiser (Dulux Visualizer, Houzz, IKEA Kreativ) rebuilt in XR: 
 
 ## Research summary (DECO7230)
 
-Choosing a colour by holding a sample against the surface draws on proprioception: working within arm's reach and relative to the body is faster and more precise than acting at a distance (Mine et al., 1997), which is why hold-up is the default commit and the fan deck opens in the hand rather than on a panel. Throwing in VR is measurably less accurate and more effortful than real throwing (Zindulka et al., 2020), so toss is offered alongside hold-up and evaluated on experience and preference, not accuracy. Colour judgements made in a headset differ from those made on a screen, and light temperature preferences shift between the two (Siess & Wölfel, 2019) — the reason testing runs on the Quest, and why the room's light can be changed (clock, lamp, curtains). The final phase opens a bare room with the same tools, following the creativity-support principle of low thresholds, high ceilings and wide walls (Shneiderman, 2007): nothing new to learn, no set target, and as many outcomes as the participant can imagine. Its question, how close the result came to the room they had in mind, borrows the Expressiveness factor of the Creativity Support Index (Cherry & Latulipe, 2014), cut to one rating that fits a one-minute phase. Experience and comfort are measured with short standardised instruments that fit an eight-minute session: the 8-item UEQ-S (Schrepp et al., 2017) and the 9-item VRSQ (Kim et al., 2018).
+Choosing a colour by holding a sample against the surface draws on proprioception: working within arm's reach and relative to the body is faster and more precise than acting at a distance (Mine et al., 1997), which is why hold-up is the default commit and the fan deck opens in the hand rather than on a panel. Throwing in VR is measurably less accurate and more effortful than real throwing (Zindulka et al., 2020), so toss is offered alongside hold-up and evaluated on experience and preference, not accuracy. Colour judgements made in a headset differ from those made on a screen, and light temperature preferences shift between the two (Siess & Wölfel, 2019) — the reason testing runs on the Quest, and why the room's light can be changed (clock, lamp, curtains). The final phase opens a bare room with the same tools, following the creativity-support principle of low thresholds, high ceilings and wide walls (Shneiderman, 2007): nothing new to learn, no set target, and as many outcomes as the participant can imagine. Its question, how close the result came to the room they had in mind, is a single rating in the spirit of the Creativity Support Index (Cherry & Latulipe, 2014), which measures how well a tool supports creative work; the full index does not fit a one-minute phase. Experience and comfort are measured with short standardised instruments that fit an eight-minute session: the 8-item UEQ-S (Schrepp et al., 2017) and the 9-item VRSQ (Kim et al., 2018).
 
 Cherry, E., & Latulipe, C. (2014). Quantifying the creativity support of digital tools through the Creativity Support Index. *ACM Transactions on Computer-Human Interaction, 21*(4), 1–25. https://doi.org/10.1145/2617588
 Kim, H. K., Park, J., Choi, Y., & Choe, M. (2018). Virtual reality sickness questionnaire (VRSQ): Motion sickness measurement index in a virtual reality environment. *Applied Ergonomics, 69*, 66–73. https://doi.org/10.1016/j.apergo.2017.12.016
@@ -28,7 +28,7 @@ Zindulka, T., Bachynskyi, M., & Müller, J. (2020). Performance and experience o
 | **B3** | Given both, people use and prefer **hold-up** for precision and **toss** for fun — or one dominates. | Commits per method (logged per commit) · stated preference + why |
 | **B4** | The dressed rooms feel like a home the participant could make their own. | "Feels like a room I could make mine" 1–5 + why |
 | **B5** | Changing the light (curtains, clock, lamp) changes at least one colour decision. | Light used? · decision changed? |
-| B6 *(exploratory)* | In a bare room, the same tools let people make the room they imagine. | "How close is this to the room you had in mind?" 1–5 + why · colour source of each commit (menu / fan) |
+| B6 *(exploratory)* | In a bare room, the same tools let people make the room they imagine. | "How close is this to the room you had in mind?" 1–5 + why · what they painted with (menu / fan / both) · furniture added? |
 
 Lesson carried from Eval 2: every decisive question is asked of **everyone exposed to the thing it asks about**, whichever path they took.
 
@@ -38,7 +38,7 @@ Structured observation with a timed task protocol and think-aloud, two standardi
 
 ## Prototype
 
-A 5.5 × 5 m room on the Quest 3S, controllers (not hand tracking). Three rooms, switched by touching a framed picture on the wall behind the start position: **Living** (warm contemporary — curved cream sofa, terracotta armchair, oak floor, jute rug, garden window, arc lamp, woven pendant, TV wall), **Bedroom** (mid-century — walnut, teal wall, mustard duvet, vanity) and the **Empty room** (bare white walls, plain oak boards; no furniture, rug, prints or lamp; always opens in daylight).
+A 5.5 × 5 m room on the Quest 3S, controllers (not hand tracking). Three rooms, switched by touching a framed picture on the wall behind the start position: **Living** (warm contemporary — curved cream sofa, terracotta armchair, oak floor, jute rug, garden window, arc lamp, woven pendant, TV wall), **Bedroom** (mid-century — walnut, teal wall, mustard duvet, vanity) and the **Empty room** (bare white walls, plain oak boards; no furniture, rug, prints or lamp; always opens in daylight; furniture can be added from the floor menu).
 
 | Interaction | What the participant does | New in IP2b? |
 |---|---|---|
@@ -50,7 +50,7 @@ A 5.5 × 5 m room on the Quest 3S, controllers (not hand tracking). Three rooms,
 | Floor | Paint tints the floor's material; the menu swaps the material | tint **new** |
 | Move | Grip a piece to move it; thumbstick turns it; release places it | smoother, half-speed turn |
 | Light | Touch the clock (time of day), the lamp (warm/cool/off), **the curtains (draw closed/open — daylight fades over 1 s)** | curtains **new** |
-| Empty room | Touch the **"Empty room"** frame: a bare white room with the same tools. Colours from the menu, or pull from a wall (once it's painted, its fan follows that colour) | **new** (replaces the MR showcase) |
+| Empty room | Touch the **"Empty room"** frame: a bare white room with the same tools. Colours from the menu, or pull from a wall (once it's painted, its fan follows that colour); furniture from the floor menu's Add tab | **new** (replaces the MR showcase) |
 
 Facilitator (desktop dry run only): `T` then hold `B` = sample in hand · `F1–F3` rooms · `F5–F10` time.
 
@@ -68,7 +68,7 @@ Facilitator (desktop dry run only): `T` then hold `B` = sample in hand · `F1–
 | Floor changed? by tint / material / both | categorical | B2 |
 | Curtains / clock / lamp used · did a light change change a colour? | boolean × 3 + boolean | **B5** |
 | "Feels like a room I could make mine" 1–5 + why | quantitative + qualitative | **B4** |
-| Empty room: "How close is this to the room you had in mind?" 1–5 + why · colour source per commit (menu / fan) | quantitative + qualitative | B6 |
+| Empty room: "How close is this to the room you had in mind?" 1–5 + why · painted with menu / fan / both · added furniture? | quantitative + categorical + qualitative | B6 |
 | UEQ-S (8 items, −3…+3): pragmatic + hedonic quality | quantitative | B2–B4 |
 | VRSQ (9 items, 0–3): oculomotor + disorientation | quantitative | comfort principle |
 | Prompts needed — numbers | quantitative | all |
@@ -101,7 +101,7 @@ Facilitator (desktop dry run only): `T` then hold `B` = sample in hand · `F1–
 - **Phase 1 — free look, no instruction (45 s).** Silent. Log B1 measures. Prompts only after 20 s stuck, by number.
 - **Phase 2 — Task 1 (2 min).** Read verbatim: **"Make this room yours: change the walls and the floor to colours you'd want to live with."** If no sample after 45 s, prompt 1: "Try touching something you like." Log fan, cards, method, hold-up/toss tallies.
 - **Phase 3 — Task 2 (1 min).** Read verbatim: **"Now see how it looks in the evening, and move one piece of furniture."** Log curtains/clock/lamp, decision change, furniture.
-- **Phase 4 — Empty room (1 min).** Read verbatim: **"Touch the frame that says 'Empty room'. Make the room you're imagining."** Log colour source per commit; at the end ask the B6 question.
+- **Phase 4 — Empty room (1 min).** Read verbatim: **"Touch the frame that says 'Empty room'. Make the room you're imagining."** Log what they painted with and whether they added furniture; at the end ask the B6 question.
 - **Questionnaires (1 min 30).** Headset off. UEQ-S then VRSQ on the iPad.
 - **Interview (1 min).** In order: B2 helpful/restrictive (if a fan was opened) · B3 hold-up vs throw (if both were shown) · B4 rating + why · one thing that confused you.
 
@@ -112,5 +112,6 @@ Facilitator (desktop dry run only): `T` then hold `B` = sample in hand · `F1–
 - MR was cut on 20 Oct: it could not be tried on a headset before the test, and the editor run showed the participant could get stranded. The Empty room replaces it; MR passthrough is the "different modality" extension in Evaluation 3.
 - First run of this build on a headset is the morning of the test.
 - In the Empty room a tall participant can walk into the ceiling pendant (shade bottom ≈ 1.75 m): steer them round it.
+- The three room frames hang on Wall_N. Touching the current room's frame does nothing, but a participant painting that wall can brush another room's frame and switch rooms: watch the frames in Phase 4 and note any switch.
 - B6 is one exploratory rating after one minute; it is reported raw, not as a creativity-support score.
 - n ≈ 5 peers, mostly design students: counts are reported raw, not as rates.

@@ -1,8 +1,9 @@
 using UnityEngine;
 
 /// <summary>
-/// A framed picture on the wall; touching it dresses the room in that preset. The
-/// current preset's frame glows amber. Same touch-with-controller pattern as the lamp.
+/// A framed picture on the wall; touching it dresses the room in that preset (touching the
+/// current room's frame does nothing). The current preset's frame glows amber. Same
+/// touch-with-controller pattern as the lamp.
 /// </summary>
 public class PresetFrame : MonoBehaviour, ITouchable
 {
@@ -30,6 +31,8 @@ public class PresetFrame : MonoBehaviour, ITouchable
 
     public void Touch()
     {
+        // Already in this room: do nothing. Brushing it while painting Wall_N used to re-apply the preset and wipe the paint.
+        if (IsCurrent) return;
         if (Time.time - lastTouch < Debounce) return;
         lastTouch = Time.time;
         if (applier != null) applier.Apply(index);
