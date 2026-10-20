@@ -652,4 +652,16 @@ public class SceneWiringTests
         Assert.IsTrue(Surface.All.Any(s => s != null && s.name == "Rug"), "rug pullable again");
         Assert.IsNotNull(Object.FindAnyObjectByType<LampController>(), "lamp back and touchable");
     }
+
+    /// <summary>20 Oct: MR is cut. Nothing from AR Foundation in the scene (no AR session, no passthrough, no plane detection) and no "Your room" frame.</summary>
+    [UnityTest]
+    public IEnumerator Scene_HasNoArFoundationComponents()
+    {
+        yield return null;
+        var ar = Object.FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None)
+            .Where(b => b != null && (b.GetType().Namespace ?? "").StartsWith("UnityEngine.XR.ARFoundation"))
+            .Select(b => b.GetType().Name + " on " + b.name).ToList();
+        CollectionAssert.IsEmpty(ar, "AR Foundation components left: " + string.Join(", ", ar));
+        Assert.IsNull(GameObject.Find("YourRoomFrame"), "no 'Your room' frame");
+    }
 }

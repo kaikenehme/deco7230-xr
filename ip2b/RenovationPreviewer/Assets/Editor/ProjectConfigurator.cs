@@ -21,7 +21,7 @@ public static class ProjectConfigurator
         SetupXr(BuildTargetGroup.Standalone);
         ImportXriSamples();
         SetupInputForSimulator();
-        EnableMetaMr();
+        DisableMetaMr();
         AssetDatabase.SaveAssets();
         Debug.Log("ProjectConfigurator: done");
     }
@@ -139,9 +139,11 @@ public static class ProjectConfigurator
         }
     }
 
-    /// <summary>IP2b N7: Meta passthrough + plane detection for the MR showcase (Android only; VR is unaffected —
-    /// the AR session only starts when MrModeController switches MR on). Headless: -executeMethod ProjectConfigurator.EnableMetaMr</summary>
-    public static void EnableMetaMr()
+    /// <summary>20 Oct: the MR showcase is cut. The three Meta MR features (added for it on 17 Oct) go off for Android,
+    /// so the build is back to the IP2a VR setup; AR Foundation and Unity OpenXR: Meta stay installed, unused.
+    /// The URP settings made for passthrough (HDR off, intermediate texture Auto) stay as they are.
+    /// Headless: -executeMethod ProjectConfigurator.DisableMetaMr</summary>
+    public static void DisableMetaMr()
     {
         var ids = new[]
         {
@@ -149,27 +151,16 @@ public static class ProjectConfigurator
             "com.unity.openxr.feature.arfoundation-meta-camera",
             "com.unity.openxr.feature.arfoundation-meta-plane",
         };
-        SetupPassthroughGraphics();
         FeatureHelpers.RefreshFeatures(BuildTargetGroup.Android);
         foreach (var id in ids)
         {
             var f = FeatureHelpers.GetFeatureWithIdForBuildTarget(BuildTargetGroup.Android, id);
             if (f == null) { Debug.LogWarning($"ProjectConfigurator: Meta feature {id} not found"); continue; }
-            f.enabled = true;
-            Debug.Log($"ProjectConfigurator: enabled {id} for Android");
+            f.enabled = false;
+            EditorUtility.SetDirty(f);
+            Debug.Log($"ProjectConfigurator: disabled {id} for Android");
         }
         AssetDatabase.SaveAssets();
-    }
-
-    /// <summary>Passthrough needs alpha in the eye buffer: HDR off, intermediate texture Auto (meta-openxr graphics-settings.md; review C3).</summary>
-    public static void SetupPassthroughGraphics()
-    {
-        var urp = AssetDatabase.LoadAssetAtPath<UniversalRenderPipelineAsset>("Assets/Settings/URP-Asset.asset");
-        if (urp != null) { urp.supportsHDR = false; EditorUtility.SetDirty(urp); }
-        var data = AssetDatabase.LoadAssetAtPath<UniversalRendererData>("Assets/Settings/URP-Renderer.asset");
-        if (data != null) { data.intermediateTextureMode = IntermediateTextureMode.Auto; EditorUtility.SetDirty(data); }
-        AssetDatabase.SaveAssets();
-        Debug.Log("ProjectConfigurator: passthrough graphics (HDR off, intermediate texture Auto)");
     }
 
     static void ImportXriSamples()

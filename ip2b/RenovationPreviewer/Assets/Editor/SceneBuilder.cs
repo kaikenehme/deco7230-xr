@@ -203,9 +203,6 @@ public static class SceneBuilder
             Debug.LogWarning("SceneBuilder: XR Origin prefab not found under Assets/Samples — import XRI Starter Assets, then re-run");
         }
 
-        // --- IP2b N7: MR showcase. Everything virtual goes under RoomShell so MR can hide it in one go. ---
-        BuildMr(rig, applier, trimWhite, hd);
-
         EditorSceneManager.SaveScene(scene, "Assets/Scenes/Room.unity");
         EditorBuildSettings.scenes = new[] { new EditorBuildSettingsScene("Assets/Scenes/Room.unity", true) };
         AssetDatabase.SaveAssets();
@@ -671,79 +668,5 @@ public static class SceneBuilder
         var c = MakePart(root, "Circle", new Vector3(0.02f, 0.15f, -0.08f), new Vector3(0.5f, 0.004f, 0.5f), MakeMat(name + "_Circle", circle), PrimitiveType.Cylinder);
         c.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
         MakePart(root, "Block", new Vector3(0.022f, -0.25f, 0.08f), new Vector3(0.005f, 0.28f, 0.5f), MakeMat(name + "_Block", block));
-    }
-
-    /// <summary>Roots that stay visible in MR; everything else is parented under RoomShell.</summary>
-    static readonly string[] KeepOutOfShell = { "Managers", "EventSystem", "Sun", "XR Origin (XR Rig)", "YourRoomFrame", "ARSession", "XR Device Simulator", "XR Interaction Simulator" };
-
-    static void BuildMr(GameObject rig, PresetApplier applier, Material frameMat, float hd)
-    {
-        var shell = new GameObject("RoomShell");
-        foreach (var root in SceneManager.GetActiveScene().GetRootGameObjects())
-        {
-            if (root == shell || KeepOutOfShell.Contains(root.name) || root.name.StartsWith("XR ")) continue;
-            root.transform.SetParent(shell.transform, true);
-        }
-
-        // "Your room" frame on Wall_N beside the preset frames (built facing +X like them, turned to face -Z).
-        var frame = new GameObject("YourRoomFrame");
-        frame.transform.rotation = Quaternion.Euler(0f, 90f, 0f);
-        frame.transform.position = new Vector3(1.05f, 1.5f, hd - 0.03f);
-        MakePart(frame, "Frame", Vector3.zero, new Vector3(0.05f, 0.50f, 0.60f), frameMat, keepCollider: true);
-        MakePart(frame, "Picture", new Vector3(0.03f, 0f, 0f), new Vector3(0.01f, 0.40f, 0.50f), MakeMat("YourRoomCard", Hex("#3C4A57")));
-        var labelGo = new GameObject("Label");
-        labelGo.transform.SetParent(frame.transform, false);
-        labelGo.transform.localPosition = new Vector3(0.04f, -0.34f, 0f);
-        labelGo.transform.localRotation = Quaternion.Euler(0f, -90f, 0f);
-        var tm = labelGo.AddComponent<TextMesh>();
-        tm.text = "Your room"; tm.font = UiKit.Font; tm.fontSize = 64; tm.characterSize = 0.018f;
-        tm.anchor = TextAnchor.MiddleCenter; tm.color = new Color(0.10f, 0.10f, 0.10f);
-        labelGo.GetComponent<MeshRenderer>().sharedMaterial = UiKit.Font.material;
-        var col = frame.AddComponent<SphereCollider>(); col.isTrigger = true; col.radius = 0.3f;
-        var mr = frame.AddComponent<MrModeController>();
-        mr.presets = applier;
-        mr.roomShell = shell;
-
-        // AR components, all off until MR is switched on (VR never starts an AR session).
-        var sessionGo = new GameObject("ARSession");
-        var session = sessionGo.AddComponent<UnityEngine.XR.ARFoundation.ARSession>();
-        session.enabled = false;
-        mr.session = session;
-        if (rig != null)
-        {
-            var cam = rig.transform.Find("Camera Offset/Main Camera");
-            if (cam != null)
-            {
-                mr.xrCamera = cam.GetComponent<Camera>();
-                mr.head = cam;
-                var camMgr = cam.gameObject.AddComponent<UnityEngine.XR.ARFoundation.ARCameraManager>();
-                camMgr.enabled = false;
-                mr.cameraManager = camMgr;
-            }
-            var planes = rig.AddComponent<UnityEngine.XR.ARFoundation.ARPlaneManager>();
-            planes.requestedDetectionMode = UnityEngine.XR.ARSubsystems.PlaneDetectionMode.Horizontal | UnityEngine.XR.ARSubsystems.PlaneDetectionMode.Vertical;
-            planes.planePrefab = BuildMrPlanePrefab();
-            planes.enabled = false;
-            mr.planeManager = planes;
-        }
-    }
-
-    /// <summary>AR plane prefab: mesh from the plane boundary, collider for hold-up/toss, invisible paint until committed.</summary>
-    static GameObject BuildMrPlanePrefab()
-    {
-        var go = new GameObject("MrPlane");
-        go.AddComponent<UnityEngine.XR.ARFoundation.ARPlane>();
-        go.AddComponent<MeshFilter>();
-        var r = go.AddComponent<MeshRenderer>();
-        var paint = MakeGlassMat("MrPaint");   // transparent URP Lit; MrPlaneSurface drives the alpha
-        paint.color = new Color(1f, 1f, 1f, 0f);
-        paint.SetFloat("_Smoothness", 0.1f);
-        r.sharedMaterial = paint;
-        go.AddComponent<BoxCollider>();   // MrPlaneSurface fits it to the plane (MeshCollider.ClosestPoint fails on non-convex)
-        go.AddComponent<UnityEngine.XR.ARFoundation.ARPlaneMeshVisualizer>();
-        go.AddComponent<MrPlaneSurface>();
-        var prefab = PrefabUtility.SaveAsPrefabAsset(go, "Assets/Prefabs/MrPlane.prefab");
-        Object.DestroyImmediate(go);
-        return prefab;
     }
 }

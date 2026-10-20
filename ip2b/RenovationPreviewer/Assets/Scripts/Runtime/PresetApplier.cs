@@ -21,8 +21,6 @@ public class PresetApplier : MonoBehaviour
 
     public int Current { get; private set; } = -1;
     public event Action<int> Applied;
-    /// <summary>Fires first on every Apply (even with no presets): MR switches itself off before the room is re-dressed. Runtime never references MR.</summary>
-    public event Action BeforeApply;
 
     void Start() => Apply(0);
 
@@ -31,7 +29,6 @@ public class PresetApplier : MonoBehaviour
 
     public void Apply(int i)
     {
-        BeforeApply?.Invoke();
         if (presets == null || presets.Length == 0) return;
         i = Mathf.Clamp(i, 0, presets.Length - 1);
         var preset = presets[i];
