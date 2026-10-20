@@ -48,7 +48,7 @@ Submit every 12:00 item by **10:00**. ⚠️ The three Evaluation dates come onl
 | Decision supported | **Match against what's staying** | Not "choose from scratch". Gives the hero gesture something to be held against |
 | Hero interaction | **Hold it up against the surface** | Proximity previews; release commits. Zero learning curve |
 | Sample source | **Pull off the surfaces being kept** | Closes the loop, kills menus, constraint generates the options |
-| Modality | VR (IP1, IP2a) → MR (IP2b), with a runtime toggle in IP2b | Maps onto the three prototypes; de-risks MR failure |
+| Modality | VR throughout. ~~MR in IP2b~~ **cut 20 Oct** (Kaike): untestable before the test, rig fell out of the room in MR → Empty room instead; MR becomes Eval 3's "different modality" extension | Hurdle risk: nothing on test day that has never run |
 | Scope | Full renovation as *concept*, phased as *build* | IP1 is horizontal — brief says explicitly "not a final product with all the functionalities" |
 | IP1 input | **Controllers, not hand tracking** | Hand tracking drops out; too fragile for 5 back-to-back tests on a hurdle |
 
@@ -60,7 +60,7 @@ Submit every 12:00 item by **10:00**. ⚠️ The three Evaluation dates come onl
 |---|---|---|---|
 | **IP1** Wk 5 | VR, controllers | Full loop (mark → pull → hold → tune → commit) **on walls only** · diegetic light control (warm / cool / daylight) | Furniture static; layout absent |
 | **IP2a** Wk 9 | VR | Weakest thing from IP1 rebuilt · scheme comparison · furniture grab/move/rotate | — |
-| **IP2b** Wk 12 | MR passthrough | Same loop on the participant's **real** room · runtime VR↔MR toggle | — |
+| **IP2b** Wk 12 | VR (Quest) | Two dressed rooms + **Empty room** · fan deck · toss · floor tint · curtains (MR passthrough cut 20 Oct) | — |
 
 ## Environment
 
@@ -105,25 +105,23 @@ Print CSS gotchas already solved in `lowfi-plan-print.html`: `page-break-after:a
 - Scope discipline is the top risk — zero Unity experience against a 35% hurdle with no extension.
 - Caveman mode is usually active in these sessions (terse, fragments OK). Code, commits and security warnings still get written normally.
 
-## Current state — 17 Oct 2026, Week 11 — **IP2b built, not yet run on a headset** (test Fri 23 Oct, Studio)
+## Current state — 20 Oct 2026, Week 12 — **IP2b built; MR cut → Empty room; APK builds; not yet run on a headset** (test Fri 23 Oct, Studio)
 
-Eval 2 submitted 7 Oct. IP2b design: `docs/superpowers/specs/2026-10-17-ip2b-design.md`; plan + STATUS: `docs/superpowers/plans/2026-10-17-ip2b-build.md`; branch **`ip2b`** (not merged). EditMode 246/246, PlayMode 44/44 (after final-review fixes + Kaike's first lap; rulings + deferred minors in `docs/superpowers/plans/2026-10-17-ip2b-build-ledger.md`).
+**20 Oct (Kaike's call): MR showcase cut.** Desktop lap 19 Oct: in MR the room shell (floor included) hides while the rig's GravityProvider keeps running, so the rig falls out of the room; on the Quest the participant would be stranded (the "Your room" frame stays behind, `M` is editor-only). Untestable before Friday → replaced by an **Empty room**: third preset (bare white walls, oak boards; no furniture, rug, prints or arc lamp; always opens in daylight), third frame on Wall_N, `F3`. Same mechanics; colours from the menu, fan from any wall. Meta MR OpenXR features off (AR Foundation + Unity OpenXR: Meta still installed, unused); no AR components in the scene. Design `docs/superpowers/specs/2026-10-20-empty-room-design.md`; plan + ledger `docs/superpowers/plans/2026-10-20-empty-room.md`.
 
-**What changed (Kaike's calls, 17 Oct):** nothing is "staying" — pull from any surface, furniture is pull-only, walls + floor take paint · two dressed rooms: **Living** (warm contemporary, Sketchfab CC-BY pieces) and **Bedroom** (mid-century) in a **5.5 × 5 m** room · **fan deck** (7 cards light → dark, two off-whites) replaces twist-to-tune · floor tint over material · **curtains** fade daylight over 1 s · smoother furniture (45°/s) · **toss** alongside hold-up · **MR showcase**: "Your room" frame → passthrough, real walls/floor paintable (`Renovation.MR` assembly; AR Foundation 6.1.1 + Unity OpenXR: Meta 2.1.1). IP2a features kept (clock, lamp, menu, schemes, presets).
+Branch **`ip2b`** (not merged). **EditMode 240/240, PlayMode 43/43.** **Build-only APK check (Kaike's go, 20 Oct):** `Builds/ip2b.apk` builds headless (`BuildScript.BuildAndroid`, 7 min 22 s, 91 MB); permissions and manifest identical to IP2a's; no `USE_SCENE`. **Not installed** — Friday builds fresh from the tagged commit.
 
-**No headset until Fri 23 Oct** — studio Quest on the day; Unity-only testing = grade cap. Friday AM: Space Setup in the studio, USB "Always allow", build APK (**only on Kaike's go**), install, check MR; if MR fails, test VR only and say so.
+**17 Oct design (still stands apart from MR):** `docs/superpowers/specs/2026-10-17-ip2b-design.md` — nothing "staying", pull from any surface, furniture pull-only, walls + floor take paint · **Living** (warm contemporary, Sketchfab CC-BY) + **Bedroom** (mid-century) in a **5.5 × 5 m** room · **fan deck** (7 cards light → dark, two off-whites) · floor tint · **curtains** fade daylight over 1 s · furniture 45°/s · **toss** alongside hold-up · IP2a features kept (clock, lamp, menu, schemes, presets). 17 Oct lap fixes: garden view follows the clock, ceiling pendant is a touchable switch.
 
-**Test-day docs (drafts — Kaike's voice pass needed):** `ip2b/2026-10-23-ip2b-testing-plan.md` (B1–B6, five principles = Week 6 slide 21, UEQ-S + VRSQ) · research paragraph with 7 verified refs (`ip2b/research-references.md`) — **submit to Blackboard at the end of the session** · iPad logger `ip2b/ipad-logger.html` (not yet published as an artifact) · `ip2b/ai-use-log.md`.
+**No headset until Fri 23 Oct** — studio Quest on the day; Unity-only testing = grade cap. **Code changes allowed until Thu 22 night** (the 19 Oct freeze was self-imposed, not the course's); then tag (e.g. `ip2b-test`) and build Friday from the tag. Friday AM: boundary in the studio, USB "Always allow", build APK (**only on Kaike's go**), install, quick lap incl. the Empty room.
 
-**Desktop controls added:** `M` = MR on/off (facilitator). Scroll no longer twists (fan cards are clicked). F1–F2 rooms.
+**Test-day docs (drafts — Kaike's voice pass needed):** `ip2b/2026-10-23-ip2b-testing-plan.md` (B1–B6; Phase 4 = Empty room, B6 = "how close to the room you had in mind?" 1–5; ~8 min per participant; five principles = Week 6 slide 21; UEQ-S + VRSQ) · research paragraph, 7 verified refs (`ip2b/research-references.md`; MR refs replaced 20 Oct by Shneiderman 2007 + Cherry & Latulipe 2014) — **submit to Blackboard at the end of the session** · iPad logger `ip2b/ipad-logger.html` (not yet published as an artifact) · `ip2b/ai-use-log.md`.
+
+**Desktop controls:** `F1–F3` rooms (Living / Bedroom / Empty). `M` is gone. Scroll doesn't twist (fan cards are clicked).
 
 **Headless gotcha (17 Oct):** a killed batchmode run left `bee_backend`/`netcorerun` orphans that wedged every later compile at "Compiling Scripts". Fix: kill all Unity processes by PID, `rm -rf Library/Bee Library/ScriptAssemblies`, rerun.
 
-**17 Oct, Kaike's first lap in the editor:** looks good. Fixed: garden view now follows the clock (`TimeOfDay.WindowTint`), ceiling pendant is a touchable switch (`PendantLight`). Unity editor was left open on `Room.unity`, stopped.
-
-**Next session (Sun 18 Oct):** carry on Kaike's lap (pull → fan → hold-up → floor → curtains → furniture → Bedroom → `M`) · voice pass on testing plan + research paragraph · publish iPad logger artifact · decide merge/PR for `ip2b` · deferred minors in the ledger if time.
-
-**Still to do:** desktop lap by Kaike (pull → fan → hold-up/toss → floor → curtains → furniture → Bedroom → `M`) · XR Simulation check of MR in the GUI editor (optional) · plan PDF · merge `ip2b` → main.
+**Next:** Kaike's desktop lap (pull → fan → hold-up/toss → floor → curtains → furniture → clock/lamp/pendant → Bedroom → Empty room via frame/`F3` → back to Living) · voice pass on testing plan + research paragraph · publish iPad logger artifact · merge `ip2b` → main · Thu night: tag.
 
 ---
 

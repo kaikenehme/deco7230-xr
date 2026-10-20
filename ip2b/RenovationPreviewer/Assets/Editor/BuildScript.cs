@@ -8,7 +8,7 @@ public static class BuildScript
     {
         var report = BuildPipeline.BuildPlayer(
             new[] { "Assets/Scenes/Room.unity" },
-            "Builds/ip2a.apk",
+            "Builds/ip2b.apk",
             BuildTarget.Android,
             BuildOptions.None);
 
