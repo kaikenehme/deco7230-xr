@@ -159,7 +159,7 @@ textarea { min-height: 84px; resize: vertical; }
     <div class="ckey"><kbd>Grip</kbd><p>Move furniture · thumbstick turns it</p></div>
   </div>
   <div class="fac">
-    <strong>Facilitator only.</strong> Rooms: touch a framed picture (desktop <b>F1–F2</b>). MR: touch “Your room” (desktop <b>M</b>).
+    <strong>Facilitator only.</strong> Rooms: touch a framed picture (desktop <b>F1–F3</b>). Phase 4: the “Empty room” frame.
     Time of day: the clock (desktop <b>F5–F10</b>). Restart the app between participants. Pauses = Meta button or proximity sensor (see quest-sideload.md).
   </div>
 </div>
@@ -176,7 +176,7 @@ textarea { min-height: 84px; resize: vertical; }
     "You can also throw it at a wall.",
     "Touch the curtains.",
     "Grip a piece of furniture to move it.",
-    "Touch the frame that says ‘Your room’.",
+    "Touch the frame that says ‘Empty room’.",
   ];
   const YN = ["Yes", "No"];
   const SECTIONS = [
@@ -210,10 +210,11 @@ textarea { min-height: 84px; resize: vertical; }
       { k: "r14", n: 14, q: "Moved furniture where they meant first try?", type: "seg", opts: ["Yes", "No", "Needed a prompt"] },
       { k: "r15", n: 15, q: "Switched to the Bedroom?", type: "seg", opts: YN },
     ]},
-    { id: "p4", title: "Phase 4 · MR showcase", note: "45 s — “Touch the frame that says ‘Your room’.” — B6", timer: 3, items: [
-      { k: "r16", n: 16, q: "MR worked on this headset?", type: "seg", opts: ["Yes", "Passthrough only", "No (skipped)"] },
-      { k: "r17", n: 17, q: "Painted a real wall?", type: "seg", opts: YN },
-      { k: "r18", n: 18, q: "“Could you see yourself using this at home?”", type: "area" },
+    { id: "p4", title: "Phase 4 · Empty room", note: "1 min — “Touch the frame that says ‘Empty room’. Make the room you're imagining.” — B6", timer: 3, items: [
+      { k: "r16", n: 16, q: "Entered the Empty room?", type: "seg", opts: ["Yes", "Needed help", "No (skipped)"] },
+      { k: "r17", n: 17, q: "What did they paint with?", type: "seg", opts: ["Menu", "Fan deck", "Both", "Nothing"] },
+      { k: "r18", n: 18, q: "“How close is this to the room you had in mind?” (1–5)", type: "seg", opts: ["1", "2", "3", "4", "5"] },
+      { k: "r18b", n: "18b", q: "Why? (verbatim)", type: "area" },
     ]},
     { id: "ueq", title: "UEQ-S", note: "Headset off · participant taps · −3 = left word, +3 = right word", items: [
       { k: "u1", n: "U1", q: "Obstructive ←→ Supportive", type: "seg", opts: ['-3', '-2', '-1', '0', '+1', '+2', '+3'] },
@@ -251,7 +252,7 @@ textarea { min-height: 84px; resize: vertical; }
     { label: "Free look", secs: 45 },
     { label: "Task 1", secs: 120 },
     { label: "Task 2", secs: 60 },
-    { label: "MR", secs: 45 },
+    { label: "Empty room", secs: 60 },
     { label: "Interview", secs: 60 },
   ];
 
