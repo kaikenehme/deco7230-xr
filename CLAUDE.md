@@ -123,7 +123,7 @@ Branch **`ip2b`** (not merged). **EditMode 241/241, PlayMode 43/43** (after fina
 
 **22 Oct (Thu night):** tests 241/43 green after the iCloud fix · `ip2b` merged → main, tagged `ip2b-test`, pushed · APK built tonight from the tag (Kaike's go) — Friday = install + lap only. Studio Fri **14:00–15:50, 78-208** (INFS7203 10:00–11:50 before it).
 
-**Next:** Kaike's desktop lap (pull → fan → hold-up/toss → floor → curtains → furniture → clock/lamp/pendant → Bedroom → Empty room via frame/`F3` → back to Living) — any fix means re-tag + rebuild · voice pass on testing plan + research paragraph · fill `[TODO]`s in `ip2b/ai-acknowledgement.md` → rebuild PDFs → commit · iPad: open logger once, check "Saved".
+**Next — Fri morning before INFS 10:00 (Kaike moved it from Thu night; checklist = top of `ip2b/test-day-runbook.md`):** Kaike's desktop lap (pull → fan → hold-up/toss → floor → curtains → furniture → clock/lamp/pendant → Bedroom → Empty room via frame/`F3` → back to Living) — any fix means re-tag + rebuild · voice pass on testing plan + research paragraph · fill `[TODO]`s in `ip2b/ai-acknowledgement.md` → rebuild PDFs → commit · iPad: open logger once, check "Saved".
 
 ---
 
