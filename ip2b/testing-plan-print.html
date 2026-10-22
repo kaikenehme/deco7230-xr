@@ -1,0 +1,300 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<title>XR Renovation Previewer — IP2b Testing Plan</title><style>
+  @page { size: A4; margin: 16mm 16mm 14mm 16mm; }
+  :root{ --uq:#51247a; --ink:#1c1c1c; --muted:#5c5c5c; --rule:#d5d0da; --tint:#f6f3f8; }
+  *{ box-sizing:border-box; }
+  html{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  body{ margin:0; font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+        font-size:9.6pt; line-height:1.45; color:var(--ink); }
+  h1{ font-size:17pt; font-weight:700; color:var(--uq); margin:0 0 4px; letter-spacing:-.01em; }
+  h2{ font-size:11pt; font-weight:700; color:var(--uq); margin:12px 0 4px;
+      page-break-after:avoid; break-after:avoid; }
+  p{ margin:0 0 6px; }
+  .meta{ color:var(--muted); font-size:9pt; margin-bottom:8px; }
+  ul, ol{ margin:0 0 8px; padding-left:18px; }
+  li{ margin-bottom:2px; }
+  b.tag{ color:var(--uq); }
+  table{ width:100%; border-collapse:collapse; margin:6px 0 8px; font-size:8.8pt; }
+  th{ text-align:left; font-weight:700; color:#fff; background:var(--uq);
+      padding:4px 7px; border:1px solid var(--uq); }
+  td{ padding:4px 7px; border:1px solid var(--rule); vertical-align:top; }
+  tbody tr:nth-child(even) td{ background:var(--tint); }
+
+  code{ font-family:Menlo,monospace; font-size:8.4pt; background:var(--tint); padding:0 2px; }
+  strong{ color:inherit; }
+  a{ color:var(--uq); text-decoration:none; }
+  table{ page-break-inside:auto; break-inside:auto; }
+  tr{ page-break-inside:avoid; break-inside:avoid; }
+  thead{ display:table-header-group; }
+</style></head>
+<body><h1>XR Renovation Previewer — Testing plan for Interactive Prototype 2b</h1><p><strong>DECO7230 · Kaike Nehme · Studio test: Fri 23 Oct 2026 (Week 12) · on the studio Meta Quest 3S</strong><br />
+Design: <code>../docs/superpowers/specs/2026-10-17-ip2b-design.md</code>, amended by <code>../docs/superpowers/specs/2026-10-20-empty-room-design.md</code> (20 Oct: the MR showcase is replaced by an Empty room). What changed since IP2a and why: <code>../evaluations/evaluation-2-print.html</code> §05–06, <code>../testing-data/ip2a/README.md</code>.</p>
+<h2>Pitch</h2>
+<p>A phone paint-visualiser (Dulux Visualizer, Houzz, IKEA Kreativ) rebuilt in XR: you stand in a room, pull a colour off anything you like — the sofa, the rug, a print — and it opens in your hand as a paint fan deck. Pick a card, hold it up to a wall or the floor (or throw it), and the room changes at full size, in its own light. IP2b moves from a test level to two rooms that read as homes (a warm contemporary living room and a mid-century bedroom), lets you change anything, and ends in a bare Empty room where you make the room you imagine.</p>
+<h2>Research summary (DECO7230)</h2>
+<p>Choosing a colour by holding a sample against the surface draws on proprioception: working within arm's reach and relative to the body is faster and more precise than acting at a distance (Mine et al., 1997), which is why hold-up is the default commit and the fan deck opens in the hand rather than on a panel. Throwing in VR is measurably less accurate and more effortful than real throwing (Zindulka et al., 2020), so toss is offered alongside hold-up and evaluated on experience and preference, not accuracy. Colour judgements made in a headset differ from those made on a screen, and light temperature preferences shift between the two (Siess &amp; Wölfel, 2019) — the reason testing runs on the Quest, and why the room's light can be changed (clock, lamp, curtains). The final phase opens a bare room with the same tools, following the creativity-support principle of low thresholds, high ceilings and wide walls (Shneiderman, 2007): nothing new to learn, no set target, and as many outcomes as the participant can imagine. Its question, how close the result came to the room they had in mind, is a single rating in the spirit of the Creativity Support Index (Cherry &amp; Latulipe, 2014), which measures how well a tool supports creative work; the full index does not fit a one-minute phase. Experience and comfort are measured with short standardised instruments that fit an eight-minute session: the 8-item UEQ-S (Schrepp et al., 2017) and the 9-item VRSQ (Kim et al., 2018).</p>
+<p>Cherry, E., &amp; Latulipe, C. (2014). Quantifying the creativity support of digital tools through the Creativity Support Index. <em>ACM Transactions on Computer-Human Interaction, 21</em>(4), 1–25. https://doi.org/10.1145/2617588<br />
+Kim, H. K., Park, J., Choi, Y., &amp; Choe, M. (2018). Virtual reality sickness questionnaire (VRSQ): Motion sickness measurement index in a virtual reality environment. <em>Applied Ergonomics, 69</em>, 66–73. https://doi.org/10.1016/j.apergo.2017.12.016<br />
+Mine, M. R., Brooks, F. P., &amp; Sequin, C. H. (1997). Moving objects in space: Exploiting proprioception in virtual-environment interaction. <em>Proceedings of SIGGRAPH '97</em>, 19–26. https://doi.org/10.1145/258734.258747<br />
+Schrepp, M., Hinderks, A., &amp; Thomaschewski, J. (2017). Design and evaluation of a short version of the User Experience Questionnaire (UEQ-S). <em>International Journal of Interactive Multimedia and Artificial Intelligence, 4</em>(6), 103–108. https://doi.org/10.9781/ijimai.2017.09.001<br />
+Shneiderman, B. (2007). Creativity support tools: Accelerating discovery and innovation. <em>Communications of the ACM, 50</em>(12), 20–32. https://doi.org/10.1145/1323688.1323689<br />
+Siess, A., &amp; Wölfel, M. (2019). User color temperature preferences in immersive virtual realities. <em>Computers &amp; Graphics, 81</em>, 20–31. https://doi.org/10.1016/j.cag.2019.03.018<br />
+Zindulka, T., Bachynskyi, M., &amp; Müller, J. (2020). Performance and experience of throwing in virtual reality. <em>Proceedings of the 2020 CHI Conference on Human Factors in Computing Systems</em>. https://doi.org/10.1145/3313831.3376639</p>
+<h2>Testing objective</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Assumption</th>
+<th>Decisive measure</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>B1</strong></td>
+<td>With nothing marked as "staying" and the room's largest piece pulsing on entry, people pull a sample <strong>unprompted</strong>. (IP1 0/5 sim · IP2a 4/5 headset)</td>
+<td>Pulled in free look, no prompt</td>
+</tr>
+<tr>
+<td><strong>B2</strong></td>
+<td>Seeing all seven options at once, light → dark, gets people <strong>choosing from the constrained set</strong> rather than the full menu — and they find it helpful, not restrictive. (IP2a: kept colour from the menu 5/5; A2 never asked)</td>
+<td>Method of the kept colour · "helpful or restrictive?" asked of <strong>everyone who opened a fan</strong></td>
+</tr>
+<tr>
+<td><strong>B3</strong></td>
+<td>Given both, people use and prefer <strong>hold-up</strong> for precision and <strong>toss</strong> for fun — or one dominates.</td>
+<td>Commits per method (logged per commit) · stated preference + why</td>
+</tr>
+<tr>
+<td><strong>B4</strong></td>
+<td>The dressed rooms feel like a home the participant could make their own.</td>
+<td>"Feels like a room I could make mine" 1–5 + why</td>
+</tr>
+<tr>
+<td><strong>B5</strong></td>
+<td>Changing the light (curtains, clock, lamp) changes at least one colour decision.</td>
+<td>Light used? · decision changed?</td>
+</tr>
+<tr>
+<td>B6 <em>(exploratory)</em></td>
+<td>In a bare room, the same tools let people make the room they imagine.</td>
+<td>"How close is this to the room you had in mind?" 1–5 + why · what they painted with (menu / fan / both) · furniture added?</td>
+</tr>
+</tbody>
+</table>
+<p>Lesson carried from Eval 2: every decisive question is asked of <strong>everyone exposed to the thing it asks about</strong>, whichever path they took.</p>
+<h2>Methodology</h2>
+<p>Structured observation with a timed task protocol and think-aloud, two standardised questionnaires, and a short interview. Phase 1 is uninstructed (B1). Phase 2 is a free creative task (B2, B3). Phase 3 changes the light and layout (B5). Phase 4 is the Empty room (B6). Then UEQ-S and VRSQ on the iPad, then the interview (B2, B3, B4). One record per participant, logged live on the iPad session logger (https://claude.ai/artifact/MSM5HKKZdxh7xLpB1MV3RS); prompts logged <strong>by number</strong>. The Quest view is mirrored and recorded with consent (<code>record-session.sh P1</code>).</p>
+<h2>Prototype</h2>
+<p>A 5.5 × 5 m room on the Quest 3S, controllers (not hand tracking). Three rooms, switched by touching a framed picture on the wall behind the start position: <strong>Living</strong> (warm contemporary — curved cream sofa, terracotta armchair, oak floor, jute rug, garden window, arc lamp, woven pendant, TV wall), <strong>Bedroom</strong> (mid-century — walnut, teal wall, mustard duvet, vanity) and the <strong>Empty room</strong> (bare white walls, plain oak boards; no furniture, rug, prints or lamp; always opens in daylight; furniture can be added from the floor menu).</p>
+<table>
+<thead>
+<tr>
+<th>Interaction</th>
+<th>What the participant does</th>
+<th>New in IP2b?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pull</td>
+<td>Bring a controller to <strong>anything</strong> — sofa, rug, a wall, the floor — a swatch tab appears; trigger peels a sample into the hand</td>
+<td><strong>any surface</strong> (IP2a: kept surfaces only)</td>
+</tr>
+<tr>
+<td>Fan deck</td>
+<td>The sample opens as <strong>seven cards, lightest on the left, two off-whites first</strong>; touch a card with the other controller (or point the right ray at it + trigger) to pick it</td>
+<td><strong>new</strong> (replaces twist-to-tune)</td>
+</tr>
+<tr>
+<td>Hold up</td>
+<td>Bring the picked card near a wall or the floor to preview; let go to commit; let go mid-air to discard</td>
+<td>floor now takes colour</td>
+</tr>
+<tr>
+<td>Toss</td>
+<td>Throw the card at a wall or the floor — it splashes on</td>
+<td><strong>new</strong></td>
+</tr>
+<tr>
+<td>Menu</td>
+<td>Point at a surface, trigger: full catalogue (paints, floor materials, furniture)</td>
+<td>as IP2a</td>
+</tr>
+<tr>
+<td>Floor</td>
+<td>Paint tints the floor's material; the menu swaps the material</td>
+<td>tint <strong>new</strong></td>
+</tr>
+<tr>
+<td>Move</td>
+<td>Grip a piece to move it; thumbstick turns it; release places it</td>
+<td>smoother, half-speed turn</td>
+</tr>
+<tr>
+<td>Light</td>
+<td>Touch the clock (time of day), the lamp (warm/cool/off), <strong>the curtains (draw closed/open — daylight fades over 1 s)</strong></td>
+<td>curtains <strong>new</strong></td>
+</tr>
+<tr>
+<td>Empty room</td>
+<td>Touch the <strong>"Empty room"</strong> frame: a bare white room with the same tools. Colours from the menu, or pull from a wall (once it's painted, its fan follows that colour); furniture from the floor menu's Add tab</td>
+<td><strong>new</strong> (replaces the MR showcase)</td>
+</tr>
+</tbody>
+</table>
+<p>Facilitator (desktop dry run only): <code>T</code> then hold <code>B</code> = sample in hand · <code>F1–F3</code> rooms · <code>F5–F10</code> time.</p>
+<h2>Data collection</h2>
+<table>
+<thead>
+<tr>
+<th>Measure</th>
+<th>Type</th>
+<th>Validates</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sample pulled unprompted in free look · what from</td>
+<td>boolean + categorical</td>
+<td><strong>B1 — decisive</strong></td>
+</tr>
+<tr>
+<td>Hero pulse noticed (remark / reach toward it)</td>
+<td>boolean</td>
+<td>B1</td>
+</tr>
+<tr>
+<td>Fan opened · cards picked before first commit (tally)</td>
+<td>quantitative</td>
+<td>B2</td>
+</tr>
+<tr>
+<td>Method of the colour they keep (fan / menu / both)</td>
+<td>categorical</td>
+<td><strong>B2 — decisive</strong></td>
+</tr>
+<tr>
+<td>"Seven options picked from what you pulled — helpful or restrictive? Why?" (everyone who opened a fan)</td>
+<td>qualitative</td>
+<td><strong>B2 — decisive</strong></td>
+</tr>
+<tr>
+<td>Commits by hold-up / by toss (tally each)</td>
+<td>quantitative</td>
+<td><strong>B3</strong></td>
+</tr>
+<tr>
+<td>"Hold it up or throw it — which would you use, and why?" (everyone shown both)</td>
+<td>qualitative</td>
+<td><strong>B3</strong></td>
+</tr>
+<tr>
+<td>Floor changed? by tint / material / both</td>
+<td>categorical</td>
+<td>B2</td>
+</tr>
+<tr>
+<td>Curtains / clock / lamp used · did a light change change a colour?</td>
+<td>boolean × 3 + boolean</td>
+<td><strong>B5</strong></td>
+</tr>
+<tr>
+<td>"Feels like a room I could make mine" 1–5 + why</td>
+<td>quantitative + qualitative</td>
+<td><strong>B4</strong></td>
+</tr>
+<tr>
+<td>Empty room: "How close is this to the room you had in mind?" 1–5 + why · painted with menu / fan / both · added furniture?</td>
+<td>quantitative + categorical + qualitative</td>
+<td>B6</td>
+</tr>
+<tr>
+<td>UEQ-S (8 items, −3…+3): pragmatic + hedonic quality</td>
+<td>quantitative</td>
+<td>B2–B4</td>
+</tr>
+<tr>
+<td>VRSQ (9 items, 0–3): oculomotor + disorientation</td>
+<td>quantitative</td>
+<td>comfort principle</td>
+</tr>
+<tr>
+<td>Prompts needed — numbers</td>
+<td>quantitative</td>
+<td>all</td>
+</tr>
+<tr>
+<td>Seen this project before?</td>
+<td>boolean</td>
+<td>sample</td>
+</tr>
+</tbody>
+</table>
+<p><strong>UEQ-S items</strong> (7-point, left −3 … right +3): obstructive–supportive · complicated–easy · inefficient–efficient · confusing–clear · boring–exciting · not interesting–interesting · conventional–inventive · usual–leading edge.<br />
+<strong>VRSQ items</strong> (none 0 · slight 1 · moderate 2 · severe 3): general discomfort · fatigue · eyestrain · difficulty focusing · headache · fullness of head · blurred vision · dizzy (eyes closed) · vertigo.</p>
+<h2>Five design principles (Week 6 lecture)</h2>
+<table>
+<thead>
+<tr>
+<th>Principle</th>
+<th>How the prototype addresses it</th>
+<th>What we observe</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Text readability</strong></td>
+<td>Almost no text: cards carry colour only; the three frame labels are large, dark on light</td>
+<td>Any squinting / leaning in to read; comments</td>
+</tr>
+<tr>
+<td><strong>Ergonomics</strong></td>
+<td>Fan opens at the hand, cards within 16 cm; hold-up at arm's length; floor reached by lowering the arm, not crouching; furniture moved by ray, no lifting</td>
+<td>Arm held up &gt; 10 s; crouching; reach complaints</td>
+</tr>
+<tr>
+<td><strong>Brightness changes</strong></td>
+<td>Curtains fade daylight over 1 s, never snap; closed room stays lit by lamp + pendant; time-of-day steps are scheduled by touch</td>
+<td>Squint / flinch at curtain close; VRSQ eyestrain</td>
+</tr>
+<tr>
+<td><strong>Avoiding simulator sickness</strong></td>
+<td>No smooth locomotion (teleport only; room fits the play space)</td>
+<td>VRSQ total; any pause / "I feel off"</td>
+</tr>
+<tr>
+<td><strong>Button placement</strong></td>
+<td>No menu buttons for core actions: controls are objects (cards, curtains, clock, lamp, frames). Trigger = pull/pick/touch, grip = move — the same on both hands</td>
+<td>Wrong button pressed (tally); asks "which button?"</td>
+</tr>
+</tbody>
+</table>
+<h2>Setup (studio, before the first participant)</h2>
+<ol>
+<li>Quest 3S charged; boundary set in the test area, clear ≥ 2 × 2 m.</li>
+<li>USB to the Mac, <strong>"Always allow"</strong> for debugging; install the APK (<code>adb install -r</code>); launch once.</li>
+<li>Check the Empty room: touch its frame → bare, lit room; touch Living to return.</li>
+<li>Mirror running (scrcpy) + recording script; iPad logger open; consent card ready.</li>
+<li>Restart the app between participants (colours, furniture, time and curtains must not leak).</li>
+</ol>
+<h2>Process (~8 min per participant, aim ≥ 5)</h2>
+<ul>
+<li><strong>Brief (30 s).</strong> "Imagine this is your home and you're about to redecorate. You can change anything." Consent for recording. Seen the project before? Fit the headset.</li>
+<li><strong>Phase 1 — free look, no instruction (45 s).</strong> Silent. Log B1 measures. Prompts only after 20 s stuck, by number.</li>
+<li><strong>Phase 2 — Task 1 (2 min).</strong> Read verbatim: <strong>"Make this room yours: change the walls and the floor to colours you'd want to live with."</strong> If no sample after 45 s, prompt 1: "Try touching something you like." Log fan, cards, method, hold-up/toss tallies.</li>
+<li><strong>Phase 3 — Task 2 (1 min).</strong> Read verbatim: <strong>"Now see how it looks in the evening, and move one piece of furniture."</strong> Log curtains/clock/lamp, decision change, furniture.</li>
+<li><strong>Phase 4 — Empty room (1 min).</strong> Read verbatim: <strong>"Touch the frame that says 'Empty room'. Make the room you're imagining."</strong> Log what they painted with and whether they added furniture; at the end ask the B6 question.</li>
+<li><strong>Questionnaires (1 min 30).</strong> Headset off. UEQ-S then VRSQ on the iPad.</li>
+<li><strong>Interview (1 min).</strong> In order: B2 helpful/restrictive (if a fan was opened) · B3 hold-up vs throw (if both were shown) · B4 rating + why · one thing that confused you.</li>
+</ul>
+<p><strong>Results: logger export + this plan's sheet posted to <code>testing-data/ip2b/</code> before leaving the room. Research summary submitted to Blackboard at the end of the session.</strong></p>
+<h2>Known limits, stated up front</h2>
+<ul>
+<li>MR was cut on 20 Oct: it could not be tried on a headset before the test, and the editor run showed the participant could get stranded. The Empty room replaces it; MR passthrough is the "different modality" extension in Evaluation 3.</li>
+<li>First run of this build on a headset is the morning of the test.</li>
+<li>In the Empty room a tall participant can walk into the ceiling pendant (shade bottom ≈ 1.75 m): steer them round it.</li>
+<li>The three room frames hang on Wall_N. Touching the current room's frame does nothing, but a participant painting that wall can brush another room's frame and switch rooms: watch the frames in Phase 4 and note any switch.</li>
+<li>B6 is one exploratory rating after one minute; it is reported raw, not as a creativity-support score.</li>
+<li>n ≈ 5 peers, mostly design students: counts are reported raw, not as rates.</li>
+</ul></body></html>

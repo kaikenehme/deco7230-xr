@@ -91,3 +91,4 @@ testing-data/**/raw-private/
 .utmp/
 ip2b/art/*.blend
 ip2b/art/*.blend1
+ip2b/apk-build.log

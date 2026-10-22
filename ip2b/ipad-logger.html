@@ -58,7 +58,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px
 .tab[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
 
 /* timer strip */
-.timers { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.timers { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
 .tbtn { border: 1px solid var(--line); background: var(--surface); border-radius: 12px; padding: 10px 12px; text-align: left; cursor: pointer; min-height: 64px; display: grid; gap: 2px; }
 .tbtn .lbl { font-size: 13px; color: var(--muted); }
 .tbtn .clk { font: 600 22px/1 var(--mono); font-variant-numeric: tabular-nums; }
@@ -446,7 +446,7 @@ textarea { min-height: 84px; resize: vertical; }
     if (t.dataset.k) {
       const k = t.dataset.k, v = t.dataset.v;
       d[k] = d[k] === v ? null : v;
-      if (k === "r12" && d[k] === "No") d.r12stops = 0;
+      if (k === "r11" && d[k] === "No") d.r11stops = 0;
       touch(); renderForm(); return;
     }
     if (t.dataset.inc || t.dataset.dec) {
@@ -455,7 +455,7 @@ textarea { min-height: 84px; resize: vertical; }
       document.getElementById("out-" + k).textContent = d[k]; touch(); return;
     }
     if (t.dataset.prompt) {
-      const phase = running.idx === 0 ? "free look" : running.idx === 2 ? "task 2" : running.idx === 3 ? "post" : "task 1";
+      const phase = ["free look", "task 1", "task 2", "empty room", "interview"][running.idx] || "task 1";
       d.prompts = [...(d.prompts || []), { n: +t.dataset.prompt, phase, at: Date.now() }];
       touch(); renderForm(); return;
     }

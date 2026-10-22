@@ -1,0 +1,23 @@
+# AI acknowledgement coversheet
+
+**Name:** Kaike Nehme · **Student number:** [TODO student number]
+**Course:** DECO7230 — Digital Prototyping and Extended Reality
+**Assignment:** Interactive Prototype 2b (Fri 23 Oct 2026, Week 12 Studio)
+
+☑ **Yes, AI tools have been used to generate or edit material in this assessment.**
+
+All AI use in IP2b was Claude Code (Anthropic, model Claude Opus 5.5), driven interactively by Kaike Nehme in supervised terminal sessions, with Blender driven by Claude through the MCP for Blender add-on for the room mock-ups. No generative image or 3D model was used. Prompts were conversational: the "Prompt(s)" column summarises the direction given, quoting my words where the running log recorded them. The raw log kept during development is `ip2b/ai-use-log.md` (committed with full history). IP2b builds on the IP1 and IP2a Unity code, whose AI use was declared with those submissions (Claude Fable 5 and Fable 5.1). Furniture models and textures are human-made assets (Sketchfab CC-BY / Free Standard, Poly Haven and ambientCG CC0), credited in `ip2b/RenovationPreviewer/Assets/Catalogue/CREDITS.md`.
+
+| Tool | Use | Prompt(s) | Section | Date |
+|---|---|---|---|---|
+| Claude Code (Claude Opus 5.5) | Reading the brief: listed the IP2b deliverables from the task sheet, rubric and Week 6 slides (five principles, questionnaires) and flagged the simulator grade cap | Asked what IP2b needs; supplied the Week 6 slides | — (chat) | 17 Oct 2026 |
+| Claude Code (Claude Opus 5.5) | Design ideation and references: brainstormed the IP2b direction with me, searched the web for contemporary living-room references and built a moodboard; searched Sketchfab and Poly Haven for free furniture | My choices: references A + F, nothing stays, walls + floor + furniture, a mid-century bedroom, keep the IP2a features, curtains that darken the room | `ip2b/art/` | 17 Oct 2026 |
+| Claude Code + Blender (MCP) | Room mock-ups: assembled and rendered the living room and bedroom in Blender, recoloured the bedroom pieces | My review: "furniture stuck in the middle", "add a TV" | `ip2b/art/*.png` | 17 Oct 2026 |
+| Claude Code (Claude Opus 5.5) | Planning: wrote the design specs and build plans from my decisions, including the Empty room that replaced MR | Approved each spec and plan; Empty room: "as free as possible to create something they are imagining" | `docs/superpowers/specs/`, `docs/superpowers/plans/` | 17–20 Oct 2026 |
+| Claude Code (Claude Opus 5.5) | Code generation: all new C# for IP2b with EditMode/PlayMode tests — pull from any surface, fan deck, floor tint, toss, curtains, Living and Bedroom presets, Empty room; the MR showcase was built, then removed; furniture models decimated in Blender for the Quest | Approved the build plans and asked for them to be built | `ip2b/RenovationPreviewer/Assets/` | 17–20 Oct 2026 |
+| Claude Code (Claude Opus 5.5) | Debugging: traced the MR "fall into the void" bug I found on my desktop lap (the rig's gravity kept running with the floor hidden) | Reported the bug from my lap; I decided to cut MR | — (diagnosis) | 19 Oct 2026 |
+| Claude Code (Claude Opus 5.5) | Research: found 7 academic sources, verified each through Crossref, and drafted the research paragraph | Asked for sources tied to hold-up, toss, colour in VR, the Empty room and the questionnaires. [TODO after voice pass: "I read each source and rewrote the paragraph in my own words."] | `ip2b/research-references.md`, testing plan | 17–20 Oct 2026 |
+| Claude Code (Claude Opus 5.5) | Documents: drafted the testing plan (B1–B6, five principles, UEQ-S + VRSQ), the iPad session logger, this coversheet and the PDFs; test-day checks | Asked for a plan another person could run; "make sure everything is on point for tomorrow" | `ip2b/*.md`, `ip2b/*.pdf`, `ip2b/ipad-logger.html` | 17–22 Oct 2026 |
+| Claude Code (Claude Opus 5.5) | Tooling and builds: headless test runs, Android APK builds for the Quest | Asked for a build-only check (20 Oct) and the test-day build | project config, `Builds/` | 20–23 Oct 2026 |
+
+**Not AI:** the concept and every design decision (nothing stays, the two rooms, cutting MR, the Empty room), all in-class testing on 23 Oct, and the analysis of its results.

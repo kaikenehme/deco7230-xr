@@ -34,7 +34,7 @@ Lesson carried from Eval 2: every decisive question is asked of **everyone expos
 
 ## Methodology
 
-Structured observation with a timed task protocol and think-aloud, two standardised questionnaires, and a short interview. Phase 1 is uninstructed (B1). Phase 2 is a free creative task (B2, B3). Phase 3 changes the light and layout (B5). Phase 4 is the Empty room (B6). Then UEQ-S and VRSQ on the iPad, then the interview (B2, B3, B4). One record per participant, logged live on the iPad session logger; prompts logged **by number**. The Quest view is mirrored and recorded with consent (`../ip2a/record-session.sh`).
+Structured observation with a timed task protocol and think-aloud, two standardised questionnaires, and a short interview. Phase 1 is uninstructed (B1). Phase 2 is a free creative task (B2, B3). Phase 3 changes the light and layout (B5). Phase 4 is the Empty room (B6). Then UEQ-S and VRSQ on the iPad, then the interview (B2, B3, B4). One record per participant, logged live on the iPad session logger (https://claude.ai/artifact/MSM5HKKZdxh7xLpB1MV3RS); prompts logged **by number**. The Quest view is mirrored and recorded with consent (`record-session.sh P1`).
 
 ## Prototype
 
