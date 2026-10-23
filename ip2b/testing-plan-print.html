@@ -32,7 +32,7 @@ Design: <code>../docs/superpowers/specs/2026-10-17-ip2b-design.md</code>, amende
 <h2>Pitch</h2>
 <p>A phone paint-visualiser (Dulux Visualizer, Houzz, IKEA Kreativ) rebuilt in XR: you stand in a room, pull a colour off anything you like — the sofa, the rug, a print — and it opens in your hand as a paint fan deck. Pick a card, hold it up to a wall or the floor (or throw it), and the room changes at full size, in its own light. IP2b moves from a test level to two rooms that read as homes (a warm contemporary living room and a mid-century bedroom), lets you change anything, and ends in a bare Empty room where you make the room you imagine.</p>
 <h2>Research summary (DECO7230)</h2>
-<p>Choosing a colour by holding a sample against the surface draws on proprioception: working within arm's reach and relative to the body is faster and more precise than acting at a distance (Mine et al., 1997), which is why hold-up is the default commit and the fan deck opens in the hand rather than on a panel. Throwing in VR is measurably less accurate and more effortful than real throwing (Zindulka et al., 2020), so toss is offered alongside hold-up and evaluated on experience and preference, not accuracy. Colour judgements made in a headset differ from those made on a screen, and light temperature preferences shift between the two (Siess &amp; Wölfel, 2019) — the reason testing runs on the Quest, and why the room's light can be changed (clock, lamp, curtains). The final phase opens a bare room with the same tools, following the creativity-support principle of low thresholds, high ceilings and wide walls (Shneiderman, 2007): nothing new to learn, no set target, and as many outcomes as the participant can imagine. Its question, how close the result came to the room they had in mind, is a single rating in the spirit of the Creativity Support Index (Cherry &amp; Latulipe, 2014), which measures how well a tool supports creative work; the full index does not fit a one-minute phase. Experience and comfort are measured with short standardised instruments that fit an eight-minute session: the 8-item UEQ-S (Schrepp et al., 2017) and the 9-item VRSQ (Kim et al., 2018).</p>
+<p>Choosing a colour by holding a sample against the surface draws on proprioception, since working within arm’s reach and relative to the body is faster and more precise than acting at a distance (Mine et al., 1997). For this reason, hold-up is the default way to commit a choice, and the fan deck opens in the hand rather than on a panel. Throwing in VR is measurably less accurate and more effortful than real throwing (Zindulka et al., 2020), so toss is offered alongside hold-up but evaluated on experience and preference rather than accuracy. Colour judgements and preferred light temperature also differ between a headset and a screen (Siess &amp; Wölfel, 2019). Testing therefore runs on the Quest, and participants can change the room’s light through the clock, lamp and curtains. The final phase opens a bare room with the same tools, following the creativity-support principle of low thresholds, high ceilings and wide walls (Shneiderman, 2007): participants have nothing new to learn, no set target, and as many possible outcomes as they can imagine. Its single question, how close the result came to the room they had in mind, is a one-item rating in the spirit of the Creativity Support Index (Cherry &amp; Latulipe, 2014), which measures how well a tool supports creative work. The full index is too long for a one-minute phase. Experience and comfort are instead measured with two short standardised instruments that fit within the eight-minute session: the 8-item UEQ-S (Schrepp et al., 2017) and the 9-item VRSQ (Kim et al., 2018).</p>
 <p>Cherry, E., &amp; Latulipe, C. (2014). Quantifying the creativity support of digital tools through the Creativity Support Index. <em>ACM Transactions on Computer-Human Interaction, 21</em>(4), 1–25. https://doi.org/10.1145/2617588<br />
 Kim, H. K., Park, J., Choi, Y., &amp; Choe, M. (2018). Virtual reality sickness questionnaire (VRSQ): Motion sickness measurement index in a virtual reality environment. <em>Applied Ergonomics, 69</em>, 66–73. https://doi.org/10.1016/j.apergo.2017.12.016<br />
 Mine, M. R., Brooks, F. P., &amp; Sequin, C. H. (1997). Moving objects in space: Exploiting proprioception in virtual-environment interaction. <em>Proceedings of SIGGRAPH '97</em>, 19–26. https://doi.org/10.1145/258734.258747<br />
@@ -190,6 +190,16 @@ Zindulka, T., Bachynskyi, M., &amp; Müller, J. (2020). Performance and experien
 <td><strong>B3</strong></td>
 </tr>
 <tr>
+<td>Stepped back to look at the room after a hold-up commit? (observed; logger notes)</td>
+<td>boolean</td>
+<td>B3</td>
+</tr>
+<tr>
+<td>"When you held it up, could you tell how the colour looked in the whole room?" (everyone who used hold-up; logger notes)</td>
+<td>qualitative</td>
+<td>B3</td>
+</tr>
+<tr>
 <td>Floor changed? by tint / material / both</td>
 <td>categorical</td>
 <td>B2</td>
@@ -286,13 +296,14 @@ Zindulka, T., Bachynskyi, M., &amp; Müller, J. (2020). Performance and experien
 <li><strong>Phase 3 — Task 2 (1 min).</strong> Read verbatim: <strong>"Now see how it looks in the evening, and move one piece of furniture."</strong> Log curtains/clock/lamp, decision change, furniture.</li>
 <li><strong>Phase 4 — Empty room (1 min).</strong> Read verbatim: <strong>"Touch the frame that says 'Empty room'. Make the room you're imagining."</strong> Log what they painted with and whether they added furniture; at the end ask the B6 question.</li>
 <li><strong>Questionnaires (1 min 30).</strong> Headset off. UEQ-S then VRSQ on the iPad.</li>
-<li><strong>Interview (1 min).</strong> In order: B2 helpful/restrictive (if a fan was opened) · B3 hold-up vs throw (if both were shown) · B4 rating + why · one thing that confused you.</li>
+<li><strong>Interview (1 min).</strong> In order: B2 helpful/restrictive (if a fan was opened) · B3 hold-up vs throw (if both were shown) · B3 overview: "When you held it up, could you tell how the colour looked in the whole room?" (if they used hold-up) · B4 rating + why · one thing that confused you.</li>
 </ul>
 <p><strong>Results: logger export + this plan's sheet posted to <code>testing-data/ip2b/</code> before leaving the room. Research summary submitted to Blackboard at the end of the session.</strong></p>
 <h2>Known limits, stated up front</h2>
 <ul>
 <li>MR was cut on 20 Oct: it could not be tried on a headset before the test, and the editor run showed the participant could get stranded. The Empty room replaces it; MR passthrough is the "different modality" extension in Evaluation 3.</li>
-<li>First run of this build on a headset is the morning of the test.</li>
+<li>First run of this build on a headset is in the studio, just before the first participant.</li>
+<li>Designer's desktop lap (23 Oct, morning): hold-up needs you close to the wall, so you judge the colour but lose the view of the whole room. Not changed before the test; observed under B3 (step-back + overview question). Toss and the menu both paint from a distance.</li>
 <li>In the Empty room a tall participant can walk into the ceiling pendant (shade bottom ≈ 1.75 m): steer them round it.</li>
 <li>The three room frames hang on Wall_N. Touching the current room's frame does nothing, but a participant painting that wall can brush another room's frame and switch rooms: watch the frames in Phase 4 and note any switch.</li>
 <li>B6 is one exploratory rating after one minute; it is reported raw, not as a creativity-support score.</li>

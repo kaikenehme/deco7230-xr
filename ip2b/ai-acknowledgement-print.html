@@ -36,11 +36,11 @@
   th:nth-child(4){ width:19%; } th:nth-child(5){ width:11%; }
   footer{ margin-top:12px; padding-top:6px; border-top:1px solid var(--rule); font-size:8.4pt; color:var(--muted); }
 </style></head>
-<body><h1>AI acknowledgement coversheet</h1><p><strong>Name:</strong> Kaike Nehme · <strong>Student number:</strong> [TODO student number]<br />
+<body><h1>AI acknowledgement coversheet</h1><p><strong>Name:</strong> Kaike Nehme · <strong>Student number:</strong> s4959287<br />
 <strong>Course:</strong> DECO7230 — Digital Prototyping and Extended Reality<br />
 <strong>Assignment:</strong> Interactive Prototype 2b (Fri 23 Oct 2026, Week 12 Studio)</p>
 <p>☑ <strong>Yes, AI tools have been used to generate or edit material in this assessment.</strong></p>
-<p>All AI use in IP2b was Claude Code (Anthropic, model Claude Opus 5.5), driven interactively by Kaike Nehme in supervised terminal sessions, with Blender driven by Claude through the MCP for Blender add-on for the room mock-ups. No generative image or 3D model was used. Prompts were conversational: the "Prompt(s)" column summarises the direction given, quoting my words where the running log recorded them. The raw log kept during development is <code>ip2b/ai-use-log.md</code> (committed with full history). IP2b builds on the IP1 and IP2a Unity code, whose AI use was declared with those submissions (Claude Fable 5 and Fable 5.1). Furniture models and textures are human-made assets (Sketchfab CC-BY / Free Standard, Poly Haven and ambientCG CC0), credited in <code>ip2b/RenovationPreviewer/Assets/Catalogue/CREDITS.md</code>.</p>
+<p>AI use in IP2b was Claude Code (Anthropic, model Claude Opus 5.5), driven interactively by Kaike Nehme in supervised terminal sessions, with Blender driven by Claude through the MCP for Blender add-on for the room mock-ups; and, once, Claude Sonnet 5.5 (Anthropic) to paraphrase my own rewrite of the research paragraph. No generative image or 3D model was used. Prompts were conversational: the "Prompt(s)" column summarises the direction given, quoting my words where the running log recorded them. The raw log kept during development is <code>ip2b/ai-use-log.md</code> (committed with full history). IP2b builds on the IP1 and IP2a Unity code, whose AI use was declared with those submissions (Claude Fable 5 and Fable 5.1). Furniture models and textures are human-made assets (Sketchfab CC-BY / Free Standard, Poly Haven and ambientCG CC0), credited in <code>ip2b/RenovationPreviewer/Assets/Catalogue/CREDITS.md</code>.</p>
 <table>
 <thead>
 <tr>
@@ -97,16 +97,30 @@
 <tr>
 <td>Claude Code (Claude Opus 5.5)</td>
 <td>Research: found 7 academic sources, verified each through Crossref, and drafted the research paragraph</td>
-<td>Asked for sources tied to hold-up, toss, colour in VR, the Empty room and the questionnaires. [TODO after voice pass: "I read each source and rewrote the paragraph in my own words."]</td>
+<td>Asked for sources tied to hold-up, toss, colour in VR, the Empty room and the questionnaires. I then rewrote the paragraph in my own words (next row).</td>
 <td><code>ip2b/research-references.md</code>, testing plan</td>
 <td>17–20 Oct 2026</td>
+</tr>
+<tr>
+<td>Claude Sonnet 5.5 (Anthropic)</td>
+<td>Editing: paraphrased my own rewrite of the research paragraph for readability (shorter sentences, reason first)</td>
+<td>I wrote my own version of the paragraph and asked it to paraphrase my wording</td>
+<td>Testing plan — research summary</td>
+<td>23 Oct 2026</td>
+</tr>
+<tr>
+<td>Claude Code (Claude Opus 5.5)</td>
+<td>Test-day morning: walked me through my desktop lap; after my findings, wrote the window fix (no glass reflection, grass texture outside, a glass blend bug in the scene builder) and re-ran the tests; added a B3 step-back observation and overview question to the testing plan</td>
+<td>My lap findings: "you need to get too close to the wall… you don't have the feeling of how that wall looks on the overall room"; "the window reflects the light from the ceiling pendant… could we make it like a grass floor outside"; I chose a test question over a code change for hold-up</td>
+<td><code>Assets/Editor/SceneBuilder.cs</code>, testing plan</td>
+<td>23 Oct 2026</td>
 </tr>
 <tr>
 <td>Claude Code (Claude Opus 5.5)</td>
 <td>Documents: drafted the testing plan (B1–B6, five principles, UEQ-S + VRSQ), the iPad session logger, this coversheet and the PDFs; test-day checks</td>
 <td>Asked for a plan another person could run; "make sure everything is on point for tomorrow"</td>
 <td><code>ip2b/*.md</code>, <code>ip2b/*.pdf</code>, <code>ip2b/ipad-logger.html</code></td>
-<td>17–22 Oct 2026</td>
+<td>17–23 Oct 2026</td>
 </tr>
 <tr>
 <td>Claude Code (Claude Opus 5.5)</td>
@@ -117,4 +131,4 @@
 </tr>
 </tbody>
 </table>
-<p><strong>Not AI:</strong> the concept and every design decision (nothing stays, the two rooms, cutting MR, the Empty room), all in-class testing on 23 Oct, and the analysis of its results.</p><footer>DECO7230 Interactive Prototype 2b · Kaike Nehme · AI acknowledgement per UQ Library guidance (secure assessment) · source: <code>ip2b/ai-acknowledgement.md</code></footer></body></html>
+<p><strong>Not AI:</strong> the concept and every design decision (nothing stays, the two rooms, cutting MR, the Empty room), the desktop lap and its findings on 23 Oct, all in-class testing on 23 Oct, and the analysis of its results.</p><footer>DECO7230 Interactive Prototype 2b · Kaike Nehme · AI acknowledgement per UQ Library guidance (secure assessment) · source: <code>ip2b/ai-acknowledgement.md</code></footer></body></html>
