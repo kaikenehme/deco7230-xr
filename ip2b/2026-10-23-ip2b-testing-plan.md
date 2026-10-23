@@ -65,6 +65,8 @@ Facilitator (desktop dry run only): `T` then hold `B` = sample in hand · `F1–
 | "Seven options picked from what you pulled — helpful or restrictive? Why?" (everyone who opened a fan) | qualitative | **B2 — decisive** |
 | Commits by hold-up / by toss (tally each) | quantitative | **B3** |
 | "Hold it up or throw it — which would you use, and why?" (everyone shown both) | qualitative | **B3** |
+| Stepped back to look at the room after a hold-up commit? (observed; logger notes) | boolean | B3 |
+| "When you held it up, could you tell how the colour looked in the whole room?" (everyone who used hold-up; logger notes) | qualitative | B3 |
 | Floor changed? by tint / material / both | categorical | B2 |
 | Curtains / clock / lamp used · did a light change change a colour? | boolean × 3 + boolean | **B5** |
 | "Feels like a room I could make mine" 1–5 + why | quantitative + qualitative | **B4** |
@@ -103,14 +105,15 @@ Facilitator (desktop dry run only): `T` then hold `B` = sample in hand · `F1–
 - **Phase 3 — Task 2 (1 min).** Read verbatim: **"Now see how it looks in the evening, and move one piece of furniture."** Log curtains/clock/lamp, decision change, furniture.
 - **Phase 4 — Empty room (1 min).** Read verbatim: **"Touch the frame that says 'Empty room'. Make the room you're imagining."** Log what they painted with and whether they added furniture; at the end ask the B6 question.
 - **Questionnaires (1 min 30).** Headset off. UEQ-S then VRSQ on the iPad.
-- **Interview (1 min).** In order: B2 helpful/restrictive (if a fan was opened) · B3 hold-up vs throw (if both were shown) · B4 rating + why · one thing that confused you.
+- **Interview (1 min).** In order: B2 helpful/restrictive (if a fan was opened) · B3 hold-up vs throw (if both were shown) · B3 overview: "When you held it up, could you tell how the colour looked in the whole room?" (if they used hold-up) · B4 rating + why · one thing that confused you.
 
 **Results: logger export + this plan's sheet posted to `testing-data/ip2b/` before leaving the room. Research summary submitted to Blackboard at the end of the session.**
 
 ## Known limits, stated up front
 
 - MR was cut on 20 Oct: it could not be tried on a headset before the test, and the editor run showed the participant could get stranded. The Empty room replaces it; MR passthrough is the "different modality" extension in Evaluation 3.
-- First run of this build on a headset is the morning of the test.
+- First run of this build on a headset is in the studio, just before the first participant.
+- Designer's desktop lap (23 Oct, morning): hold-up needs you close to the wall, so you judge the colour but lose the view of the whole room. Not changed before the test; observed under B3 (step-back + overview question). Toss and the menu both paint from a distance.
 - In the Empty room a tall participant can walk into the ceiling pendant (shade bottom ≈ 1.75 m): steer them round it.
 - The three room frames hang on Wall_N. Touching the current room's frame does nothing, but a participant painting that wall can brush another room's frame and switch rooms: watch the frames in Phase 4 and note any switch.
 - B6 is one exploratory rating after one minute; it is reported raw, not as a creativity-support score.

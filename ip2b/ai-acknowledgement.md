@@ -1,6 +1,6 @@
 # AI acknowledgement coversheet
 
-**Name:** Kaike Nehme · **Student number:** [TODO student number]
+**Name:** Kaike Nehme · **Student number:** s4959287
 **Course:** DECO7230 — Digital Prototyping and Extended Reality
 **Assignment:** Interactive Prototype 2b (Fri 23 Oct 2026, Week 12 Studio)
 
