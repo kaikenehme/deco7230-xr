@@ -75,15 +75,15 @@ UEQ-S: pragmatic = items 1–4, hedonic = items 5–8 (Schrepp et al., 2017). VR
 
 ## Five design principles — evidence from the session
 
-The brief asks for an evaluation against the five principles (Week 6), including any that do not apply. Evidence columns are filled from the logger; the verdict is written after the session from the observer notes.
+The brief asks for an evaluation against the five principles (Week 6), including any that do not apply. Observer notes were not logged live, so "facilitator recall" below is Kaike's account after the session — no counts.
 
 | Principle | Evidence logged | Verdict |
 |---|---|---|
-| Text readability | Observer notes (squinting, leaning in to read the frame labels) | |
-| Ergonomics | Observer notes (arm held up > 10 s, crouching for the floor) · furniture placed first try (row 14): 2 / 4 (P2, P3) | |
-| Brightness changes | VRSQ eyestrain (item 3): 1 slight, 0 none, 0 none, 0 none · observer notes (flinch at curtains) | |
-| Avoiding simulator sickness | VRSQ totals above (mean 7.8) · teleport only, no smooth locomotion | |
-| Button placement | Observer notes (wrong button, "which button?", stuck holding a sample: let go = grip) | |
+| Text readability | Facilitator recall: **nobody squinted** or leaned in to read. The design carries almost no text (cards are colour only; three large frame labels) | **Met** |
+| Ergonomics | No observation recorded (arm held up, crouching). Logged: furniture placed where meant first try 2 / 4 (P2, P3) | **Not evaluated** — no evidence either way beyond row 14 |
+| Brightness changes | VRSQ eyestrain (item 3): 1 slight (P1), none for P2–P4. No observation recorded of reactions to the curtains closing | **No problem indicated** by VRSQ; not observed directly |
+| Avoiding simulator sickness | Facilitator recall: **no one reported sickness**. VRSQ total mean 7.8 / 100, highest 19.2 (P1); P2 incomplete. Teleport only, no smooth locomotion | **Met** |
+| Button placement | Facilitator recall: **some participants got stuck holding the ball** (number not logged). Row 22: 3 / 4 named "the ball" as the most confusing thing; row 20 (P4): "confusing the way you pick the ball". The sample stays in the hand with no button held, and letting go means squeezing and releasing the grip — nothing in the scene shows that | **Not met** for releasing a sample — the main usability finding |
 
 ## Data quality — read before quoting any of this
 
