@@ -69,7 +69,7 @@ Quick lap on the headset (2 min): pull from the sofa → fan → hold-up on a wa
 | When | Do |
 |---|---|
 | Before | Restart app: `"$ADB" shell am force-stop $PKG && "$ADB" shell monkey -p $PKG 1` · logger **+ New** |
-| Consent yes | `ip2b/record-session.sh P1` (P2, P3…) — close the window to save |
+| Consent yes | `ip2b/record-session.sh P1` (P2, P3…) — close the window to save. Also saves `P1_…_events.log` (the app's hold-up / toss commits, timestamped) and prints the counts: cross-check the logger's B3 tally |
 | Phases | Logger timers: Free look → Task 1 → Task 2 → Empty room → Interview |
 | Between | Headset on the wall charger if battery < 40 % (`"$ADB" shell dumpsys battery \| grep level`) |
 
