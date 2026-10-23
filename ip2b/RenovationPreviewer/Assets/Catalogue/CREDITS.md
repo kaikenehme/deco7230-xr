@@ -12,6 +12,7 @@ Poly Haven and ambientCG models and textures are CC0 (public domain); Sketchfab 
 - Marble012 — https://ambientcg.com/view?id=Marble012
 - WoodFloor051 — https://ambientcg.com/view?id=WoodFloor051
 - WoodFloor043 — https://ambientcg.com/view?id=WoodFloor043
+- Grass004 — https://ambientcg.com/view?id=Grass004 (lawn outside the window)
 - Carpet016 — https://ambientcg.com/view?id=Carpet016
 - Plaster001 — https://ambientcg.com/view?id=Plaster001
 - PaintedPlaster017 — https://ambientcg.com/view?id=PaintedPlaster017

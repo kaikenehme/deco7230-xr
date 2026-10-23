@@ -63,7 +63,7 @@ public static class SceneBuilder
         ground.name = "Ground";
         ground.transform.position = new Vector3(0f, -0.02f, 0f);
         ground.transform.localScale = new Vector3(6f, 1f, 6f);      // 60 x 60 m, so the view out of the window has a horizon
-        ground.GetComponent<Renderer>().sharedMaterial = MakeMat("Ground", new Color(0.30f, 0.36f, 0.26f));
+        ground.GetComponent<Renderer>().sharedMaterial = MakeGroundMat();
         MakeSurface("Wall_E", new Vector3(hw + T / 2f, hh, 0), new Vector3(T, RoomH, RoomD + 2 * T), offwhite, SurfaceState.Change, SurfaceKind.Wall);
         MakeSurface("Wall_W", new Vector3(-(hw + T / 2f), hh, 0), new Vector3(T, RoomH, RoomD + 2 * T), offwhite, SurfaceState.Change, SurfaceKind.Wall);
         MakeSurface("Ceiling", new Vector3(0, RoomH + T / 2f, 0), new Vector3(RoomW + 2 * T, T, RoomD + 2 * T), ceilingMat, SurfaceState.Change, SurfaceKind.Ceiling);
@@ -512,13 +512,40 @@ public static class SceneBuilder
         m.SetFloat("_Surface", 1f);   // transparent
         m.SetFloat("_Blend", 0f);     // alpha
         m.SetFloat("_ZWrite", 0f);
-        m.SetFloat("_SrcBlend", (float)BlendMode.SrcAlpha);
+        // URP's preserve-specular alpha: the shader premultiplies (_ALPHAPREMULTIPLY_ON), so the source factor is One.
+        // SrcAlpha here applied alpha twice; URP rewrote it to One on save, so this matches the asset as tested.
+        m.SetFloat("_BlendModePreserveSpecular", 1f);
+        m.EnableKeyword("_ALPHAPREMULTIPLY_ON");
+        m.SetFloat("_SrcBlend", (float)BlendMode.One);
         m.SetFloat("_DstBlend", (float)BlendMode.OneMinusSrcAlpha);
         m.SetOverrideTag("RenderType", "Transparent");
         m.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
         m.renderQueue = (int)RenderQueue.Transparent;
         m.color = new Color(0.80f, 0.90f, 1f, 0.15f);
-        m.SetFloat("_Smoothness", 0.9f);
+        // No highlights or reflections: the pendant showed as a bright blob on the glass (Kaike's lap, 23 Oct).
+        m.SetFloat("_Smoothness", 0f);
+        m.SetFloat("_SpecularHighlights", 0f);
+        m.EnableKeyword("_SPECULARHIGHLIGHTS_OFF");
+        m.SetFloat("_EnvironmentReflections", 0f);
+        m.EnableKeyword("_ENVIRONMENTREFLECTIONS_OFF");
+        EditorUtility.SetDirty(m);
+        return m;
+    }
+
+    /// <summary>Lawn outside the window (ambientCG Grass004, CC0), one tile per 2 m, so the view past the
+    /// garden photo's edges reads as grass rather than a flat grey-green plane (Kaike's lap, 23 Oct).</summary>
+    static Material MakeGroundMat()
+    {
+        // Tint lifts the texture to the photo's sunlit grass (measured in daylight: ground 107,115,85 vs photo 129,146,96).
+        var m = MakeMat("Ground", new Color(1.15f, 1.25f, 1.05f));
+        var tex = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Catalogue/Materials/Grass004/Grass004_1K-JPG_Color.jpg");
+        if (tex != null)
+        {
+            m.SetTexture("_BaseMap", tex);
+            m.mainTexture = tex;
+            m.SetTextureScale("_BaseMap", new Vector2(30f, 30f));   // the plane is 60 x 60 m
+        }
+        m.SetFloat("_Smoothness", 0f);
         EditorUtility.SetDirty(m);
         return m;
     }
