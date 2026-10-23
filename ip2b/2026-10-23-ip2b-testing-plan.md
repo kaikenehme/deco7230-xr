@@ -44,8 +44,8 @@ A 5.5 × 5 m room on the Quest 3S, controllers (not hand tracking). Three rooms,
 |---|---|---|
 | Pull | Bring a controller to **anything** — sofa, rug, a wall, the floor — a swatch tab appears; trigger peels a sample into the hand | **any surface** (IP2a: kept surfaces only) |
 | Fan deck | The sample opens as **seven cards, lightest on the left, two off-whites first**; touch a card with the other controller (or point the right ray at it + trigger) to pick it | **new** (replaces twist-to-tune) |
-| Hold up | Bring the picked card near a wall or the floor to preview; let go to commit; let go mid-air to discard | floor now takes colour |
-| Toss | Throw the card at a wall or the floor — it splashes on | **new** |
+| Hold up | Bring the picked card near a wall or the floor to preview; let go to commit; let go mid-air to discard. The sample stays in the hand with no button held; **let go = squeeze and release the grip** | floor now takes colour |
+| Toss | Throw the card at a wall or the floor (swing, letting go of the grip) — it splashes on | **new** |
 | Menu | Point at a surface, trigger: full catalogue (paints, floor materials, furniture) | as IP2a |
 | Floor | Paint tints the floor's material; the menu swaps the material | tint **new** |
 | Move | Grip a piece to move it; thumbstick turns it; release places it | smoother, half-speed turn |
@@ -87,7 +87,7 @@ Facilitator (desktop dry run only): `T` then hold `B` = sample in hand · `F1–
 | **Ergonomics** | Fan opens at the hand, cards within 16 cm; hold-up at arm's length; floor reached by lowering the arm, not crouching; furniture moved by ray, no lifting | Arm held up > 10 s; crouching; reach complaints |
 | **Brightness changes** | Curtains fade daylight over 1 s, never snap; closed room stays lit by lamp + pendant; time-of-day steps are scheduled by touch | Squint / flinch at curtain close; VRSQ eyestrain |
 | **Avoiding simulator sickness** | No smooth locomotion (teleport only; room fits the play space) | VRSQ total; any pause / "I feel off" |
-| **Button placement** | No menu buttons for core actions: controls are objects (cards, curtains, clock, lamp, frames). Trigger = pull/pick/touch, grip = move — the same on both hands | Wrong button pressed (tally); asks "which button?" |
+| **Button placement** | No menu buttons for core actions: controls are objects (cards, curtains, clock, lamp, frames). Trigger = pull/pick/touch, grip = move furniture or let go of a sample — the same on both hands | Wrong button pressed (tally); asks "which button?" |
 
 ## Setup (studio, before the first participant)
 
@@ -98,6 +98,8 @@ Facilitator (desktop dry run only): `T` then hold `B` = sample in hand · `F1–
 5. Restart the app between participants (colours, furniture, time and curtains must not leak).
 
 ## Process (~8 min per participant, aim ≥ 5)
+
+Longer than the brief's 5-minute guide: four short phases test B1–B6 in one sitting, and the two questionnaires (UEQ-S, VRSQ) add about 1 min 30. If the queue is long, drop Phase 4 (B6 is exploratory) to get to about 7 min.
 
 - **Brief (30 s).** "Imagine this is your home and you're about to redecorate. You can change anything." Consent for recording. Seen the project before? Fit the headset.
 - **Phase 1 — free look, no instruction (45 s).** Silent. Log B1 measures. Prompts only after 20 s stuck, by number.

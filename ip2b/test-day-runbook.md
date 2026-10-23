@@ -68,9 +68,12 @@ Quick lap on the headset (2 min): pull from the sofa → fan → hold-up on a wa
 
 | When | Do |
 |---|---|
-| Before | Restart app: `"$ADB" shell am force-stop $PKG && "$ADB" shell monkey -p $PKG 1` · logger **+ New** |
+| Before | Restart app: `"$ADB" shell am force-stop $PKG && "$ADB" shell monkey -p $PKG 1` · logger **+ New** (first participant: tap **+ New** too — the logger holds two empty test records, so numbering may start at P3; that's fine) |
+| Numbering | **Use the P-number the logger shows** for the recording too (`record-session.sh P3` if the logger says P3), so the video, the event log and the logger record match. Empty records are skipped in the results |
 | Consent yes | `ip2b/record-session.sh P1` (P2, P3…) — close the window to save. Also saves `P1_…_events.log` (the app's hold-up / toss commits, timestamped) and prints the counts: cross-check the logger's B3 tally |
-| Phases | Logger timers: Free look → Task 1 → Task 2 → Empty room → Interview |
+| Phases | **Start each logger timer** as the phase starts: Free look → Task 1 → Task 2 → Empty room → Interview (IP2a didn't, so prompt phases were unusable) |
+| Prompt 5 | Say it as: "Hold the card near a wall, then **squeeze and release the side grip**." (the logger text only says "let go") |
+| Interview | After B3 (row 20) ask: "When you held it up, could you tell how the colour looked in the whole room?" → Observer notes. Also note if they stepped back after a hold-up |
 | Between | Headset on the wall charger if battery < 40 % (`"$ADB" shell dumpsys battery \| grep level`) |
 
 ## If something goes wrong
@@ -87,6 +90,7 @@ Quick lap on the headset (2 min): pull from the sofa → fan → hold-up on a wa
 ## After the last participant
 
 1. `"$ADB" shell am broadcast -a com.oculus.vrpowermanager.automation_disable` (undo `prox_close`), unplug, return the Quest.
-2. Ask Claude: "export the IP2b logger into `testing-data/ip2b/`" (JSON per participant + README table, as for IP2a).
-3. **Blackboard:** `ip2b/IP2b-Testing-Plan-Kaike-Nehme.pdf` (has the research summary) + `ip2b/IP2b-AI-Acknowledgement-Kaike-Nehme.pdf`.
-4. Commit `testing-data/ip2b/` (not recordings — git-ignored) and push, before leaving the room.
+2. Ask Claude: **"export the IP2b logger"**. Claude reads the logger database into `testing-data/ip2b/logger-export/participants/`, copies the event logs (`cp testing-data/ip2b/recordings/*_events.log testing-data/ip2b/device/`), runs `python3 testing-data/ip2b/build-results.py` → `testing-data/ip2b/README.md` (raw table, B1–B6 counts, UEQ-S + VRSQ scores, five-principles evidence).
+3. Five minutes with Claude: write the **five-principles verdicts** and the **data-quality notes** into the README from your observer notes (the brief asks for the principles evaluation, including any that don't apply).
+4. Commit `testing-data/ip2b/` (videos stay out — git-ignored) and push, **before leaving the room**.
+5. **Blackboard:** `ip2b/IP2b-Testing-Plan-Kaike-Nehme.pdf` (has the research summary) + `ip2b/IP2b-AI-Acknowledgement-Kaike-Nehme.pdf`.

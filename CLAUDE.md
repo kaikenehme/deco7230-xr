@@ -1,7 +1,7 @@
 # DECO7230 — Digital Prototyping and Extended Reality
 
 Coursework repo for **XR Renovation Previewer**. Semester 2, 2026 · UQ St Lucia · Kaike Nehme.
-Repo: `github.com/kaikenehme/deco7230-xr` (private).
+Repo: `github.com/kaikenehme/deco7230-xr` (**public** — checked 23 Oct; participant data stays anonymous, P-numbers only).
 
 ## Read these before proposing anything
 
@@ -123,7 +123,7 @@ Branch **`ip2b`** (not merged). **EditMode 241/241, PlayMode 43/43** (after fina
 
 **22 Oct (Thu night):** tests 241/43 green after the iCloud fix · `ip2b` merged → main, tagged `ip2b-test`, pushed · APK built tonight from the tag (Kaike's go) — Friday = install + lap only. Studio Fri **14:00–15:50, 78-208** (INFS7203 10:00–11:50 before it).
 
-**Next — Fri morning before INFS 10:00 (Kaike moved it from Thu night; checklist = top of `ip2b/test-day-runbook.md`):** Kaike's desktop lap (pull → fan → hold-up/toss → floor → curtains → furniture → clock/lamp/pendant → Bedroom → Empty room via frame/`F3` → back to Living) — any fix means re-tag + rebuild · voice pass on testing plan + research paragraph · fill `[TODO]`s in `ip2b/ai-acknowledgement.md` → rebuild PDFs → commit · iPad: open logger once, check "Saved".
+**23 Oct (Fri AM) — test-ready:** desktop lap passed (0 exceptions; let go = grip, `G` on desktop). Lap fixes: no glass reflection, grass outside the window (ambientCG Grass004), builder glass-blend bug → tests 241/43, **re-tagged `ip2b-test` (`6917ef9`), APK rebuilt 10:31**; old tag `ip2b-test-pre-window`, old APK `Builds/ip2b-fallback.apk`. Hold-up-too-close finding → B3 question, no code. Voice pass done (Kaike's version, paraphrased by Claude Sonnet 5.5 — declared). PDFs exit 0. `record-session.sh` also saves `P#_…_events.log`. Results pipeline ready: export logger → `testing-data/ip2b/logger-export/participants/`, copy event logs → `device/`, `python3 testing-data/ip2b/build-results.py` → README; then five-principles verdicts + data-quality notes, push, Blackboard. Logger holds 2 empty test records (p1, p2): use the logger's P-number for recordings.
 
 ---
 
