@@ -109,7 +109,7 @@ Longer than the brief's 5-minute guide: four short phases test B1–B6 in one si
 - **Questionnaires (1 min 30).** Headset off. UEQ-S then VRSQ on the iPad.
 - **Interview (1 min).** In order: B2 helpful/restrictive (if a fan was opened) · B3 hold-up vs throw (if both were shown) · B3 overview: "When you held it up, could you tell how the colour looked in the whole room?" (if they used hold-up) · B4 rating + why · one thing that confused you.
 
-**Results: logger export + this plan's sheet posted to `testing-data/ip2b/` before leaving the room. Research summary submitted to Blackboard at the end of the session.**
+**Results: logger export posted to `testing-data/ip2b/` before leaving the room. The research summary is the section above (also in `IP2b-Testing-Plan-Kaike-Nehme.pdf`, this folder).**
 
 ## Known limits, stated up front
 
