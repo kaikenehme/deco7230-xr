@@ -68,6 +68,7 @@ Quick lap on the headset (2 min): pull from the sofa → fan → hold-up on a wa
 
 | When | Do |
 |---|---|
+| Position | Participant on the start spot, facing the sofa → **hold the Meta button ~2 s** (recenter). A tap only opens the pause menu |
 | Before | Restart app: `"$ADB" shell am force-stop $PKG && "$ADB" shell monkey -p $PKG 1` · logger **+ New** (first participant: tap **+ New** too — the logger holds two empty test records, so numbering may start at P3; that's fine) |
 | Numbering | **Use the P-number the logger shows** for the recording too (`record-session.sh P3` if the logger says P3), so the video, the event log and the logger record match. Empty records are skipped in the results |
 | Consent yes | `ip2b/record-session.sh P1` (P2, P3…) — close the window to save. Also saves `P1_…_events.log` (the app's hold-up / toss commits, timestamped) and prints the counts: cross-check the logger's B3 tally |
@@ -82,6 +83,10 @@ Quick lap on the headset (2 min): pull from the sofa → fan → hold-up on a wa
 |---|---|
 | `adb devices` → `unauthorized` | Headset on, accept the dialog, tick **Always allow**; `"$ADB" kill-server && "$ADB" devices` |
 | "Resume / Quit" mid-session | Meta button pressed, or headset slept → Resume; re-run the `prox_close` line |
+| Spawned **outside the room** | Hold the Meta button ~2 s to recenter; else restart the app standing mid-boundary; else redraw the boundary |
+| `unauthorized` that never clears, no Revoke option in Developer | UQ-managed headset — swap it (23 Oct: `…G6M009N` locked; `…G6L04R5` works) |
+| "Controller required" won't accept a click | Controllers belong to another headset — use this headset's pair (serials in `dumpsys OVRRemoteService`) |
+| Another student's app opens instead | `"$ADB" shell am force-stop <their.package>`, then launch ours |
 | Participant stuck in another room | Touch the Living frame (Wall_N, behind the start position) |
 | Build stuck at "Compiling Scripts", Unity at 0 % CPU | iCloud eviction. `kill -9` every Unity / `bee_backend` / `netcorerun` process, run step 0's `rm -rf`, rebuild |
 | Build fails | Read the end of `ip2b/apk-build.log`. Fallback: `Builds/ip2b-fallback.apk` (22 Oct, before the window fix — only the window differs) |
