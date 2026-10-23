@@ -4,7 +4,9 @@ Plan: `2026-10-23-ip2b-testing-plan.md` · Logger (iPad): https://claude.ai/arti
 
 ## Friday morning, before INFS at 10:00 (moved from Thursday night)
 
-Already done Thu 22 Oct: tests 241/43 green · `ip2b` merged → `main`, tagged `ip2b-test`, pushed · **APK built from the tag** (`Builds/ip2b.apk`, 20:33).
+Already done Thu 22 Oct: tests 241/43 green · `ip2b` merged → `main`, tagged `ip2b-test`, pushed · APK built from the tag (20:33).
+
+**Fri 23 Oct morning:** desktop lap passed (0 exceptions). Lap fix — no glass reflection, grass outside the window — tests 241/43 green, **re-tagged `ip2b-test` (`6917ef9`) and APK rebuilt 10:31** (`Builds/ip2b.apk`). Old tag `ip2b-test-pre-window`; old APK kept as `Builds/ip2b-fallback.apk`.
 
 | # | Do | Done when |
 |---|---|---|
@@ -58,7 +60,9 @@ grep "Build result" ip2b/apk-build.log                # Succeeded, errors 0
 ip2b/record-session.sh
 ```
 
-Quick lap on the headset (2 min): pull from the sofa → fan → hold-up on a wall → toss → floor → curtains → **Empty room frame** → Living frame. Then restart the app.
+Quick lap on the headset (2 min): pull from the sofa → fan → hold-up on a wall → **toss with a real arm swing** (desktop could only drop it) → floor → curtains → walk up to the **window** (grass, no reflection) → **Empty room frame** → Living frame. Then restart the app.
+
+**Let go = squeeze the side grip and release** (the sample stays in the hand without holding anything). Prompt for a stuck participant: "Squeeze the side button and let go."
 
 ## Each participant
 
@@ -77,7 +81,8 @@ Quick lap on the headset (2 min): pull from the sofa → fan → hold-up on a wa
 | "Resume / Quit" mid-session | Meta button pressed, or headset slept → Resume; re-run the `prox_close` line |
 | Participant stuck in another room | Touch the Living frame (Wall_N, behind the start position) |
 | Build stuck at "Compiling Scripts", Unity at 0 % CPU | iCloud eviction. `kill -9` every Unity / `bee_backend` / `netcorerun` process, run step 0's `rm -rf`, rebuild |
-| Build fails | Read the end of `ip2b/apk-build.log`. The 20 Oct `ip2b.apk` predates the final fixes — last resort only, and say so in the results |
+| Build fails | Read the end of `ip2b/apk-build.log`. Fallback: `Builds/ip2b-fallback.apk` (22 Oct, before the window fix — only the window differs) |
+| New APK misbehaves on the headset | `"$ADB" install -r ip2b/RenovationPreviewer/Builds/ip2b-fallback.apk` — same features, old window. Note it in the results |
 
 ## After the last participant
 
